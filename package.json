@@ -1,0 +1,8 @@
+{
+  "name": "base",
+  "dependencies": {
+    "onoff": "1.0.*",
+    "gpio-stream": "1.0.17",
+    "lcd" : "1.1.1"
+  }
+}
