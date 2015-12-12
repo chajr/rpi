@@ -7,11 +7,12 @@ var Lcd = require('lcd'),
     cols: 16,
     rows: 2
   });
+
 var lcdLight = new gpio(4, 'out');
 var ledErr = new gpio(24, 'out');
 var ledOk = new gpio(25, 'out');
 
-  lcd.clear();
+lcd.clear();
 ledErr.writeSync(0);
 ledOk.writeSync(0);
 //  lcd.close();

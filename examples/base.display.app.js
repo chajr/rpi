@@ -7,7 +7,7 @@ var Lcd = require('lcd'),
     cols: 8,
     rows: 2
   });
- 
+
 lcd.on('ready', function() {
   var led = new gpio(4, 'out');
   led.writeSync(1);
@@ -22,7 +22,7 @@ lcd.on('ready', function() {
     console.log(new Date().toString().substring(16, 24));
   }, 1000);
 });
- 
+
 // If ctrl+c is hit, free resources and exit.
 //process.on('SIGINT', function() {
 process.on('SIGILL', function() {

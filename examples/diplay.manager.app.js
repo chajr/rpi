@@ -23,8 +23,8 @@ try {
     display();
   });
 } catch (e) {
-  ledOk.writeSync(0); 
-  ledErr.writeSync(1); 
+  ledOk.writeSync(0);
+  ledErr.writeSync(1);
   console.log(e);
 }
 
@@ -59,8 +59,6 @@ function display() {
           lcd.print(new Date().toString().substring(16, 24));
         });
       }, 1000);
-
-      console.log(1);
       break;
 
     case 1:
@@ -80,8 +78,6 @@ function display() {
              lcd.print((diff.getHours() -1) + ':' + diff.getMinutes() + ':' + diff.getSeconds());
         });
       }, 1000);
-
-      console.log(2);
       break;
 
     case 2:
@@ -92,16 +88,13 @@ function display() {
 
       int2 = setInterval(function() {
         lcd.setCursor(0, 0);
-        lcd.print('some message :)'); 
+        lcd.print('some message :)');
       }, 1000);
-
-      console.log(3);
       break;
 
     case 3:
       clearInterval(int2);
       lcd.clear();
-      console.log(4);
       break;
   }
 }
@@ -109,10 +102,10 @@ function display() {
 function disp(err, state) {
   if (err) {
     console.log(err);
-    ledOk.writeSync(0); 
+    ledOk.writeSync(0);
     ledErr.writeSync(1);
   }
-  
+
   if(state == 1) {
     dispStatus++;
 
@@ -121,7 +114,7 @@ function disp(err, state) {
     }
 
     display();
-  } 
+  }
 }
 
 function startDisplay() {
@@ -136,4 +129,3 @@ function startDisplay() {
 
 buttonLight.watch(light);
 buttonDisp.watch(disp);
- 
