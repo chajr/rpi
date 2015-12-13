@@ -11,6 +11,7 @@ var lcdLight = new gpio(4, 'out');
 var int0;
 var int1;
 var int2;
+var lcd;
 
 try {
   startDisplay();
