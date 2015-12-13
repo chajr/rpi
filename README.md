@@ -1,10 +1,10 @@
 # Raspberry Pi Alarm System (RPiAS)
 This _Node JS_ application allow to manage automatic alarm system based on _Raspberry Pi_
-computer powered by _Ubuntu Mate OS_ with camera and move detector. Aplication
+computer powered by _Ubuntu Mate OS_ with camera and move detector. Application
 record movie and send it to external server after move detection and also has
-possibility to inform user about that detection by e-mail or sms. Also aplication
+possibility to inform user about that detection by e-mail or sms. Also application
 can handle some other devices like LCD display, LEDs and switches for some status
-informations and temperature with preasure measurement.
+information and temperature with pressure measurement.
 
 ### Features
 - Move detection
@@ -14,7 +14,7 @@ informations and temperature with preasure measurement.
 - Display and switches for quick diagnose without console
 - Display system statuses
 - Temperature measurement
-- Preasure measurment
+- Pressure measurement
 
 ### List of devices and technologies
 - Raspberry Pi B+
@@ -26,7 +26,7 @@ informations and temperature with preasure measurement.
 - LCD display 2x16
 - Green LED
 - Red LED
-- 2x Tact switch
+- 3x Tact switch
 - Resistors (2.2 kOhm, 2x 100 Ohm, 2x 10 kOhm)
 
 ### Connection schema
