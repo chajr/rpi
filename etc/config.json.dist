@@ -26,6 +26,7 @@
       "button-status": 0,
       "button-display": 0,
       "detector-move": 0,
+      "lcd-light": 0,
       "lcd-rs": 0,
       "lcd-e": 0,
       "lcd-data-1": 0,
