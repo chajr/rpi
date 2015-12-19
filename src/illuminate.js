@@ -1,19 +1,20 @@
 var gpio = require('onoff').Gpio;
 
-var pin5 = new gpio(5, 'out');
-var pin6 = new gpio(6, 'out');
-var pin12 = new gpio(12, 'out');
-var pin13 = new gpio(13, 'out');
-var pinVal = 0;
-var args = process.argv.slice(2);
+exports.launch = function (args, config) {
+    var pin1 = new gpio(config.get('illuminate_gpio.pin_1'), 'out');
+    var pin2 = new gpio(config.get('illuminate_gpio.pin_2'), 'out');
+    var pin3 = new gpio(config.get('illuminate_gpio.pin_3'), 'out');
+    var pin4 = new gpio(config.get('illuminate_gpio.pin_4'), 'out');
+    var pinVal = 0;
 
-if (args[0] === 'on') {
-    pinVal = 1;
-}
+    if (args[0] === 'on') {
+        pinVal = 1;
+    }
 
-pin5.writeSync(pinVal);
-pin6.writeSync(pinVal);
-pin12.writeSync(pinVal);
-pin13.writeSync(pinVal);
+    pin1.writeSync(pinVal);
+    pin2.writeSync(pinVal);
+    pin3.writeSync(pinVal);
+    pin4.writeSync(pinVal);
 
-console.log('Pin set to: ' + pinVal);
+    console.log('Pin set to: ' + pinVal);
+};
