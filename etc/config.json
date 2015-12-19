@@ -1,35 +1,36 @@
 {
   "app": {
-    "movie-send": true,
-    "connection-try": 5,
-    "movie-length": 10,
-    "system-shutdown": true,
-    "light-on": true
+    "movie_send": true,
+    "connection_try": 5,
+    "movie_length": 10,
+    "system_shutdown": true,
+    "light_on": true
   },
   "connections": {
-    "remote-server": {
+    "remote_server": {
       "host": "",
       "port": "",
       "user": "",
       "pass": ""
     },
-    "remote-pi": {
+    "remote_pi": {
       "host": "",
       "user": ""
     }
   },
   "gpio": {
-    "led-red": 0,
-    "led-green": 0,
-    "button-off": 0,
-    "button-status": 0,
-    "button-display": 0,
-    "detector-move": 0,
-    "lcd-rs": 0,
-    "lcd-e": 0,
-    "lcd-data-1": 0,
-    "lcd-data-2": 0,
-    "lcd-data-3": 0,
-    "lcd-data-4": 0
+    "led_red": 6,
+    "led_green": 13,
+    "button_off":5,
+    "button_status": 19,
+    "button_display": 26,
+    "detector_move": 18,
+    "lcd_light": 21,
+    "lcd_rs": 20,
+    "lcd_e": 19,
+    "lcd_data_1": 12,
+    "lcd_data_2": 25,
+    "lcd_data_3": 24,
+    "lcd_data_4": 23
   }
 }
