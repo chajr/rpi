@@ -1,5 +1,5 @@
 var config = require('./lib/config');
-var log = require('../lib/log.js');
+var log = require('./lib/log.js');
 
 var args = process.argv.slice(2);
 var app;
