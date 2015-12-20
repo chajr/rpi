@@ -18,7 +18,7 @@
       "user": ""
     }
   },
-  "gpio": {
+  "alert_gpio": {
     "led_red": 6,
     "led_green": 13,
     "button_off":5,
@@ -32,5 +32,11 @@
     "lcd_data_2": 25,
     "lcd_data_3": 24,
     "lcd_data_4": 23
+  },
+  "illuminate_gpio": {
+    "pin_1": 5,
+    "pin_2": 6,
+    "pin_3": 12,
+    "pin_4": 13
   }
 }
