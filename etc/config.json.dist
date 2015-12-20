@@ -4,7 +4,8 @@
     "connection_try": 5,
     "movie_length": 10,
     "system_shutdown": true,
-    "light_on": true
+    "light_on": true,
+    "log_path": "~/projects/RPiAS/var/log"
   },
   "connections": {
     "remote_server": {
