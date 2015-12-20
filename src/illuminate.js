@@ -1,4 +1,5 @@
 var gpio = require('onoff').Gpio;
+var log = require('../lib/log.js');
 
 exports.launch = function (args, config) {
     var pin1 = new gpio(config.get('illuminate_gpio.pin_1'), 'out');
@@ -16,5 +17,7 @@ exports.launch = function (args, config) {
     pin3.writeSync(pinVal);
     pin4.writeSync(pinVal);
 
-    console.log('Pin set to: ' + pinVal);
+    var message = 'Pin set to: ' + pinVal;
+    console.log(message);
+    log.logInfo(message);
 };

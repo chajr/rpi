@@ -1,4 +1,5 @@
 var config = require('./lib/config');
+var log = require('../lib/log.js');
 
 var args = process.argv.slice(2);
 var app;
@@ -20,4 +21,11 @@ switch (args[0]) {
 }
 
 args.splice(0, 1);
-app.launch(args, config);
+
+try {
+    app.launch(args, config);
+} catch (error) {
+    console.log('Application error, more info in log file.');
+    log.logError(error);
+    process.exit(1);
+}
