@@ -1,0 +1,36 @@
+{
+  "app": {
+    "movie_send": true,
+    "connection_try": 5,
+    "movie_length": 10,
+    "system_shutdown": true,
+    "light_on": true
+  },
+  "connections": {
+    "remote_server": {
+      "host": "",
+      "port": "",
+      "user": "",
+      "pass": ""
+    },
+    "remote_pi": {
+      "host": "",
+      "user": ""
+    }
+  },
+  "gpio": {
+    "led_red": 6,
+    "led_green": 13,
+    "button_off":5,
+    "button_status": 19,
+    "button_display": 26,
+    "detector_move": 18,
+    "lcd_light": 21,
+    "lcd_rs": 20,
+    "lcd_e": 19,
+    "lcd_data_1": 12,
+    "lcd_data_2": 25,
+    "lcd_data_3": 24,
+    "lcd_data_4": 23
+  }
+}

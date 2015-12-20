@@ -1,3 +1,4 @@
+etc/*.json
 node_modules/
 *.swp
 .idea
