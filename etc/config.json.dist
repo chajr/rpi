@@ -5,7 +5,9 @@
     "movie_length": 10,
     "system_shutdown": true,
     "light_on": true,
-    "log_path": "~/projects/RPiAS/var/log"
+    "log_path": "~/projects/RPiAS/var/log",
+    "led_red": 6,
+    "led_green": 13
   },
   "connections": {
     "remote_server": {
@@ -20,8 +22,6 @@
     }
   },
   "alert_gpio": {
-    "led_red": 6,
-    "led_green": 13,
     "button_off":5,
     "button_status": 19,
     "button_display": 26,
