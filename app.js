@@ -1,5 +1,6 @@
 var config = require('./lib/config');
 var log = require('./lib/log.js');
+var led = require('./lib/led');
 
 var args = process.argv.slice(2);
 var app;
@@ -10,8 +11,7 @@ switch (args[0]) {
         break;
 
     case 'alarm':
-        console.log('not supported yet');
-        process.exit(1);
+        app = require('./src/alert');
         break;
 
     default:
@@ -27,5 +27,9 @@ try {
 } catch (error) {
     console.log('Application error, more info in log file.');
     log.logError(error);
+
+    led.on(config.get('app.led_red'));
+    led.off(config.get('app.led_green'));
+
     process.exit(1);
 }
