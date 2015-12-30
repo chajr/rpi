@@ -1,13 +1,13 @@
 var gpio = require('onoff').Gpio;
 var Lcd = require('lcd');
 var startTime = new Date().getTime();
-var ledErr = new gpio(24, 'out');
-var ledOk = new gpio(25, 'out');
-var buttonLight = new gpio(19, 'in', 'both');
-var buttonDisp = new gpio(26, 'in', 'both');
+var ledErr = new gpio(22, 'out');
+var ledOk = new gpio(13, 'out');
+var buttonLight = new gpio(26, 'in', 'both');
+var buttonDisp = new gpio(19, 'in', 'both');
 var status = 0;
 var dispStatus = 0;
-var lcdLight = new gpio(4, 'out');
+var lcdLight = new gpio(21, 'out');
 var int0;
 var int1;
 var int2;
@@ -127,9 +127,9 @@ function disp(err, state) {
 
 function startDisplay() {
   lcd = new Lcd({
-    rs: 12,
-    e: 21,
-    data: [5, 6, 17, 18],
+    rs: 20,
+    e: 16,
+    data: [12, 25, 24, 23],
     cols: 16,
     rows: 2
   });
