@@ -6,7 +6,7 @@
     "system_shutdown": true,
     "light_on": true,
     "log_path": "~/projects/RPiAS/var/log",
-    "led_red": 6,
+    "led_red": 22,
     "led_green": 13
   },
   "connections": {
@@ -26,9 +26,11 @@
     "button_status": 19,
     "button_display": 26,
     "detector_move": 18,
+    "lcd_cols": 16,
+    "lcd_rows": 2,
     "lcd_light": 21,
     "lcd_rs": 20,
-    "lcd_e": 19,
+    "lcd_e": 16,
     "lcd_data_1": 12,
     "lcd_data_2": 25,
     "lcd_data_3": 24,
