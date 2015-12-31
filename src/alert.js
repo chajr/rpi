@@ -8,15 +8,16 @@ var buttonOff;
 var buttonStatus;
 var lcdLightStatus = 0;
 var config;
+var detector;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
     init();
-    lcd.init();
 
     buttonLight.watch(lcdLight);
     buttonOff.watch(systemOff);
+    detector.watch(alarm);
 };
 
 function lcdLight(err, state) {
@@ -39,6 +40,11 @@ function init() {
     );
     buttonOff = new gpio(
         config.get('alert_gpio.button_off'),
+        'in',
+        'both'
+    );
+    detector = new gpio(
+        config.get('alert_gpio.detector_move'),
         'in',
         'both'
     );
@@ -73,4 +79,18 @@ function upTime() {
     var diff = new Date(calc);
 
     return (diff.getHours() -1) + ':' + diff.getMinutes() + ':' + diff.getSeconds();
+}
+
+function alarm(err, state) {
+    if (err) {
+        log.logError(err);
+    }
+
+    if (state == 1) {
+        console.log('move detected');
+        console.log("\n");
+    } else {
+        console.log('no move');
+        console.log("\n");
+    }
 }
