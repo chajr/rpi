@@ -17,13 +17,15 @@ exports.launch = function (args, appConfig) {
     buttonOff.watch(systemOff);
 };
 
-function lcdLight () {
-    if (lcdLightStatus) {
-        lcd.lightOff();
-        lcdLightStatus = 0;
-    } else {
-        lcd.lightOn();
-        lcdLightStatus = 1;
+function lcdLight (err, state) {
+    if(state == 1) {
+        if (lcdLightStatus) {
+            lcd.lightOff();
+            lcdLightStatus = 0;
+        } else {
+            lcd.lightOn();
+            lcdLightStatus = 1;
+        }
     }
 }
 
@@ -47,6 +49,7 @@ function init () {
 
 function systemOff () {
     var exec = require('child_process').exec;
+
     log.logInfo('System shutdown.');
     console.log('System is shutting down.');
 
