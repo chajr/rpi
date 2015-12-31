@@ -7,7 +7,8 @@
     "light_on": true,
     "log_path": "~/projects/RPiAS/var/log",
     "led_red": 22,
-    "led_green": 13
+    "led_green": 13,
+    "json_log": false
   },
   "connections": {
     "remote_server": {
