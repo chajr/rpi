@@ -1,6 +1,7 @@
 var http = require('http');
 var qs = require('querystring');
 var log = require('./lib/log');
+var config = require('./lib/config');
 var url = require('url');
 var illuminate = require('./src/illuminate');
 
@@ -26,10 +27,10 @@ http.createServer(function (request, response) {
         switch (getData.query.app) {
             case 'illuminate':
                 if (getData.query.status === 'on') {
-                    illuminate.launch(['on']);
+                    illuminate.launch(['on'], config);
                     log.logInfo('Light turn on manually.');
                 } else {
-                    illuminate.launch(['off']);
+                    illuminate.launch(['off'], config);
                     log.logInfo('Light turn off manually.');
                 }
                 break;
