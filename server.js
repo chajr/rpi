@@ -1,26 +1,29 @@
 var http = require('http');
 var qs = require('querystring');
 var log = require('./lib/log');
+var url = require('url');
 
-console.log(process.argv);
-
-http.createServer(function (req, res) {
+http.createServer(function (request, response) {
     var postData = '';
-    var response = '';
+    var responseData = {
+        "status": 'success'
+    };
 
-    console.log(process.argv);
-
-    if (req.method === 'POST') {
-        req.on('data', function (data) {
-            console.log(data.toString());
+    if (request.method === 'POST') {
+        request.on('data', function (data) {
             postData += data;
         });
-        req.on('end', function (data) {
-                var postDataFull = qs.parse(postData);
-                
-            }
-        );
+
+        request.on('end', function () {
+            var postDataFull = qs.parse(postData);
+        });
     }
+
+    if (request.method === 'GET') {
+        var getData = url.parse(request.url, true);
+    }
+
+    response.end(JSON.stringify(responseData));
 }).listen(3000);
 
-console.log('Server running');
+console.log('Server is running.');
