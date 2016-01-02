@@ -2,6 +2,7 @@ var http = require('http');
 var qs = require('querystring');
 var log = require('./lib/log');
 var url = require('url');
+var illuminate = require('./src/illuminate');
 
 http.createServer(function (request, response) {
     var postData = '';
@@ -21,6 +22,26 @@ http.createServer(function (request, response) {
 
     if (request.method === 'GET') {
         var getData = url.parse(request.url, true);
+
+        switch (getData.query.app) {
+            case 'illuminate':
+                if (getData.query.status === 'on') {
+                    illuminate.launch(['on']);
+                    log.logInfo('Light turn on manually.');
+                } else {
+                    illuminate.launch(['off']);
+                    log.logInfo('Light turn off manually.');
+                }
+                break;
+
+            default:
+                responseData.status = 'fail';
+                responseData.data = {
+                    'message': 'Application is not specified.'
+                };
+
+                log.logInfo('Application is not specified: ' + getData.query.app);
+        }
     }
 
     response.end(JSON.stringify(responseData));
