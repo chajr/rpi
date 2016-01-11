@@ -87,8 +87,17 @@ function alarm(err, state) {
     }
 
     if (state == 1) {
-        console.log('move detected');
-        console.log("\n");
+        var cameraExec = config.get('alert_gpio.camera_exec');
+        var time = new Date();
+        var command = cameraExec + time.getTime() + '.avi';
+        var exec = require('child_process').exec;
+
+        function puts(error, stdout, stderr) {
+            
+        }
+
+        exec(command, puts);
+
     } else {
         console.log('no move');
         console.log("\n");
