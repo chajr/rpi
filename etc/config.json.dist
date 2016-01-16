@@ -36,7 +36,9 @@
     "lcd_data_2": 25,
     "lcd_data_3": 24,
     "lcd_data_4": 23,
-    "camera_exec": ""
+    "camera_exec": "",
+    "record_time": 10000,
+    "server_destination": ""
   },
   "illuminate_gpio": {
     "pin_1": 5,
