@@ -5,10 +5,12 @@ var log = require('../lib/log.js');
 var startTime = new Date().getTime();
 var buttonLight;
 var buttonOff;
-var buttonStatus;
 var lcdLightStatus = 0;
 var config;
 var detector;
+var exec = require('child_process').exec;
+var recordInterval;
+var currentRecord;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -87,19 +89,30 @@ function alarm(err, state) {
     }
 
     if (state == 1) {
-        var cameraExec = config.get('alert_gpio.camera_exec');
-        var time = new Date();
-        var command = cameraExec + time.getTime() + '.avi';
-        var exec = require('child_process').exec;
-
-        function puts(error, stdout, stderr) {
-            
-        }
-
-        exec(command, puts);
-
+        record();
+        recordInterval = setInterval(record, config.get('alert_gpio.record_time') + 500);
     } else {
-        console.log('no move');
-        console.log("\n");
+        clearInterval(recordInterval);
     }
+}
+
+function record() {
+    var time = new Date();
+    currentRecord = time.getTime() + '.avi';
+    var cameraExec = config.get('alert_gpio.camera_exec');
+    var command = cameraExec + currentRecord;
+
+    exec(command, recordCallback);
+
+    setTimeout(sendToRemote, config.get('alert_gpio.record_time') +1500);
+}
+
+function recordCallback(error, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    console.log(error);
+}
+
+function sendToRemote() {
+    exec('scp var/movie/' + currentRecord + ' ' + config.get('alert_gpio.server_destination'), recordCallback);
 }
