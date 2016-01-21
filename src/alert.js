@@ -2,15 +2,17 @@ var gpio = require('onoff').Gpio;
 var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var log = require('../lib/log.js');
+var RaspiCam = require("raspicam");
+var exec = require('child_process').exec;
 var startTime = new Date().getTime();
 var buttonLight;
 var buttonOff;
 var lcdLightStatus = 0;
 var config;
 var detector;
-var exec = require('child_process').exec;
 var recordInterval;
 var currentRecord;
+var camera = false;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -35,6 +37,11 @@ function lcdLight(err, state) {
 }
 
 function init() {
+    detector = new gpio(
+        config.get('alert_gpio.detector_move'),
+        'in',
+        'both'
+    );
     buttonLight = new gpio(
         config.get('alert_gpio.button_display'),
         'in',
@@ -42,11 +49,6 @@ function init() {
     );
     buttonOff = new gpio(
         config.get('alert_gpio.button_off'),
-        'in',
-        'both'
-    );
-    detector = new gpio(
-        config.get('alert_gpio.detector_move'),
         'in',
         'both'
     );
@@ -89,22 +91,39 @@ function alarm(err, state) {
     }
 
     if (state == 1) {
+        console.log('move detected');
+
         record();
-        recordInterval = setInterval(record, config.get('alert_gpio.record_time') + 500);
+        recordInterval = setInterval(record, config.get('alert_gpio.record_time') + 250);
     } else {
+        if (camera) {
+            camera.stop();
+        }
+
         clearInterval(recordInterval);
+
+        console.log('no move');
     }
 }
 
 function record() {
+    if (camera) {
+        camera.stop();
+    }
+
+    console.log('start record');
     var time = new Date();
     currentRecord = time.getTime() + '.avi';
-    var cameraExec = config.get('alert_gpio.camera_exec');
-    var command = cameraExec + currentRecord;
 
-    exec(command, recordCallback);
+    camera = new RaspiCam({
+        mode: "video",
+        output: "var/movie/test_" + currentRecord,
+        timeout: config.get('alert_gpio.record_time'),
+        framerate :15
+    });
+    camera.start();
 
-    setTimeout(sendToRemote, config.get('alert_gpio.record_time') +1500);
+    console.log('record started');
 }
 
 function recordCallback(error, stdout, stderr) {
@@ -114,5 +133,7 @@ function recordCallback(error, stdout, stderr) {
 }
 
 function sendToRemote() {
+    console.log('send file');
     exec('scp var/movie/' + currentRecord + ' ' + config.get('alert_gpio.server_destination'), recordCallback);
+    console.log('ended');
 }
