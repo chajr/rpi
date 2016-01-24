@@ -116,11 +116,22 @@ function record() {
 
     console.log('start record');
     var time = new Date();
-    currentRecord = time.getTime() + '.avi';
+    currentRecord = time.getHours()
+        + ':'
+        + time.getMinutes()
+        + ':'
+        + time.getSeconds()
+        + '_'
+        + time.getDate()
+        + '-'
+        + (time.getMonth() +1)
+        + '-'
+        + time.getFullYear()
+        + '.avi';
 
     camera = new RaspiCam({
         mode: "video",
-        output: "var/movie/test_" + currentRecord,
+        output: "var/movie/" + currentRecord,
         timeout: config.get('alert_gpio.camera.timeout'),
         width: config.get('alert_gpio.camera.width'),
         height: config.get('alert_gpio.camera.height'),
