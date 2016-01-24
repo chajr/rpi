@@ -6,6 +6,7 @@
     "system_shutdown": true,
     "light_on": true,
     "log_path": "~/projects/RPiAS/var/log",
+    "movie_path": "~/projects/RPiAS/var/movie",
     "led_red": 22,
     "led_green": 13,
     "json_log": false,

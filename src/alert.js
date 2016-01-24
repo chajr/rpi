@@ -99,9 +99,7 @@ function alarm(err, state) {
             config.get('alert_gpio.camera.timeout') + config.get('alert_gpio.camera.interval')
         );
     } else {
-        if (camera) {
-            camera.stop();
-        }
+        cameraStop();
 
         clearInterval(recordInterval);
 
@@ -110,9 +108,7 @@ function alarm(err, state) {
 }
 
 function record() {
-    if (camera) {
-        camera.stop();
-    }
+    cameraStop();
 
     console.log('start record');
     var time = new Date();
@@ -131,13 +127,14 @@ function record() {
 
     camera = new RaspiCam({
         mode: "video",
-        output: "var/movie/" + currentRecord,
+        output: config.get('app.movie_path') + '/' + currentRecord,
         timeout: config.get('alert_gpio.camera.timeout'),
         width: config.get('alert_gpio.camera.width'),
         height: config.get('alert_gpio.camera.height'),
         bitrate: config.get('alert_gpio.camera.bitrate'),
         framerate: config.get('alert_gpio.camera.framerate')
     });
+
     camera.start();
 
     console.log('record started');
@@ -149,11 +146,22 @@ function recordCallback(error, stdout, stderr) {
     console.log(error);
 }
 
+function cameraStop() {
+    if (camera) {
+        camera.stop();
+        sendToRemote();
+    }
+}
+
 function sendToRemote() {
     console.log('send file');
-    exec(
-        'scp var/movie/' + currentRecord + ' ' + config.get('alert_gpio.server_destination'),
-        recordCallback
-    );
+    var command = 'scp '
+        + config.get('app.movie_path')
+        + '/'
+        + currentRecord
+        + ' '
+        + config.get('alert_gpio.server_destination');
+
+    exec(command, recordCallback);
     console.log('ended');
 }
