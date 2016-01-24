@@ -73,7 +73,7 @@ function systemOff(err, state) {
         log.logInfo('System shutdown after: ' + uptime);
         console.log('System is shutting down.');
 
-        exec('sudo shutdown -h now');
+        exec(config.get('app.shutdown_command'));
     }
 }
 
@@ -94,7 +94,10 @@ function alarm(err, state) {
         console.log('move detected');
 
         record();
-        recordInterval = setInterval(record, config.get('alert_gpio.record_time') + 250);
+        recordInterval = setInterval(
+            record,
+            config.get('alert_gpio.camera.timeout') + config.get('alert_gpio.camera.interval')
+        );
     } else {
         if (camera) {
             camera.stop();
@@ -118,8 +121,11 @@ function record() {
     camera = new RaspiCam({
         mode: "video",
         output: "var/movie/test_" + currentRecord,
-        timeout: config.get('alert_gpio.record_time'),
-        framerate :15
+        timeout: config.get('alert_gpio.camera.timeout'),
+        width: config.get('alert_gpio.camera.width'),
+        height: config.get('alert_gpio.camera.height'),
+        bitrate: config.get('alert_gpio.camera.bitrate'),
+        framerate: config.get('alert_gpio.camera.framerate')
     });
     camera.start();
 
@@ -134,6 +140,9 @@ function recordCallback(error, stdout, stderr) {
 
 function sendToRemote() {
     console.log('send file');
-    exec('scp var/movie/' + currentRecord + ' ' + config.get('alert_gpio.server_destination'), recordCallback);
+    exec(
+        'scp var/movie/' + currentRecord + ' ' + config.get('alert_gpio.server_destination'),
+        recordCallback
+    );
     console.log('ended');
 }

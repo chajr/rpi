@@ -8,7 +8,8 @@
     "log_path": "~/projects/RPiAS/var/log",
     "led_red": 22,
     "led_green": 13,
-    "json_log": false
+    "json_log": false,
+    "shutdown_command": "sudo shutdown -h now"
   },
   "connections": {
     "remote_server": {
@@ -36,8 +37,14 @@
     "lcd_data_2": 25,
     "lcd_data_3": 24,
     "lcd_data_4": 23,
-    "camera_exec": "",
-    "record_time": 10000,
+    "camera": {
+      "timeout": 10000,
+      "width": 1024,
+      "height": 768,
+      "bitrate": 5000000,
+      "framerate": 15,
+      "interval": 250
+    },
     "server_destination": ""
   },
   "illuminate_gpio": {
