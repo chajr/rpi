@@ -11,7 +11,7 @@ var lcdLightStatus = 0;
 var config;
 var detector;
 var recordInterval;
-var currentRecord;
+var currentRecord = false;
 var camera = false;
 
 exports.launch = function (args, appConfig) {
@@ -154,14 +154,18 @@ function cameraStop() {
 }
 
 function sendToRemote() {
-    console.log('send file');
-    var command = 'scp '
-        + config.get('app.movie_path')
-        + '/'
-        + currentRecord
-        + ' '
-        + config.get('alert_gpio.server_destination');
+    if (currentRecord) {
+        console.log('send file');
+        var command = 'scp '
+            + config.get('app.movie_path')
+            + '/'
+            + currentRecord
+            + ' '
+            + config.get('alert_gpio.server_destination');
 
-    exec(command, recordCallback);
-    console.log('ended');
+        exec(command, recordCallback);
+
+        console.log('ended');
+        currentRecord = false;
+    }
 }
