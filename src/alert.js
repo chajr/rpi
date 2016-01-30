@@ -93,15 +93,23 @@ function alarm(err, state) {
     if (state == 1) {
         console.log('move detected');
 
-        record();
-        recordInterval = setInterval(
-            record,
-            config.get('alert_gpio.camera.timeout') + config.get('alert_gpio.camera.interval')
-        );
-    } else {
-        cameraStop();
+        if (config.get('alert_gpio.mode') === 'movie') {
+            record();
+            recordInterval = setInterval(
+                record,
+                config.get('alert_gpio.camera.timeout') + config.get('alert_gpio.camera.interval')
+            );
+        }
 
-        clearInterval(recordInterval);
+        if (config.get('alert_gpio.mode') === 'image') {
+            
+        }
+
+    } else {
+        if (config.get('alert_gpio.mode') === 'movie') {
+            cameraStop();
+            clearInterval(recordInterval);
+        }
 
         console.log('no move');
     }
