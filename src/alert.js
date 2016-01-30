@@ -154,7 +154,7 @@ function cameraStop() {
 }
 
 function sendToRemote() {
-    if (currentRecord) {
+    if (currentRecord && config.get('app.movie_send')) {
         console.log('send file');
         var command = 'scp '
             + config.get('app.movie_path')
