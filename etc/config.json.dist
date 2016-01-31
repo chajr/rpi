@@ -12,18 +12,6 @@
     "json_log": false,
     "shutdown_command": "sudo shutdown -h now"
   },
-  "connections": {
-    "remote_server": {
-      "host": "",
-      "port": "",
-      "user": "",
-      "pass": ""
-    },
-    "remote_pi": {
-      "host": "",
-      "user": ""
-    }
-  },
   "alert_gpio": {
     "mode":"movie",
     "button_off":5,
