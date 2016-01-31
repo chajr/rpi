@@ -14,6 +14,10 @@ switch (args[0]) {
         app = require('./src/alert');
         break;
 
+    case 'system':
+        app = require('./src/system');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
