@@ -1,6 +1,7 @@
 var exec = require('sync-exec');
 var log = require('../lib/log');
 var worker = require('../lib/worker');
+var request = require('request');
 var config;
 var name = 'System worker';
 
@@ -39,5 +40,19 @@ function collectData() {
         data[key] = exec(commands[key]).stdout;
     }
 
-    log.logDebug(data);
+    var url = config.get('workers.system.data_collector')
+        + '?key='
+        + config.get('workers.system.security_key'); 
+
+    request.post(
+        url,
+        {form: data},
+        function (error, response, body) {
+            if (error) {
+                log.logError(error);
+            } else {
+                log.logInfo(body);
+            }
+        }
+    );
 }
