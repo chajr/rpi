@@ -1,38 +1,41 @@
 {
   "app": {
     "movie_send": true,
-    "connection_try": 5,
     "movie_length": 10,
     "system_shutdown": true,
     "light_on": true,
-    "log_path": "~/projects/RPiAS/var/log"
-  },
-  "connections": {
-    "remote_server": {
-      "host": "",
-      "port": "",
-      "user": "",
-      "pass": ""
-    },
-    "remote_pi": {
-      "host": "",
-      "user": ""
-    }
+    "log_path": "~/projects/RPiAS/var/log",
+    "movie_path": "~/projects/RPiAS/var/movie",
+    "img_path": "~/projects/RPiAS/var/img",
+    "led_red": 22,
+    "led_green": 13,
+    "json_log": false,
+    "shutdown_command": "sudo shutdown -h now"
   },
   "alert_gpio": {
-    "led_red": 6,
-    "led_green": 13,
+    "mode":"movie",
     "button_off":5,
     "button_status": 19,
     "button_display": 26,
     "detector_move": 18,
+    "lcd_cols": 16,
+    "lcd_rows": 2,
     "lcd_light": 21,
     "lcd_rs": 20,
-    "lcd_e": 19,
+    "lcd_e": 16,
     "lcd_data_1": 12,
     "lcd_data_2": 25,
     "lcd_data_3": 24,
-    "lcd_data_4": 23
+    "lcd_data_4": 23,
+    "camera": {
+      "timeout": 10000,
+      "width": 1024,
+      "height": 768,
+      "bitrate": 5000000,
+      "framerate": 15,
+      "interval": 250
+    },
+    "server_destination": ""
   },
   "illuminate_gpio": {
     "pin_1": 5,
