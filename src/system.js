@@ -7,9 +7,9 @@ var name = 'System worker';
 
 var commands = {
     date: 'date +"%Y-%m-%d %T"',
-    cpu_utilization: 'top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1"%"}\'',
-    memory_free: 'free | grep Mem | awk "{print $4/$2 * 100.0}"',
-    memory_used: 'free | grep Mem | awk "{print $3/$2 * 100.0}"',
+    cpu_utilization: 'top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1}\'',
+    memory_free: 'free | grep Mem | awk \'{print $4/$2 * 100.0}\'',
+    memory_used: 'free | grep Mem | awk \'{print $3/$2 * 100.0}\'',
     uptime_p: 'uptime -p',
     uptime_s: 'uptime -s',
     system_load: 'cat /proc/loadavg',
