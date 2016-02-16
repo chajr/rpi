@@ -42,7 +42,7 @@ function collectData() {
 
     var url = config.get('workers.system.data_collector')
         + '?key='
-        + config.get('workers.system.security_key'); 
+        + config.get('workers.system.security_key');
 
     request.post(
         url,
