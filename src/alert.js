@@ -119,33 +119,35 @@ function alarm(err, state) {
 
             camera = new RaspiCam({
                 mode: "timelapse",
-                output: config.get('app.img_path') + '/' + currentRecord + "_%06d.jpg",
-                encoding: "jpg",
-                width: 1024,
-                height: 768,
-                timelapse: 200,
-                timeout: 60000 * 60
+                output: config.get('app.img_path') + '/' + currentRecord + "_%06d." + config.get('alert_gpio.image.encoding'),
+                encoding: config.get('alert_gpio.image.encoding'),
+                width: config.get('alert_gpio.image.width'),
+                height: config.get('alert_gpio.image.height'),
+                timelapse: config.get('alert_gpio.image.timelapse'),
+                timeout: config.get('alert_gpio.image.timeout')
             });
 
-            if (config('app.image_send')) {
+            if (config.get('app.image_send')) {
                 camera.on("read", function (err, timestamp, filename) {
-                    var formData = {
-                        file: fs.createReadStream(config.get('app.img_path') + '/' + filename)
-                    };
+                    if (!filename.match(/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}_[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}_[0-9]+\.jpg~$/)) {
+                        var formData = {
+                            file: fs.createReadStream(config.get('app.img_path') + '/' + filename)
+                        };
 
-                    request.post(
-                        {
-                            url: config('alert_gpio.server_destination') + '?key=' + config.get('app.security_key'),
-                            formData: formData
-                        },
-                        function optionalCallback(err, httpResponse, body) {
-                            if (err) {
-                                return console.error('upload failed:', err);
+                        request.post(
+                            {
+                                url: config.get('alert_gpio.server_destination') + '?key=' + config.get('app.security_key'),
+                                formData: formData
+                            },
+                            function optionalCallback(err, httpResponse, body) {
+                                if (err) {
+                                    return console.error('upload failed:', err);
+                                }
+
+                                console.log('Upload successful!  Server responded with:', body);
                             }
-
-                            console.log('Upload successful!  Server responded with:', body);
-                        }
-                    );
+                        );
+                    }
                 });
             }
 
