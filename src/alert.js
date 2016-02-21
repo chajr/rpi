@@ -3,6 +3,8 @@ var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var log = require('../lib/log.js');
 var RaspiCam = require("raspicam");
+var fs = require('fs');
+var request = require('request');
 var exec = require('child_process').exec;
 var startTime = new Date().getTime();
 var buttonLight;
@@ -102,12 +104,60 @@ function alarm(err, state) {
         }
 
         if (config.get('alert_gpio.mode') === 'image') {
-            
+            var time = new Date();
+            currentRecord = time.getHours()
+                + ':'
+                + time.getMinutes()
+                + ':'
+                + time.getSeconds()
+                + '_'
+                + time.getDate()
+                + '-'
+                + (time.getMonth() +1)
+                + '-'
+                + time.getFullYear();
+
+            camera = new RaspiCam({
+                mode: "timelapse",
+                output: config.get('app.img_path') + '/' + currentRecord + "_%06d." + config.get('alert_gpio.image.encoding'),
+                encoding: config.get('alert_gpio.image.encoding'),
+                width: config.get('alert_gpio.image.width'),
+                height: config.get('alert_gpio.image.height'),
+                timelapse: config.get('alert_gpio.image.timelapse'),
+                timeout: config.get('alert_gpio.image.timeout')
+            });
+
+            if (config.get('app.image_send')) {
+                camera.on("read", function (err, timestamp, filename) {
+                    if (!filename.match(/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}_[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}_[0-9]+\.jpg~$/)) {
+                        var formData = {
+                            file: fs.createReadStream(config.get('app.img_path') + '/' + filename)
+                        };
+
+                        request.post(
+                            {
+                                url: config.get('alert_gpio.server_destination') + '?key=' + config.get('app.security_key'),
+                                formData: formData
+                            },
+                            function optionalCallback(err, httpResponse, body) {
+                                if (err) {
+                                    return console.error('upload failed:', err);
+                                }
+
+                                console.log('Upload successful!  Server responded with:', body);
+                            }
+                        );
+                    }
+                });
+            }
+
+            camera.start();
         }
 
     } else {
+        cameraStop();
+
         if (config.get('alert_gpio.mode') === 'movie') {
-            cameraStop();
             clearInterval(recordInterval);
         }
 
@@ -157,7 +207,10 @@ function recordCallback(error, stdout, stderr) {
 function cameraStop() {
     if (camera) {
         camera.stop();
-        sendToRemote();
+
+        if (config.get('alert_gpio.mode') === 'movie') {
+            sendToRemote();
+        }
     }
 }
 
