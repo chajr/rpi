@@ -18,6 +18,10 @@ switch (args[0]) {
         app = require('./src/system');
         break;
 
+    case 'autoIlluminate':
+        app = require('./src/autoIlluminate');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
