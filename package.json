@@ -17,6 +17,7 @@
     "exec-plan" : "0.0.3",
     "sync-exec" : "0.6.2",
     "request" : "2.69.*",
-    "raspicam": "0.2.13"
+    "raspicam": "0.2.13",
+    "suncalc": "1.7.0"
   }
 }
