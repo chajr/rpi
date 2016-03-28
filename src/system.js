@@ -20,7 +20,7 @@ var commands = {
     logged_in_users_count: 'users | wc -w',
     users_work: 'w -h',
     hostname: 'hostname',
-    ip_internal: 'ip route get 8.8.8.8 | awk \'{print $NF; exit}\'',
+    ip_internal: 'hostname -I | xargs -n1 | head -1',
     ip_external: 'wget http://ipinfo.io/ip -qO -'
 };
 var data = {};
