@@ -1,4 +1,4 @@
-var illuminate = require('./illuminate').Gpio;
+var illuminate = require('./illuminate');
 var log = require('../lib/log.js');
 var worker = require('../lib/worker');
 var SunCalc = require('suncalc');
