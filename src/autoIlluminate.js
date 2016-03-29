@@ -32,7 +32,7 @@ function illuminator() {
     var minimalTime = date.getTime();
 
     if (sunsetTime <= currentTime && sunsetTime <= minimalTime) {
-        illuminate.launch('on', config);
+        illuminate.launch(['on'], config);
     }
 
     date.setMinutes(offTime[0]);
@@ -41,6 +41,6 @@ function illuminator() {
     var shutdownTime = date.getTime();
 
     if (currentTime >= shutdownTime) {
-        illuminate.launch('off', config);
+        illuminate.launch(['off'], config);
     }
 }
