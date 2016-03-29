@@ -1,9 +1,10 @@
-var illuminate = require('illuminate').Gpio;
+var illuminate = require('./illuminate').Gpio;
 var log = require('../lib/log.js');
 var worker = require('../lib/worker');
 var SunCalc = require('suncalc');
 var config;
 var name = 'Auto illuminate worker';
+var keepAlive = null;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
