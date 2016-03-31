@@ -5,7 +5,7 @@ var SunCalc = require('suncalc');
 var config;
 var name = 'Auto illuminate worker';
 var keepAlive = false;
-var launched = false;
+var forceLaunch = false;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -32,9 +32,11 @@ function illuminator() {
 
     var minimalTime = date.getTime();
 
-    if (!launched && sunsetTime <= currentTime && sunsetTime <= minimalTime) {
+    /** @todo convert to switch with all options to on and off also add off on sunrise */
+
+    if (!illuminate.launched && sunsetTime <= currentTime && sunsetTime <= minimalTime) {
         illuminate.launch(['on'], config);
-        launched = true;
+        illuminate.launched = true;
     }
 
     date.setMinutes(offTime[0]);
@@ -42,8 +44,8 @@ function illuminator() {
 
     var shutdownTime = date.getTime();
 
-    if (launched && !keepAlive && currentTime >= shutdownTime) {
+    if (illuminate.launched && !keepAlive && currentTime >= shutdownTime) {
         illuminate.launch(['off'], config);
-        launched = false;
+        illuminate.launched = false;
     }
 }

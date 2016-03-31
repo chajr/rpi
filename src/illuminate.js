@@ -1,5 +1,6 @@
 var gpio = require('onoff').Gpio;
 var log = require('../lib/log.js');
+var launched = false;
 
 exports.launch = function (args, config) {
     var pin1 = new gpio(config.get('illuminate_gpio.pin_1'), 'out');
@@ -10,6 +11,9 @@ exports.launch = function (args, config) {
 
     if (args[0] === 'on') {
         pinVal = 1;
+        launched = true;
+    } else {
+        launched = false;
     }
 
     pin1.writeSync(pinVal);
