@@ -1,5 +1,6 @@
 var gpio = require('onoff').Gpio;
 var log = require('../lib/log.js');
+var redis = require('../lib/redis.js');
 var launched = false;
 
 exports.launch = function (args, config) {
@@ -12,8 +13,10 @@ exports.launch = function (args, config) {
     if (args[0] === 'on') {
         pinVal = 1;
         launched = true;
+        redis.setData('illuminate_status', 'true');
     } else {
         launched = false;
+        redis.setData('illuminate_status', 'false');
     }
 
     pin1.writeSync(pinVal);
