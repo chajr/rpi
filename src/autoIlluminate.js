@@ -1,14 +1,18 @@
 var illuminate = require('./illuminate');
 var log = require('../lib/log.js');
+var redis = require('../lib/redis.js');
 var worker = require('../lib/worker');
 var SunCalc = require('suncalc');
 var config;
 var name = 'Auto illuminate worker';
 var keepAlive = false;
-var forceLaunch = false;
+var forceOn = false;
+var forceOff = false;
+var launched = false;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
+    redis.connect();
 
     worker.startWorker(
         illuminator,
@@ -18,34 +22,80 @@ exports.launch = function (args, appConfig) {
 };
 
 function illuminator() {
+    getRedisStatus('status');
+    getRedisStatus('force_on');
+    getRedisStatus('force_off');
+    getRedisStatus('keep_alive');
+
     var lt = config.get('app.position.lt');
     var gt = config.get('app.position.gt');
+    var turnOn = config.get('workers.autoIlluminate.turnOn').split(':');
     var minTime = config.get('workers.autoIlluminate.minimalTime').split(':');
-    var offTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
+    var maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
     var date = new Date();
     var sunCalc = SunCalc.getTimes(date, lt, gt);
     var sunsetTime = sunCalc.sunset.getTime();
     var currentTime = date.getTime();
 
-    date.setMinutes(minTime[0]);
-    date.setHours(minTime[1]);
+    date.setMinutes(turnOn[1]);
+    date.setHours(turnOn[0]);
+
+    var onTime = date.getTime();
+
+    date.setMinutes(minTime[1]);
+    date.setHours(minTime[0]);
 
     var minimalTime = date.getTime();
 
-    /** @todo convert to switch with all options to on and off also add off on sunrise */
+    date.setMinutes(maxTime[1]);
+    date.setHours(maxTime[0]);
 
-    if (!illuminate.launched && sunsetTime <= currentTime && sunsetTime <= minimalTime) {
-        illuminate.launch(['on'], config);
-        illuminate.launched = true;
+    var offTime = date.getTime();
+
+    var nowLowerThantOff = currentTime <= offTime;
+    var nowGraterThanSunset = currentTime >= sunsetTime;
+    var nowGraterThanOn = currentTime >= onTime;
+    var nowGraterThanOff = currentTime >= offTime;
+    var sunsetLowerThanOn = sunsetTime < onTime;
+
+    var turnLightOn = (
+        (!sunsetLowerThanOn && nowGraterThanSunset) || (sunsetLowerThanOn && nowGraterThanOn)
+    ) && nowLowerThantOff;
+
+    switch (true) {
+        case !launched && (turnLightOn || forceOn):
+            illuminate.launch(['on'], config);
+            redis.setData('illuminate_status', 'true');
+            illuminate.launched = true;
+            break;
+
+        case launched && ((!keepAlive && nowGraterThanOff) || forceOff):
+            illuminate.launch(['off'], config);
+            redis.setData('illuminate_status', 'false');
+            illuminate.launched = false;
+            break;
     }
+}
 
-    date.setMinutes(offTime[0]);
-    date.setHours(offTime[1]);
+function getRedisStatus (status) {
+    redis.getData('illuminate_' + status, function (data) {
+        if (data) {
+            log.logInfo(data);
 
-    var shutdownTime = date.getTime();
-
-    if (illuminate.launched && !keepAlive && currentTime >= shutdownTime) {
-        illuminate.launch(['off'], config);
-        illuminate.launched = false;
-    }
+            switch (status) {
+                case 'status':
+                    launched = data === 'true';
+                    break;
+                case 'force_on':
+                    forceOn = data === 'true';
+                    break;
+                case 'force_off':
+                    forceOff = data === 'true';
+                    break;
+                case 'keep_alive':
+                    keepAlive = data === 'true';
+                    break;
+            }
+        }
+    });
 }
