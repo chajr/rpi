@@ -52,6 +52,7 @@ function illuminator() {
 
     var offTime = date.getTime();
 
+    var nowGraterThanMinimal = currentTime >= minimalTime;
     var nowLowerThantOff = currentTime <= offTime;
     var nowGraterThanSunset = currentTime >= sunsetTime;
     var nowGraterThanOn = currentTime >= onTime;
@@ -59,7 +60,7 @@ function illuminator() {
     var sunsetLowerThanOn = sunsetTime < onTime;
 
     var turnLightOn = (
-        (!sunsetLowerThanOn && nowGraterThanSunset) || (sunsetLowerThanOn && nowGraterThanOn)
+        (!sunsetLowerThanOn && nowGraterThanSunset) || (sunsetLowerThanOn && nowGraterThanOn) || nowGraterThanMinimal
     ) && nowLowerThantOff;
 
     switch (true) {
