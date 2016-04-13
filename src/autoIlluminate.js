@@ -67,13 +67,13 @@ function illuminator() {
         case !launched && (turnLightOn || forceOn):
             illuminate.launch(['on'], config);
             redis.setData('illuminate_status', 'true');
-            illuminate.launched = true;
+            launched = true;
             break;
 
         case launched && ((!keepAlive && nowGraterThanOff) || forceOff):
             illuminate.launch(['off'], config);
             redis.setData('illuminate_status', 'false');
-            illuminate.launched = false;
+            launched = false;
             break;
     }
 }
