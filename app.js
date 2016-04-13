@@ -22,6 +22,10 @@ switch (args[0]) {
         app = require('./src/autoIlluminate');
         break;
 
+    case 'command':
+        app = require('./src/commandConsummer');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
