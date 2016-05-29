@@ -10,6 +10,8 @@ exports.launch = function (args, config) {
     var pin4 = new gpio(config.get('illuminate_gpio.pin_4'), 'out');
     var pinVal = 0;
 
+    redis.connect();
+
     if (args[0] === 'on') {
         pinVal = 1;
         launched = true;
