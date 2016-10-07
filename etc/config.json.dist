@@ -42,5 +42,6 @@
     "pin_2": 6,
     "pin_3": 12,
     "pin_4": 13
-  }
+  },
+  "illuminate": "old"
 }
