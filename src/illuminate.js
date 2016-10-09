@@ -59,8 +59,8 @@ function newIlluminate(args, config) {
             launched = false;
             redis.setData('illuminate_status', 'false');
 
-            var ledR1 = new gpio(pin1, 'in');
-            var ledR2 = new gpio(pin2, 'in');
+            var ledR1 = new gpio(config.get('illuminate_gpio.pin_1'), 'in');
+            var ledR2 = new gpio(config.get('illuminate_gpio.pin_2'), 'in');
 
             pin1.writeSync(1);
             pin2.writeSync(1);
