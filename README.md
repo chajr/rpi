@@ -30,3 +30,12 @@ information and temperature with pressure measurement.
 - Resistors (2.2 kOhm, 2x 100 Ohm, 2x 10 kOhm)
 
 ### Connection schema
+
+### Redis setup
+
+Set data with keys:
+
+- **illuminate_status** - false
+- **illuminate_force_on** - false
+- **illuminate_force_off** - false
+- **illuminate_keep_alive** - false
