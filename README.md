@@ -35,7 +35,7 @@ information and temperature with pressure measurement.
 
 Set data with keys:
 
-- **illuminate_status** - false
-- **illuminate_force_on** - false
-- **illuminate_force_off** - false
-- **illuminate_keep_alive** - false
+- **rpia_illuminate_status** - false
+- **rpia_illuminate_force_on** - false
+- **rpia_illuminate_force_off** - false
+- **rpia_illuminate_keep_alive** - false
