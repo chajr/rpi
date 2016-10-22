@@ -6,7 +6,7 @@ possibility to inform user about that detection by e-mail or sms. Also applicati
 can handle some other devices like LCD display, LEDs and switches for some status
 information and temperature with pressure measurement.
 
-### Features
+## Features
 - Move detection
 - Record movies (depend of camera type)
 - Send movies to external server
@@ -16,7 +16,7 @@ information and temperature with pressure measurement.
 - Temperature measurement
 - Pressure measurement
 
-### List of devices and technologies
+## List of devices and technologies
 - Raspberry Pi B+
 - Ubuntu Mate OS
 - Node JS 4.2
@@ -29,13 +29,20 @@ information and temperature with pressure measurement.
 - 3x Tact switch
 - Resistors (2.2 kOhm, 2x 100 Ohm, 2x 10 kOhm)
 
-### Connection schema
+## Connection schema
 
-### Redis setup
+## Application setup
 
-Set data with keys:
+### Set Redis with keys:
 
 - **rpia_illuminate_status** - false
 - **rpia_illuminate_force_on** - false
 - **rpia_illuminate_force_off** - false
 - **rpia_illuminate_keep_alive** - false
+- **rpia_illuminate_light_1** - false
+- **rpia_illuminate_light_2** - false
+
+### Process setup:
+forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
+forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
+forever start -d /path/server.js >> /var/log/rpi-mc-server.log
