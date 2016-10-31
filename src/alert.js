@@ -105,17 +105,7 @@ function alarm(err, state) {
 
         if (config.get('alert_gpio.mode') === 'image') {
             var time = new Date();
-            currentRecord = time.getHours()
-                + ':'
-                + time.getMinutes()
-                + ':'
-                + time.getSeconds()
-                + '_'
-                + time.getDate()
-                + '-'
-                + (time.getMonth() +1)
-                + '-'
-                + time.getFullYear();
+            currentRecord = time.toLocaleTimeString() + '_' + time.toLocaleDateString();
 
             camera = new RaspiCam({
                 mode: "timelapse",
