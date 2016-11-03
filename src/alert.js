@@ -2,6 +2,7 @@ var gpio = require('onoff').Gpio;
 var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var log = require('../lib/log.js');
+var redis = require('../lib/redis.js');
 var RaspiCam = require("raspicam");
 var fs = require('fs');
 var request = require('request');
@@ -15,6 +16,7 @@ var detector;
 var recordInterval;
 var currentRecord = false;
 var camera = false;
+var isSystemArmed = false;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -59,6 +61,8 @@ function init() {
     led.on(config.get('app.led_green'));
 
     lcd.init();
+
+    redis.connect();
 }
 
 function systemOff(err, state) {
@@ -91,6 +95,14 @@ function alarm(err, state) {
     if (err) {
         log.logError(err);
     }
+
+    redis.getData('alert_armed', function (data) {
+        if (data) {
+            log.logInfo('Armed status: ' + data);
+
+            isSystemArmed = data === 'true';
+        }
+    });
 
     if (state == 1) {
         console.log('move detected');

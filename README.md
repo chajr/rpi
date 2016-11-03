@@ -41,6 +41,7 @@ information and temperature with pressure measurement.
 - **rpia_illuminate_keep_alive** - false
 - **rpia_illuminate_light_1** - false
 - **rpia_illuminate_light_2** - false
+- **rpia_alert_armed** - false
 
 ### Process setup:
 forever start -d /path/app.js system >> /var/log/rpi-mc-system.log

@@ -4,6 +4,7 @@ var log = require('./lib/log');
 var config = require('./lib/config');
 var url = require('url');
 var illuminate = require('./src/illuminate');
+var redis = require('../lib/redis.js');
 
 http.createServer(function (request, response) {
     var postData = '';
@@ -32,6 +33,16 @@ http.createServer(function (request, response) {
                 } else {
                     illuminate.launch(['off'], config);
                     log.logInfo('Light turn off manually.');
+                }
+                break;
+
+            case 'alert':
+                if (getData.query.status === 'on') {
+                    redis.setData('alert_armed', 'true');
+                    log.logInfo('Alert turn on.');
+                } else {
+                    redis.setData('alert_armed', 'false');
+                    log.logInfo('Alert turn off.');
                 }
                 break;
 
