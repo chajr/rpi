@@ -10,6 +10,7 @@ var exec = require('child_process').exec;
 var startTime = new Date().getTime();
 var buttonLight;
 var buttonOff;
+var systemArmed;
 var lcdLightStatus = 0;
 var config;
 var detector;
@@ -25,6 +26,7 @@ exports.launch = function (args, appConfig) {
 
     buttonLight.watch(lcdLight);
     buttonOff.watch(systemOff);
+    systemArmed.watch(amrSystem);
     detector.watch(alarm);
 };
 
@@ -46,13 +48,21 @@ function init() {
         'in',
         'both'
     );
+
     buttonLight = new gpio(
         config.get('alert_gpio.button_display'),
         'in',
         'both'
     );
+
     buttonOff = new gpio(
         config.get('alert_gpio.button_off'),
+        'in',
+        'both'
+    );
+
+    systemArmed = new gpio(
+        config.get('alert_gpio.button_armed'),
         'in',
         'both'
     );
@@ -230,5 +240,22 @@ function sendToRemote() {
 
         console.log('ended');
         currentRecord = false;
+    }
+}
+
+function amrSystem() {
+    if (isSystemArmed) {
+        redis.setData('alert_armed', 'false');
+        log.logInfo('Alert turn off.');
+        led.off(config.get('alert_gpio.arm_led'));
+    } else {
+        setTimeout(
+            function() {
+                redis.setData('alert_armed', 'true');
+                log.logInfo('Alert turn on.');
+                led.on(config.get('alert_gpio.arm_led'));
+            },
+            config.get('alert_gpio.arm_after')
+        );
     }
 }

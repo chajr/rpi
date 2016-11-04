@@ -56,7 +56,10 @@
   },
   "alert_gpio": {
     "mode":"image",
-    "button_off":5,
+    "arm_led":11,
+    "arm_after":10,
+    "button_off":6,
+    "button_armed":5,
     "button_status": 19,
     "button_display": 26,
     "detector_move": 18,
