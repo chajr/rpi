@@ -14,8 +14,8 @@ var commands = {
     uptime_s: 'uptime -s',
     system_load: 'cat /proc/loadavg | awk \'{print $1,$2,$3}\'',
     process_number: 'ps -Af --no-headers | wc -l',
-    disk_utilization: 'iostat -d /dev/sda | sed -n "4p"', //
-    network_utilization: 'ifstat -i eth0 -q 1 1 | tail -1', //
+    disk_utilization: 'iostat -d /dev/sda | sed -n "4p"',
+    network_utilization: 'ifstat -i eth0 -q 1 1 | tail -1',
     logged_in_users: 'users',
     logged_in_users_count: 'users | wc -w',
     users_work: 'w -h',
