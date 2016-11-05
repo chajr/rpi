@@ -2,7 +2,9 @@ var exec = require('sync-exec');
 var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
+var lcd = require('../lib/lcd');
 var config;
+var buttonOff;
 var name = 'System worker';
 
 var commands = {
@@ -28,12 +30,42 @@ var data = {};
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
+    init();
+
+    buttonOff.watch(systemOff);
+};
+
+function init() {
     worker.startWorker(
         collectData,
         config.get('workers.system.worker_time'),
         name
     );
-};
+
+    buttonOff = new Gpio(
+        config.get('alert_gpio.button_off'),
+        'in',
+        'both'
+    );
+}
+
+function systemOff(err, state) {
+    if(state == 1) {
+        var uptime = upTime();
+        var exec = require('child_process').exec;
+
+        lcd.clear();
+        lcd.displayMessage([
+            'System shutdown',
+            'after: ' + uptime
+        ]);
+
+        log.logInfo('System shutdown after: ' + uptime);
+        console.log('System is shutting down.');
+
+        exec(config.get('app.shutdown_command'));
+    }
+}
 
 function collectData() {
     for (var key in commands) {

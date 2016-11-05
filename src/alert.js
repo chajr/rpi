@@ -1,5 +1,4 @@
 var Gpio = require('onoff').Gpio;
-var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var log = require('../lib/log.js');
 var redis = require('../lib/redis.js');
@@ -8,10 +7,7 @@ var fs = require('fs');
 var request = require('request');
 var exec = require('child_process').exec;
 var startTime = new Date().getTime();
-var buttonLight;
-var buttonOff;
 var systemArmed;
-var lcdLightStatus = 0;
 var config;
 var detector;
 var recordInterval;
@@ -24,39 +20,14 @@ exports.launch = function (args, appConfig) {
 
     init();
 
-    buttonLight.watch(lcdLight);
-    buttonOff.watch(systemOff);
     systemArmed.watch(amrSystem);
     detector.watch(alarm);
 };
 
-function lcdLight(err, state) {
-    if(state == 1) {
-        if (lcdLightStatus) {
-            lcd.lightOff();
-            lcdLightStatus = 0;
-        } else {
-            lcd.lightOn();
-            lcdLightStatus = 1;
-        }
-    }
-}
 
 function init() {
     detector = new Gpio(
         config.get('alert_gpio.detector_move'),
-        'in',
-        'both'
-    );
-
-    buttonLight = new Gpio(
-        config.get('alert_gpio.button_display'),
-        'in',
-        'both'
-    );
-
-    buttonOff = new Gpio(
-        config.get('alert_gpio.button_off'),
         'in',
         'both'
     );
@@ -73,24 +44,6 @@ function init() {
     lcd.init();
 
     redis.connect();
-}
-
-function systemOff(err, state) {
-    if(state == 1) {
-        var uptime = upTime();
-        var exec = require('child_process').exec;
-
-        lcd.clear();
-        lcd.displayMessage([
-            'System shutdown',
-            'after: ' + uptime
-        ]);
-
-        log.logInfo('System shutdown after: ' + uptime);
-        console.log('System is shutting down.');
-
-        exec(config.get('app.shutdown_command'));
-    }
 }
 
 function upTime() {

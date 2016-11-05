@@ -26,6 +26,10 @@ switch (args[0]) {
         app = require('./src/commandConsummer');
         break;
 
+    case 'display':
+        app = require('./src/display');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
