@@ -1,4 +1,4 @@
-var gpio = require('onoff').Gpio;
+var Gpio = require('onoff').Gpio;
 var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var log = require('../lib/log.js');
@@ -43,25 +43,25 @@ function lcdLight(err, state) {
 }
 
 function init() {
-    detector = new gpio(
+    detector = new Gpio(
         config.get('alert_gpio.detector_move'),
         'in',
         'both'
     );
 
-    buttonLight = new gpio(
+    buttonLight = new Gpio(
         config.get('alert_gpio.button_display'),
         'in',
         'both'
     );
 
-    buttonOff = new gpio(
+    buttonOff = new Gpio(
         config.get('alert_gpio.button_off'),
         'in',
         'both'
     );
 
-    systemArmed = new gpio(
+    systemArmed = new Gpio(
         config.get('alert_gpio.button_armed'),
         'in',
         'both'
@@ -129,9 +129,15 @@ function alarm(err, state) {
             var time = new Date();
             currentRecord = time.toLocaleTimeString() + '_' + time.toLocaleDateString();
 
+            var output = config.get('app.img_path')
+                + '/'
+                + currentRecord
+                + "_%06d."
+                + config.get('alert_gpio.image.encoding');
+
             camera = new RaspiCam({
                 mode: "timelapse",
-                output: config.get('app.img_path') + '/' + currentRecord + "_%06d." + config.get('alert_gpio.image.encoding'),
+                output: output,
                 encoding: config.get('alert_gpio.image.encoding'),
                 width: config.get('alert_gpio.image.width'),
                 height: config.get('alert_gpio.image.height'),
@@ -141,14 +147,20 @@ function alarm(err, state) {
 
             if (config.get('app.image_send')) {
                 camera.on("read", function (err, timestamp, filename) {
-                    if (!filename.match(/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}_[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}_[0-9]+\.jpg~$/)) {
+                    if (!filename.match(
+                        /^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}_[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}_[0-9]+\.jpg~$/)
+                    ) {
                         var formData = {
                             file: fs.createReadStream(config.get('app.img_path') + '/' + filename)
                         };
 
+                        var url = config.get('alert_gpio.server_destination')
+                            + '?key='
+                            + config.get('app.security_key');
+
                         request.post(
                             {
-                                url: config.get('alert_gpio.server_destination') + '?key=' + config.get('app.security_key'),
+                                url: url,
                                 formData: formData
                             },
                             function optionalCallback(err, httpResponse, body) {
