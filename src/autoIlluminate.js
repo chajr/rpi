@@ -63,7 +63,7 @@ function illuminator() {
     var turnLightOn = (
         (!sunsetLowerThanOn && nowGraterThanSunset)
         || (sunsetLowerThanOn && nowGraterThanOn)
-        || (isWeekend || nowGraterThanMinimal)
+        || ((isWeekend && nowGraterThanSunset) || nowGraterThanMinimal)
     ) && nowLowerThantOff;
 
     switch (true) {
