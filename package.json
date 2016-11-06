@@ -19,6 +19,9 @@
     "request" : "2.69.*",
     "raspicam": "0.2.13",
     "suncalc": "1.7.0",
+    "console.table": "0.7.0",
+    "cli-table": "0.3.*",
+    "colors": "1.1.*",
     "redis": "2.6.0-1"
   }
 }
