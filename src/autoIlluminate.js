@@ -58,7 +58,7 @@ function illuminator() {
     var nowGraterThanOn = currentTime >= onTime;
     var nowGraterThanOff = currentTime >= offTime;
     var sunsetLowerThanOn = sunsetTime < onTime;
-    var isWeekend = (date.getDay() + 1) % 7 == 0;
+    var isWeekend = date.getDay() % 7 == 0;
 
     var turnLightOn = (
         (!sunsetLowerThanOn && nowGraterThanSunset)
