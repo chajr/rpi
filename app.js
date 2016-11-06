@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var config = require('./lib/config');
 var log = require('./lib/log.js');
 var led = require('./lib/led');
