@@ -26,6 +26,10 @@ switch (args[0]) {
         app = require('./src/commandConsummer');
         break;
 
+    case 'info':
+        app = require('./src/info');
+        break;
+
     case 'display':
         app = require('./src/display');
         break;
