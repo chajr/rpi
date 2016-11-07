@@ -24,7 +24,7 @@ function getSystemInfo() {
     console.log('Uptime from: ', execCommand('uptime -p').green);
     console.log('Uptime on: ', execCommand('uptime -s').green);
     console.log('System Load: ', execCommand('cat /proc/loadavg | awk \'{print $1,$2,$3}\'').green);
-    console.log('Memory free: ', execCommand('free | grep "Mem\\|Pamięć" | awk \'{print $4/$2 * 100.0}\'').green);
+    console.log('Memory free: ', execCommand('free | grep "Mem\\|Pamięć" | awk \'{print $4/$2 * 100.0}\'').green, '%');
     console.log('CPU used: ', execCommand('cat /var/log/proc.log').green, '%');
     // console.log('Disk usage: ', exec('disk_usage: \'df -h | grep ^/\'').stdout.green);
 }
