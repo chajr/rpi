@@ -1,4 +1,4 @@
-var gpio = require('onoff').Gpio;
+var Gpio = require('onoff').Gpio;
 var log = require('../lib/log.js');
 var redis = require('../lib/redis.js');
 var launched = false;
@@ -12,10 +12,10 @@ exports.launch = function (args, config) {
 };
 
 function oldIlluminate(args, config) {
-    var pin1 = new gpio(config.get('illuminate_gpio.pin_1'), 'out');
-    var pin2 = new gpio(config.get('illuminate_gpio.pin_2'), 'out');
-    var pin3 = new gpio(config.get('illuminate_gpio.pin_3'), 'out');
-    var pin4 = new gpio(config.get('illuminate_gpio.pin_4'), 'out');
+    var pin1 = new Gpio(config.get('illuminate_gpio.pin_1'), 'out');
+    var pin2 = new Gpio(config.get('illuminate_gpio.pin_2'), 'out');
+    var pin3 = new Gpio(config.get('illuminate_gpio.pin_3'), 'out');
+    var pin4 = new Gpio(config.get('illuminate_gpio.pin_4'), 'out');
     var pinVal = 0;
 
     redis.connect();
@@ -40,8 +40,8 @@ function oldIlluminate(args, config) {
 }
 
 function newIlluminate(args, config) {
-    var pin1 = new gpio(config.get('illuminate_gpio.pin_1'), 'out');
-    var pin2 = new gpio(config.get('illuminate_gpio.pin_2'), 'out');
+    var pin1 = new Gpio(config.get('illuminate_gpio.pin_1'), 'out');
+    var pin2 = new Gpio(config.get('illuminate_gpio.pin_2'), 'out');
 
     redis.connect();
 
@@ -59,8 +59,8 @@ function newIlluminate(args, config) {
             launched = false;
             redis.setData('illuminate_status', 'false');
 
-            var ledR1 = new gpio(config.get('illuminate_gpio.pin_1'), 'in');
-            var ledR2 = new gpio(config.get('illuminate_gpio.pin_2'), 'in');
+            new Gpio(config.get('illuminate_gpio.pin_1'), 'in');
+            new Gpio(config.get('illuminate_gpio.pin_2'), 'in');
 
             pin1.writeSync(1);
             pin2.writeSync(1);
