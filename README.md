@@ -42,8 +42,12 @@ information and temperature with pressure measurement.
 - **rpia_illuminate_light_1** - false
 - **rpia_illuminate_light_2** - false
 - **rpia_alert_armed** - false
+- **rpia_sms_send** - false (life for 15 min)
 
 ### Process setup:
 forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
 forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
+forever start -d /path/app.js display >> /var/log/rpi-a-display.log
 forever start -d /path/server.js >> /var/log/rpi-mc-server.log
+
+rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
