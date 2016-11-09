@@ -3,6 +3,7 @@ var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
 var lcd = require('../lib/lcd');
+var Gpio = require('onoff').Gpio;
 var config;
 var buttonOff;
 var name = 'System worker';
@@ -23,7 +24,8 @@ var commands = {
     users_work: 'w -h',
     hostname: 'hostname',
     ip_internal: 'hostname -I | xargs -n1 | head -1',
-    ip_external: 'wget http://ipinfo.io/ip -qO -'
+    ip_external: 'wget http://ipinfo.io/ip -qO -',
+    disk_usage: 'df -h | grep ^/'
 };
 var data = {};
 
