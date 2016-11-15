@@ -4,8 +4,8 @@ var log = require('./lib/log');
 var config = require('./lib/config');
 var url = require('url');
 var illuminate = require('./src/illuminate');
-var redis = require('../lib/redis.js');
-var led = require('../lib/led');
+var redis = require('./lib/redis.js');
+var led = require('./lib/led');
 
 http.createServer(function (request, response) {
     var postData = '';
