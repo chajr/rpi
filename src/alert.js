@@ -209,13 +209,13 @@ function sendToRemote() {
     }
 }
 
-function amrSystem() {
-    if (isSystemArmed) {
+function amrSystem(err, state) {
+    if (isSystemArmed && state == 0) {
         redis.setData('alert_armed', 'false');
         log.logInfo('Alert turn off.');
         led.off(config.get('alert_gpio.arm_led'));
         isSystemArmed = false;
-    } else {
+    } else if (state == 1) {
         setTimeout(
             function() {
                 redis.setData('alert_armed', 'true');
