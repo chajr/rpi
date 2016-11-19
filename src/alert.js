@@ -215,7 +215,7 @@ function amrSystem(err, state) {
         log.logInfo('Alert turn off.');
         led.off(config.get('alert_gpio.arm_led'));
         isSystemArmed = false;
-    } else if (state == 1) {
+    } else if (!isSystemArmed && state == 1) {
         setTimeout(
             function() {
                 redis.setData('alert_armed', 'true');
