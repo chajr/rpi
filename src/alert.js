@@ -67,7 +67,7 @@ function alarm(err, state) {
         }
     });
 
-    if (state == 1) {
+    if (state == 1 && isSystemArmed) {
         console.log('move detected');
 
         if (config.get('alert_gpio.mode') === 'movie') {
@@ -213,12 +213,14 @@ function amrSystem() {
         redis.setData('alert_armed', 'false');
         log.logInfo('Alert turn off.');
         led.off(config.get('alert_gpio.arm_led'));
+        isSystemArmed = false;
     } else {
         setTimeout(
             function() {
                 redis.setData('alert_armed', 'true');
                 log.logInfo('Alert turn on.');
                 led.on(config.get('alert_gpio.arm_led'));
+                isSystemArmed = true;
             },
             config.get('alert_gpio.arm_after')
         );
