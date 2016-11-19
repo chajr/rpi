@@ -3,10 +3,10 @@ var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
 var lcd = require('../lib/lcd');
-var Gpio = require('onoff').Gpio;
 var config;
 var buttonOff;
 var name = 'System worker';
+var Gpio;
 
 var commands = {
     date: 'date +"%Y-%m-%d %T"',
@@ -32,6 +32,10 @@ var data = {};
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
+    if (config.get('app.gpio_enabled')) {
+        Gpio = require('onoff').Gpio;
+    }
+
     init();
 
     buttonOff.watch(systemOff);
@@ -44,11 +48,13 @@ function init() {
         name
     );
 
-    buttonOff = new Gpio(
-        config.get('alert_gpio.button_off'),
-        'in',
-        'both'
-    );
+    if (config.get('app.gpio_enabled')) {
+        buttonOff = new Gpio(
+            config.get('alert_gpio.button_off'),
+            'in',
+            'both'
+        );
+    }
 }
 
 function systemOff(err, state) {

@@ -17,7 +17,8 @@
     "position": {
       "lt": 0,
       "gt": 0
-    }
+    },
+    "gpio_enabled": true
   },
   "workers": {
     "commandConsumer": {
