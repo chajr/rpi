@@ -1,6 +1,7 @@
 var Gpio = require('onoff').Gpio;
 var led = require('../lib/led');
 var log = require('../lib/log.js');
+var lcd = require('../lib/lcd');
 var redis = require('../lib/redis.js');
 var RaspiCam = require("raspicam");
 var fs = require('fs');
