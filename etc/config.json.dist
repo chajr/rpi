@@ -92,8 +92,8 @@
     "server_destination": ""
   },
   "illuminate_gpio": {
-    "pin_1": 5,
-    "pin_2": 6,
+    "pin_1": 10,
+    "pin_2": 9,
     "pin_3": 12,
     "pin_4": 13
   },
