@@ -55,16 +55,27 @@ function newIlluminate(args, config) {
             redis.setData('illuminate_status', 'true');
         } catch(err) {}
     } else {
-        try {
-            launched = false;
-            redis.setData('illuminate_status', 'false');
+        var transmitter = config.get('illuminate_gpio.transmitter');
 
-            new Gpio(config.get('illuminate_gpio.pin_1'), 'in');
-            new Gpio(config.get('illuminate_gpio.pin_2'), 'in');
+        if (transmitter === 'low') {
+            try {
+                launched = false;
+                redis.setData('illuminate_status', 'false');
 
-            pin1.writeSync(1);
-            pin2.writeSync(1);
+                new Gpio(config.get('illuminate_gpio.pin_1'), 'in');
+                new Gpio(config.get('illuminate_gpio.pin_2'), 'in');
+
+                pin1.writeSync(1);
+                pin2.writeSync(1);
+                console.log(led);
+            } catch(err) {}
+        } else if (transmitter === 'high') {
+            pin1.writeSync(0);
+            pin2.writeSync(0);
             console.log(led);
-        } catch(err) {}
+
+            launched = true;
+            redis.setData('illuminate_status', 'false');
+        }
     }
 }
