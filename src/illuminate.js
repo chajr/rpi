@@ -1,6 +1,7 @@
 var Gpio = require('onoff').Gpio;
 var log = require('../lib/log.js');
 var redis = require('../lib/redis.js');
+var led = require('../lib/led');
 var launched = false;
 
 exports.launch = function (args, config) {
@@ -42,6 +43,9 @@ function oldIlluminate(args, config) {
 function newIlluminate(args, config) {
     var pin1 = new Gpio(config.get('illuminate_gpio.pin_1'), 'out');
     var pin2 = new Gpio(config.get('illuminate_gpio.pin_2'), 'out');
+
+    led.off(config.get('app.led_red'));
+    led.on(config.get('app.led_green'));
 
     redis.connect();
 

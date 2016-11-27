@@ -3,6 +3,7 @@ var log = require('../lib/log.js');
 var redis = require('../lib/redis.js');
 var worker = require('../lib/worker');
 var SunCalc = require('suncalc');
+var led = require('../lib/led');
 var config;
 var name = 'Auto illuminate worker';
 var keepAlive = false;
@@ -22,6 +23,9 @@ exports.launch = function (args, appConfig) {
 };
 
 function illuminator() {
+    led.off(config.get('app.led_red'));
+    led.on(config.get('app.led_green'));
+
     getRedisStatus('status');
     getRedisStatus('force_on');
     getRedisStatus('force_off');

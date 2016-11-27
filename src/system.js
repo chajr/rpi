@@ -3,6 +3,7 @@ var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
 var lcd = require('../lib/lcd');
+var led = require('../lib/led');
 var config;
 var buttonOff;
 var name = 'System worker';
@@ -54,6 +55,9 @@ function init() {
             'in',
             'both'
         );
+
+        led.off(config.get('app.led_red'));
+        led.on(config.get('app.led_green'));
     }
 }
 
