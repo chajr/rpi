@@ -2,17 +2,20 @@ var exec = require('sync-exec');
 var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
+var lcd = require('../lib/lcd');
 var config;
+var buttonOff;
 var name = 'System worker';
+var Gpio;
 
 var commands = {
     date: 'date +"%Y-%m-%d %T"',
-    cpu_utilization: 'top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1}\'',
-    memory_free: 'free | grep Mem | awk \'{print $4/$2 * 100.0}\'',
-    memory_used: 'free | grep Mem | awk \'{print $3/$2 * 100.0}\'',
+    cpu_utilization: 'cat /var/log/proc.log',
+    memory_free: 'free | grep "Mem\\|Pamięć" | awk \'{print $4/$2 * 100.0}\'',
+    memory_used: 'free | grep "Mem\\|Pamięć" | awk \'{print $3/$2 * 100.0}\'',
     uptime_p: 'uptime -p',
     uptime_s: 'uptime -s',
-    system_load: 'cat /proc/loadavg',
+    system_load: 'cat /proc/loadavg | awk \'{print $1,$2,$3}\'',
     process_number: 'ps -Af --no-headers | wc -l',
     disk_utilization: 'iostat -d /dev/sda | sed -n "4p"',
     network_utilization: 'ifstat -i eth0 -q 1 1 | tail -1',
@@ -20,20 +23,57 @@ var commands = {
     logged_in_users_count: 'users | wc -w',
     users_work: 'w -h',
     hostname: 'hostname',
-    ip_internal: 'ip route get 8.8.8.8 | awk "{print $NF; exit}"',
-    ip_external: 'wget http://ipinfo.io/ip -qO -'
+    ip_internal: 'hostname -I | xargs -n1 | head -1',
+    ip_external: 'wget http://ipinfo.io/ip -qO -',
+    disk_usage: 'df -h | grep ^/'
 };
 var data = {};
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
+    if (config.get('app.gpio_enabled')) {
+        Gpio = require('onoff').Gpio;
+    }
+
+    init();
+
+    buttonOff.watch(systemOff);
+};
+
+function init() {
     worker.startWorker(
         collectData,
         config.get('workers.system.worker_time'),
         name
     );
-};
+
+    if (config.get('app.gpio_enabled')) {
+        buttonOff = new Gpio(
+            config.get('alert_gpio.button_off'),
+            'in',
+            'both'
+        );
+    }
+}
+
+function systemOff(err, state) {
+    if(state == 1) {
+        var uptime = upTime();
+        var exec = require('child_process').exec;
+
+        lcd.clear();
+        lcd.displayMessage([
+            'System shutdown',
+            'after: ' + uptime
+        ]);
+
+        log.logInfo('System shutdown after: ' + uptime);
+        console.log('System is shutting down.');
+
+        exec(config.get('app.shutdown_command'));
+    }
+}
 
 function collectData() {
     for (var key in commands) {

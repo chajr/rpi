@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var config = require('./lib/config');
 var log = require('./lib/log.js');
 var led = require('./lib/led');
@@ -16,6 +18,22 @@ switch (args[0]) {
 
     case 'system':
         app = require('./src/system');
+        break;
+
+    case 'autoIlluminate':
+        app = require('./src/autoIlluminate');
+        break;
+
+    case 'command':
+        app = require('./src/commandConsummer');
+        break;
+
+    case 'info':
+        app = require('./src/info');
+        break;
+
+    case 'display':
+        app = require('./src/display');
         break;
 
     default:

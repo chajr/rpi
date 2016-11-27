@@ -6,7 +6,7 @@ possibility to inform user about that detection by e-mail or sms. Also applicati
 can handle some other devices like LCD display, LEDs and switches for some status
 information and temperature with pressure measurement.
 
-### Features
+## Features
 - Move detection
 - Record movies (depend of camera type)
 - Send movies to external server
@@ -16,7 +16,7 @@ information and temperature with pressure measurement.
 - Temperature measurement
 - Pressure measurement
 
-### List of devices and technologies
+## List of devices and technologies
 - Raspberry Pi B+
 - Ubuntu Mate OS
 - Node JS 4.2
@@ -29,4 +29,30 @@ information and temperature with pressure measurement.
 - 3x Tact switch
 - Resistors (2.2 kOhm, 2x 100 Ohm, 2x 10 kOhm)
 
-### Connection schema
+## Connection schema
+
+## Application setup
+
+### Set Redis with keys:
+
+- **rpia_illuminate_status** - false
+- **rpia_illuminate_force_on** - false
+- **rpia_illuminate_force_off** - false
+- **rpia_illuminate_keep_alive** - false
+- **rpia_illuminate_light_1** - false
+- **rpia_illuminate_light_2** - false
+- **rpia_alert_armed** - false
+- **rpia_sms_send** - false (life for 15 min)
+
+### Process setup:
+
+Set up correct paths in etc/config.json, correct security key, geographics position, server path
+
+sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
+sudo forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
+sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
+sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
+
+sudo chmod 0777 var/log
+
+rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
