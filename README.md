@@ -48,11 +48,19 @@ information and temperature with pressure measurement.
 
 Set up correct paths in etc/config.json, correct security key, geographics position, server path
 
+`/etc/init.d/rpi-mc.sh` content:
+
+```
+#! /bin/sh
+
+service ntp stop
+ntpd -gq
+service ntp start
+
 sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
 sudo forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
 sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
 sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
-
-sudo chmod 0777 var/log
+```
 
 rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
