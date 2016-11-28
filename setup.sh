@@ -21,6 +21,11 @@ sudo chown $USER:$USER /var/log/rpi-mc-server.log
 sudo chown $USER:$USER /var/log/rpi-a-display.log
 sudo chown $USER:$USER /var/log/rpi-mc-autoIlluminate.log
 
+sudo touch /etc/init.d/rpi-mc.sh
+sudo chmod +x /etc/init.d/rpi-mc.sh
+sudo update-rc.d rpi-mc.sh start
+
+chmod 0777 var/log
 ln -s ~/config.json etc/config.json
 
 npm install
