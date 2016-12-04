@@ -36,6 +36,10 @@ switch (args[0]) {
         app = require('./src/display');
         break;
 
+    case 'picture':
+        app = require('./src/picture');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
