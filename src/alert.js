@@ -1,13 +1,11 @@
 var Gpio = require('onoff').Gpio;
 var led = require('../lib/led');
 var log = require('../lib/log.js');
-var lcd = require('../lib/lcd');
 var redis = require('../lib/redis.js');
 var RaspiCam = require("raspicam");
 var fs = require('fs');
 var request = require('request');
 var exec = require('child_process').exec;
-var startTime = new Date().getTime();
 var systemArmed;
 var config;
 var detector;
@@ -42,17 +40,7 @@ function init() {
     led.off(config.get('app.led_red'));
     led.on(config.get('app.led_green'));
 
-    lcd.init();
-
     redis.connect();
-}
-
-function upTime() {
-    var currentTime = new Date().getTime();
-    var calc = currentTime - startTime;
-    var diff = new Date(calc);
-
-    return (diff.getHours() -1) + ':' + diff.getMinutes() + ':' + diff.getSeconds();
 }
 
 function alarm(err, state) {
