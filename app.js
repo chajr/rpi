@@ -5,6 +5,7 @@ var log = require('./lib/log.js');
 var led = require('./lib/led');
 
 var args = process.argv.slice(2);
+var startTime = new Date().getTime();
 var app;
 
 switch (args[0]) {
@@ -54,7 +55,7 @@ try {
         led.on(config.get('app.led_green'));
     }
 
-    app.launch(args, config);
+    app.launch(args, config, startTime);
 } catch (error) {
     console.log('Application error, more info in log file.');
     log.logError(error);

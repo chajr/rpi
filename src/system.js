@@ -4,22 +4,25 @@ var worker = require('../lib/worker');
 var request = require('request');
 var lcd = require('../lib/lcd');
 var led = require('../lib/led');
+var uptime = require('../lib/uptime');
+
+var name = 'System worker';
 var config;
 var buttonOff;
-var name = 'System worker';
 var Gpio;
+var startTime;
 
 var commands = {
     date: 'date +"%Y-%m-%d %T"',
     cpu_utilization: 'cat /var/log/proc.log',
-    memory_free: 'free | grep "Mem\\|Pamięć" | awk \'{print $4/$2 * 100.0}\'',
+    memory_free: 'free | grep "Mem\\|Pamięć" | awk \'{print ($2-$3) / $2 * 100.0}\'',
     memory_used: 'free | grep "Mem\\|Pamięć" | awk \'{print $3/$2 * 100.0}\'',
     uptime_p: 'uptime -p',
     uptime_s: 'uptime -s',
     system_load: 'cat /proc/loadavg | awk \'{print $1,$2,$3}\'',
     process_number: 'ps -Af --no-headers | wc -l',
     disk_utilization: 'iostat -d /dev/sda | sed -n "4p"',
-    network_utilization: 'ifstat -i eth0 -q 1 1 | tail -1',
+    network_utilization: 'ifstat -i enp2s0 -q 1 1 | tail -1', //enp2s0 set up in configuration
     logged_in_users: 'users',
     logged_in_users_count: 'users | wc -w',
     users_work: 'w -h',
@@ -30,8 +33,9 @@ var commands = {
 };
 var data = {};
 
-exports.launch = function (args, appConfig) {
+exports.launch = function (args, appConfig, appStartTime) {
     config = appConfig;
+    startTime = appStartTime;
 
     if (config.get('app.gpio_enabled')) {
         Gpio = require('onoff').Gpio;
@@ -62,8 +66,8 @@ function init() {
 }
 
 function systemOff(err, state) {
-    if(state == 1) {
-        var uptime = upTime();
+    if (state == 1) {
+        var uptime = uptime(startTime);
         var exec = require('child_process').exec;
 
         lcd.clear();
