@@ -37,9 +37,6 @@ function init() {
         'both'
     );
 
-    led.off(config.get('app.led_red'));
-    led.on(config.get('app.led_green'));
-
     redis.connect();
 }
 

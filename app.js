@@ -49,13 +49,20 @@ switch (args[0]) {
 args.splice(0, 1);
 
 try {
+    if (config.get('app.gpio_enabled')) {
+        led.off(config.get('app.led_red'));
+        led.on(config.get('app.led_green'));
+    }
+
     app.launch(args, config);
 } catch (error) {
     console.log('Application error, more info in log file.');
     log.logError(error);
 
-    led.on(config.get('app.led_red'));
-    led.off(config.get('app.led_green'));
+    if (config.get('app.gpio_enabled')) {
+        led.on(config.get('app.led_red'));
+        led.off(config.get('app.led_green'));
+    }
 
     process.exit(1);
 }

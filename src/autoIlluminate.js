@@ -23,9 +23,6 @@ exports.launch = function (args, appConfig) {
 };
 
 function illuminator() {
-    led.off(config.get('app.led_red'));
-    led.on(config.get('app.led_green'));
-
     getRedisStatus('status');
     getRedisStatus('force_on');
     getRedisStatus('force_off');

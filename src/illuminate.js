@@ -44,9 +44,6 @@ function newIlluminate(args, config) {
     var pin1 = new Gpio(config.get('illuminate_gpio.pin_1'), 'out');
     var pin2 = new Gpio(config.get('illuminate_gpio.pin_2'), 'out');
 
-    led.off(config.get('app.led_red'));
-    led.on(config.get('app.led_green'));
-
     redis.connect();
 
     if (args[0] === 'on') {
