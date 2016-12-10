@@ -6,6 +6,8 @@ var RaspiCam = require("raspicam");
 var fs = require('fs');
 var request = require('request');
 var exec = require('child_process').exec;
+var cameraLib = require('../lib/camera');
+
 var systemArmed;
 var config;
 var detector;
@@ -65,56 +67,7 @@ function alarm(err, state) {
         }
 
         if (config.get('alert_gpio.mode') === 'image') {
-            var time = new Date();
-            currentRecord = time.toLocaleTimeString() + '_' + time.toLocaleDateString();
-
-            var output = config.get('app.img_path')
-                + '/'
-                + currentRecord
-                + "_%06d."
-                + config.get('alert_gpio.image.encoding');
-
-            camera = new RaspiCam({
-                mode: "timelapse",
-                output: output,
-                encoding: config.get('alert_gpio.image.encoding'),
-                width: config.get('alert_gpio.image.width'),
-                height: config.get('alert_gpio.image.height'),
-                timelapse: config.get('alert_gpio.image.timelapse'),
-                timeout: config.get('alert_gpio.image.timeout')
-            });
-
-            if (config.get('app.image_send')) {
-                camera.on("read", function (err, timestamp, filename) {
-                    if (!filename.match(
-                        /^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}_[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}_[0-9]+\.jpg~$/)
-                    ) {
-                        var formData = {
-                            file: fs.createReadStream(config.get('app.img_path') + '/' + filename)
-                        };
-
-                        var url = config.get('alert_gpio.server_destination')
-                            + '?key='
-                            + config.get('app.security_key');
-
-                        request.post(
-                            {
-                                url: url,
-                                formData: formData
-                            },
-                            function optionalCallback(err, httpResponse, body) {
-                                if (err) {
-                                    return console.error('upload failed:', err);
-                                }
-
-                                console.log('Upload successful!  Server responded with:', body);
-                            }
-                        );
-                    }
-                });
-            }
-
-            camera.start();
+            cameraLib.picture(config);
         }
 
     } else {
