@@ -2,7 +2,6 @@ var exec = require('sync-exec');
 var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
-var lcd = require('../lib/lcd');
 var led = require('../lib/led');
 var uptime = require('../lib/uptime');
 
@@ -66,6 +65,7 @@ function init() {
 
 function systemOff(err, state) {
     if (state == 1) {
+        var lcd = require('../lib/lcd');
         var uptime = uptime(startTime);
         var exec = require('child_process').exec;
 
