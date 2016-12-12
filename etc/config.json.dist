@@ -18,7 +18,8 @@
       "lt": 0,
       "gt": 0
     },
-    "gpio_enabled": true
+    "gpio_enabled": true,
+    "system_name": ""
   },
   "workers": {
     "commandConsumer": {
