@@ -42,8 +42,6 @@ exports.launch = function (args, appConfig, appStartTime) {
     }
 
     init();
-
-    buttonOff.watch(systemOff);
 };
 
 function init() {
@@ -62,6 +60,7 @@ function init() {
 
         led.off(config.get('app.led_red'));
         led.on(config.get('app.led_green'));
+        buttonOff.watch(systemOff);
     }
 }
 
