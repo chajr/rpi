@@ -2,11 +2,11 @@
 
 var config = require('./lib/config');
 var log = require('./lib/log.js');
-var led = require('./lib/led');
 
 var args = process.argv.slice(2);
 var startTime = new Date().getTime();
 var app;
+var led;
 
 switch (args[0]) {
     case 'illuminate':
@@ -49,6 +49,10 @@ switch (args[0]) {
 
 args.splice(0, 1);
 
+if (config.get('app.gpio_enabled')) {
+    led = require('./lib/led');
+}
+
 try {
     if (config.get('app.gpio_enabled')) {
         led.off(config.get('app.led_red'));
@@ -56,8 +60,10 @@ try {
     }
 
     app.launch(args, config, startTime);
+    // process.exit(0);
 } catch (error) {
     console.log('Application error, more info in log file.');
+    console.log(error);
     log.logError(error);
 
     if (config.get('app.gpio_enabled')) {
