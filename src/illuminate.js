@@ -54,7 +54,11 @@ function newIlluminate(args, config) {
 
             launched = true;
             redis.setData('illuminate_status', 'true');
-        } catch(err) {}
+
+            log.logInfo('Light turn on.');
+        } catch(err) {
+            log.logError(err.getMessage());
+        }
     } else {
         var transmitter = config.get('illuminate_gpio.transmitter');
 
@@ -66,10 +70,14 @@ function newIlluminate(args, config) {
                 new Gpio(config.get('illuminate_gpio.pin_1'), 'in');
                 new Gpio(config.get('illuminate_gpio.pin_2'), 'in');
 
+                console.log(led);
+                log.logInfo('Light turn off. Type low.');
+
                 pin1.writeSync(1);
                 pin2.writeSync(1);
-                console.log(led);
-            } catch(err) {}
+            } catch(err) {
+                log.logError(err.getMessage() + '. Type low.');
+            }
         } else if (transmitter === 'high') {
             pin1.writeSync(0);
             pin2.writeSync(0);
@@ -77,6 +85,8 @@ function newIlluminate(args, config) {
 
             launched = true;
             redis.setData('illuminate_status', 'false');
+
+            log.logInfo('Light turn off. Type high.');
         }
     }
 }

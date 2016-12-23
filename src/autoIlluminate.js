@@ -3,7 +3,6 @@ var log = require('../lib/log.js');
 var redis = require('../lib/redis.js');
 var worker = require('../lib/worker');
 var SunCalc = require('suncalc');
-var led = require('../lib/led');
 var config;
 var name = 'Auto illuminate worker';
 var keepAlive = false;
@@ -23,6 +22,8 @@ exports.launch = function (args, appConfig) {
 };
 
 function illuminator() {
+    var statusObject = {};
+
     getRedisStatus('status');
     getRedisStatus('force_on');
     getRedisStatus('force_off');
@@ -30,54 +31,63 @@ function illuminator() {
 
     var lt = config.get('app.position.lt');
     var gt = config.get('app.position.gt');
-    var turnOn = config.get('workers.autoIlluminate.turnOn').split(':');
-    var minTime = config.get('workers.autoIlluminate.minimalTime').split(':');
-    var maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
+    statusObject.turnOn = config.get('workers.autoIlluminate.turnOn').split(':');
+    statusObject.minTime = config.get('workers.autoIlluminate.minimalTime').split(':');
+    statusObject.maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
     var date = new Date();
     var sunCalc = SunCalc.getTimes(date, lt, gt);
-    var sunsetTime = sunCalc.sunset.getTime();
+    statusObject.sunsetTime = sunCalc.sunset.getTime();
     var currentTime = date.getTime();
 
-    date.setMinutes(turnOn[1]);
-    date.setHours(turnOn[0]);
+    date.setMinutes(statusObject.turnOn[1]);
+    date.setHours(statusObject.turnOn[0]);
 
     var onTime = date.getTime();
 
-    date.setMinutes(minTime[1]);
-    date.setHours(minTime[0]);
+    date.setMinutes(statusObject.minTime[1]);
+    date.setHours(statusObject.minTime[0]);
 
     var minimalTime = date.getTime();
 
-    date.setMinutes(maxTime[1]);
-    date.setHours(maxTime[0]);
+    date.setMinutes(statusObject.maxTime[1]);
+    date.setHours(statusObject.maxTime[0]);
 
     var offTime = date.getTime();
 
-    var nowGraterThanMinimal = currentTime >= minimalTime;
-    var nowLowerThantOff = currentTime <= offTime;
-    var nowGraterThanSunset = currentTime >= sunsetTime;
-    var nowGraterThanOn = currentTime >= onTime;
-    var nowGraterThanOff = currentTime >= offTime;
-    var sunsetLowerThanOn = sunsetTime < onTime;
-    var isWeekend = date.getDay() % 6 == 0;
+    statusObject.nowGraterThanMinimal = currentTime >= minimalTime;
+    statusObject.nowLowerThantOff = currentTime <= offTime;
+    statusObject.nowGraterThanSunset = currentTime >= statusObject.sunsetTime;
+    statusObject.nowGraterThanOn = currentTime >= onTime;
+    statusObject.nowGraterThanOff = currentTime >= offTime;
+    statusObject.sunsetLowerThanOn = statusObject.sunsetTime < onTime;
+    statusObject.isWeekend = date.getDay() % 6 == 0;
 
     var turnLightOn = (
-        (!sunsetLowerThanOn && nowGraterThanSunset)
-        || (sunsetLowerThanOn && nowGraterThanOn)
-        || ((isWeekend && nowGraterThanSunset) || nowGraterThanMinimal)
-    ) && nowLowerThantOff;
+        (!statusObject.sunsetLowerThanOn && statusObject.nowGraterThanSunset)
+        || (statusObject.sunsetLowerThanOn && statusObject.nowGraterThanOn)
+        || ((statusObject.isWeekend && statusObject.nowGraterThanSunset) || statusObject.nowGraterThanMinimal)
+    ) && statusObject.nowLowerThantOff;
+
+    statusObject.turnOnStatus = !launched && (turnLightOn || forceOn);
+    statusObject.turnOffStatus = launched && ((!keepAlive && statusObject.nowGraterThanOff) || forceOff);
+
+    log.logInfo('Auto illuminate statuses:' + JSON.stringify(statusObject));
 
     switch (true) {
-        case !launched && (turnLightOn || forceOn):
+        case statusObject.turnOnStatus:
             illuminate.launch(['on'], config);
             redis.setData('illuminate_status', 'true');
             launched = true;
+
+            log.logInfo('Auto illuminate turned on.');
             break;
 
-        case launched && ((!keepAlive && nowGraterThanOff) || forceOff):
+        case statusObject.turnOffStatus:
             illuminate.launch(['off'], config);
             redis.setData('illuminate_status', 'false');
             launched = false;
+
+            log.logInfo('Auto illuminate turned off.');
             break;
     }
 }
@@ -85,7 +95,7 @@ function illuminator() {
 function getRedisStatus (status) {
     redis.getData('illuminate_' + status, function (data) {
         if (data) {
-            log.logInfo(data);
+            log.logInfo('illuminate_' + status + ': ' + data);
 
             switch (status) {
                 case 'status':
