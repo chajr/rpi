@@ -3,6 +3,12 @@ var lcdLightStatus = 0;
 var buttonLight;
 var config;
 
+/**
+ * @todo show working time
+ * @todo show last record status and time
+ * @todo disk usage
+ */
+
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
