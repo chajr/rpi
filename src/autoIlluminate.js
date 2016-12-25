@@ -9,6 +9,7 @@ var keepAlive = false;
 var forceOn = false;
 var forceOff = false;
 var launched = false;
+var statusObject = {};
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -22,8 +23,6 @@ exports.launch = function (args, appConfig) {
 };
 
 function illuminator() {
-    var statusObject = {};
-
     getRedisStatus('status');
     getRedisStatus('force_on');
     getRedisStatus('force_off');
@@ -36,8 +35,19 @@ function illuminator() {
     statusObject.maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
     var date = new Date();
     var sunCalc = SunCalc.getTimes(date, lt, gt);
-    statusObject.sunsetTime = sunCalc.sunset.getTime();
+    var sunsetTime = sunCalc.sunset.getTime();
     var currentTime = date.getTime();
+    statusObject.sunsetTime = sunCalc.sunset.getHours()
+        + ':'
+        + sunCalc.sunset.getMinutes()
+        + ':'
+        + sunCalc.sunset.getSeconds()
+        + ' '
+        + sunCalc.sunset.getDate()
+        + '-'
+        + (sunCalc.sunset.getMonth() +1)
+        + '-'
+        + sunCalc.sunset.getFullYear();
 
     date.setMinutes(statusObject.turnOn[1]);
     date.setHours(statusObject.turnOn[0]);
@@ -56,10 +66,10 @@ function illuminator() {
 
     statusObject.nowGraterThanMinimal = currentTime >= minimalTime;
     statusObject.nowLowerThantOff = currentTime <= offTime;
-    statusObject.nowGraterThanSunset = currentTime >= statusObject.sunsetTime;
+    statusObject.nowGraterThanSunset = currentTime >= sunsetTime;
     statusObject.nowGraterThanOn = currentTime >= onTime;
     statusObject.nowGraterThanOff = currentTime >= offTime;
-    statusObject.sunsetLowerThanOn = statusObject.sunsetTime < onTime;
+    statusObject.sunsetLowerThanOn = sunsetTime < onTime;
     statusObject.isWeekend = date.getDay() % 6 == 0;
 
     var turnLightOn = (
@@ -95,20 +105,26 @@ function illuminator() {
 function getRedisStatus (status) {
     redis.getData('illuminate_' + status, function (data) {
         if (data) {
-            log.logInfo('illuminate_' + status + ': ' + data);
-
             switch (status) {
                 case 'status':
                     launched = data === 'true';
+                    statusObject.illuminateStatus = data;
                     break;
                 case 'force_on':
                     forceOn = data === 'true';
+                    statusObject.illuminateForceOn = data;
                     break;
                 case 'force_off':
                     forceOff = data === 'true';
+                    statusObject.illuminateForceOff = data;
                     break;
                 case 'keep_alive':
                     keepAlive = data === 'true';
+                    statusObject.illuminateKeepAlive = data;
+                    break;
+
+                default:
+                    statusObject.unknownRedisStatus = data;
                     break;
             }
         }
