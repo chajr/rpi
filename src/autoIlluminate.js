@@ -71,11 +71,15 @@ function illuminator() {
     statusObject.nowGraterThanOff = currentTime >= offTime;
     statusObject.sunsetLowerThanOn = sunsetTime < onTime;
     statusObject.isWeekend = date.getDay() % 6 == 0;
+    statusObject.isSpacialDay = isSpecialDay(date);
 
     var turnLightOn = (
         (!statusObject.sunsetLowerThanOn && statusObject.nowGraterThanSunset)
         || (statusObject.sunsetLowerThanOn && statusObject.nowGraterThanOn)
-        || ((statusObject.isWeekend && statusObject.nowGraterThanSunset) || statusObject.nowGraterThanMinimal)
+        || (
+            ((statusObject.isWeekend || statusObject.isSpacialDay) && statusObject.nowGraterThanSunset)
+            || statusObject.nowGraterThanMinimal
+        )
     ) && statusObject.nowLowerThantOff;
 
     statusObject.turnOnStatus = !launched && (turnLightOn || forceOn);
@@ -100,6 +104,15 @@ function illuminator() {
             log.logInfo('Auto illuminate turned off.');
             break;
     }
+}
+
+function isSpecialDay (currentDate) {
+    var day = currentDate.getDate();
+    var expression = new RegExp(day + ",");
+    var month = currentDate.getMonth() +1;
+    var special = config.get('illuminate_special.' + month);
+
+    return special.search(expression) > 0;
 }
 
 function getRedisStatus (status) {
