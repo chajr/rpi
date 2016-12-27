@@ -70,7 +70,7 @@ function illuminator() {
     statusObject.nowGraterThanOn = currentTime >= onTime;
     statusObject.nowGraterThanOff = currentTime >= offTime;
     statusObject.sunsetLowerThanOn = sunsetTime < onTime;
-    statusObject.isWeekend = date.getDay() % 6 == 0;
+    statusObject.isWeekend = date.getDay() % 6 === 0;
     statusObject.isSpacialDay = isSpecialDay(date);
 
     var turnLightOn = (
