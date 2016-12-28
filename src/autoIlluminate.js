@@ -82,6 +82,8 @@ function illuminator() {
         )
     ) && statusObject.nowLowerThantOff;
 
+    statusObject.turnLightOn = turnLightOn;
+    statusObject.launched = launched;
     statusObject.turnOnStatus = !launched && (turnLightOn || forceOn);
     statusObject.turnOffStatus = launched && ((!keepAlive && statusObject.nowGraterThanOff) || forceOff);
 
