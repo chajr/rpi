@@ -107,5 +107,24 @@
     "8": [15],
     "11": [1, 11],
     "12": [25, 26]
-  }
+  },
+  "commands": {
+    "date": "date +\"%Y-%m-%d %T\"",
+    "cpu_utilization": "cat /var/log/proc.log",
+    "memory_free": "free | grep 'Mem\\|Pamięć' | awk '{print ($2-$3) / $2 * 100.0}'",
+    "memory_used": "free | grep 'Mem\\|Pamięć' | awk '{print $3/$2 * 100.0}",
+    "uptime_p": "uptime -p",
+    "uptime_s": "uptime -s",
+    "system_load": "cat /proc/loadavg | awk '{print $1,$2,$3}'",
+    "process_number": "ps -Af --no-headers | wc -l",
+    "disk_utilization": "iostat -d /dev/sda | sed -n \"4p\"",
+    "network_utilization": "ifstat -i enp2s0 -q 1 1 | tail -1",
+    "logged_in_users": "users",
+    "logged_in_users_count": "users | wc -w",
+    "users_work": "w -h",
+    "hostname": "hostname",
+    "ip_internal": "hostname -I | xargs -n1 | head -1",
+    "ip_external": "wget http://ipinfo.io/ip -qO -",
+    "disk_usage": "df -h | grep ^/"
+  },
 }

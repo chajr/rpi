@@ -11,27 +11,6 @@ var buttonOff;
 var Gpio;
 var startTime;
 
-var commands = {
-    date: 'date +"%Y-%m-%d %T"',
-    cpu_utilization: 'cat /var/log/proc.log',
-    memory_free: 'free | grep "Mem\\|Pamięć" | awk \'{print ($2-$3) / $2 * 100.0}\'',
-    memory_used: 'free | grep "Mem\\|Pamięć" | awk \'{print $3/$2 * 100.0}\'',
-    uptime_p: 'uptime -p',
-    uptime_s: 'uptime -s',
-    system_load: 'cat /proc/loadavg | awk \'{print $1,$2,$3}\'',
-    process_number: 'ps -Af --no-headers | wc -l',
-    disk_utilization: 'iostat -d /dev/sda | sed -n "4p"',
-    network_utilization: 'ifstat -i enp2s0 -q 1 1 | tail -1', //enp2s0 set up in configuration
-    logged_in_users: 'users',
-    logged_in_users_count: 'users | wc -w',
-    users_work: 'w -h',
-    hostname: 'hostname',
-    ip_internal: 'hostname -I | xargs -n1 | head -1',
-    ip_external: 'wget http://ipinfo.io/ip -qO -',
-    disk_usage: 'df -h | grep ^/'
-};
-var data = {};
-
 exports.launch = function (args, appConfig, appStartTime) {
     config = appConfig;
     startTime = appStartTime;
@@ -83,6 +62,9 @@ function systemOff(err, state) {
 }
 
 function collectData() {
+    var data = [];
+    var commands = config.get('commands');
+
     for (var key in commands) {
         data[key] = exec(commands[key]).stdout;
     }
