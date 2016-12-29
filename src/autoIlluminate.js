@@ -110,11 +110,10 @@ function illuminator() {
 
 function isSpecialDay (currentDate) {
     var day = currentDate.getDate();
-    var expression = new RegExp(day + ",");
     var month = currentDate.getMonth() +1;
     var special = config.get('illuminate_special.' + month);
 
-    return special.search(expression) > 0;
+    return special.indexOf(day) >= 0;
 }
 
 function getRedisStatus (status) {
