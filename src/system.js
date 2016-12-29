@@ -63,9 +63,18 @@ function systemOff(err, state) {
 
 function collectData() {
     var data = [];
+    data['extra'] = [];
     var commands = config.get('commands');
 
     for (var key in commands) {
+        if (key === 'extra') {
+            for (var keyExtra in commands[key]) {
+                data['extra'][keyExtra] = exec(commands[key][keyExtra]).stdout;
+            }
+
+            continue;
+        }
+
         data[key] = exec(commands[key]).stdout;
     }
 
