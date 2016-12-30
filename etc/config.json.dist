@@ -33,6 +33,9 @@
       "data_collector": "",
       "security_key": ""
     },
+    "error_led": {
+      "worker_time": 1000
+    },
     "autoIlluminate": {
       "worker_time": 60000,
       "minimalTime": "19:00",
