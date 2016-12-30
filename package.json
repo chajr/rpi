@@ -23,6 +23,7 @@
     "cli-table": "0.3.*",
     "colors": "1.1.*",
     "redis": "2.6.0-1",
-    "mongodb": "2.2.16"
+    "mongodb": "2.2.16",
+    "date-easter": "0.2.2"
   }
 }
