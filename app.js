@@ -41,6 +41,10 @@ switch (args[0]) {
         app = require('./src/picture');
         break;
 
+    case 'errorLed':
+        app = require('./src/errorLed');
+        break;
+
     default:
         console.log('nothing to run');
         process.exit(0);
