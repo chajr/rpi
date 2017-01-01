@@ -76,6 +76,19 @@ function getRedisVars() {
     redis.getData('sms_send', function (data) {
         if (data) {
             console.log('Illuminate sms send: ', data.yellow);
+        }
+    });
+    redis.getData('error_led', function (data) {
+        if (data) {
+            var string;
+
+            if (data === 'false') {
+                string = data.green;
+            } else {
+                string = data.red;
+            }
+
+            console.log('Error LED status: ', string);
 
             process.exit(0);
         }
