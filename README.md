@@ -43,6 +43,7 @@ information and temperature with pressure measurement.
 - **rpia_illuminate_light_2** - false
 - **rpia_alert_armed** - false
 - **rpia_sms_send** - false (life for 15 min)
+- **rpia_error_led** - false
 
 ### Process setup:
 
