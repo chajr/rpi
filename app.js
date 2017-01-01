@@ -2,11 +2,11 @@
 
 var config = require('./lib/config');
 var log = require('./lib/log.js');
+var redis = require('../lib/redis.js');
 
 var args = process.argv.slice(2);
 var startTime = new Date().getTime();
 var app;
-var led;
 
 switch (args[0]) {
     case 'illuminate':
@@ -53,16 +53,9 @@ switch (args[0]) {
 
 args.splice(0, 1);
 
-if (config.get('app.gpio_enabled')) {
-    led = require('./lib/led');
-}
-
 try {
-    if (config.get('app.gpio_enabled')) {
-        led.off(config.get('app.led_red'));
-        led.on(config.get('app.led_green'));
-    }
-
+    redis.connect();
+    redis.setData('error_led', 'false');
     app.launch(args, config, startTime);
     // process.exit(0);
 } catch (error) {
@@ -70,10 +63,7 @@ try {
     console.log(error);
     log.logError(error);
 
-    if (config.get('app.gpio_enabled')) {
-        led.on(config.get('app.led_red'));
-        led.off(config.get('app.led_green'));
-    }
+    redis.setData('error_led', 'true');
 
     process.exit(1);
 }
