@@ -2,7 +2,7 @@
 
 var config = require('./lib/config');
 var log = require('./lib/log.js');
-var redis = require('../lib/redis.js');
+var redis = require('./lib/redis.js');
 
 var args = process.argv.slice(2);
 var startTime = new Date().getTime();
