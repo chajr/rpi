@@ -25,7 +25,8 @@
   "workers": {
     "commandConsumer": {
       "worker_time": 60000,
-      "commands": "",
+      "commands_get": "",
+      "commands_set": "",
       "security_key": ""
     },
     "system": {
