@@ -17,7 +17,7 @@ exports.launch = function (args, appConfig) {
 };
 
 function consumer() {
-    var url = config.get('workers.commandConsumer.commands')
+    var url = config.get('workers.commandConsumer.commands_get')
         + '?key='
         + config.get('workers.commandConsumer.security_key')
         + '&host='
@@ -33,11 +33,13 @@ function consumer() {
 
                 if (data.status === 'success') {
                     var messages = JSON.parse(data.data.message);
-                    
+
                     for (var i in messages) {
                         console.log(messages[i]);
                         setCommands(messages[i]);
                     }
+                } else {
+                    
                 }
             }
         }
@@ -68,8 +70,36 @@ function setCommands (command) {
                 log.logError('Command insert error: ' + err);
             } else {
                 command.id = result.insertedId;
-                log.info('Command consumed: ' + JSON.stringify(command) );
+                log.logInfo('Command consumed: ' + JSON.stringify(command) );
+
+                setAsConsumed(command.command_id);
             }
         });
     });
+}
+
+function setAsConsumed (commandId) {
+    var url = config.get('workers.commandConsumer.commands_set')
+        + '?key='
+        + config.get('workers.commandConsumer.security_key')
+        + '&host='
+        + config.get('app.system_name');
+
+    console.log(url);
+    console.log(commandId);
+
+    request.post(
+        url,
+        {form: {test_key: 'test'}},
+        function (error, response, body) {
+            if (error) {
+                log.logError(error);
+            } else {
+                console.log(response.statusCode);
+                console.log(body);
+            }
+
+            process.exit(0);
+        }
+    );
 }
