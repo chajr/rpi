@@ -34,34 +34,24 @@ function consumer() {
                 if (data.status === 'success') {
                     var messages = JSON.parse(data.data.message);
 
+                    if (messages.length === 0) {
+                        log.logInfo('No commands consumed.');
+                    } else {
+                        log.logInfo('Consumed: "' + messages.length + '" commands.');
+                    }
+
                     for (var i in messages) {
-                        console.log(messages[i]);
-                        setCommands(messages[i]);
+                        markCommands(messages[i]);
                     }
                 } else {
-                    
+                    log.logError(data.data.message);
                 }
             }
         }
     );
 }
 
-function getCommands () {
-    var container;
-    mongo.execute(function (db) {
-        var collection = db.collection('rpiasCommand');
-        collection.find({command_id: 3}).toArray(function(err, docs) {
-            if (err) {
-
-            }
-
-            console.log(docs);
-            container = docs;
-        });
-    });
-}
-
-function setCommands (command) {
+function markCommands (command) {
     mongo.execute(function (db) {
         var collection = db.collection('rpiasCommand');
 
@@ -69,37 +59,59 @@ function setCommands (command) {
             if (err) {
                 log.logError('Command insert error: ' + err);
             } else {
+                var date = new Date;
+                command.consummDate = date.getFullYear()
+                    + '-'
+                    + (date.getMonth() +1)
+                    + '-'
+                    + date.getDate()
+                    + ' '
+                    + date.getHours()
+                    + ':'
+                    + date.getMinutes()
+                    + ':'
+                    + date.getSeconds();
                 command.id = result.insertedId;
-                log.logInfo('Command consumed: ' + JSON.stringify(command) );
 
-                setAsConsumed(command.command_id);
+                log.logInfo('Command consumed: ' + JSON.stringify(command) );
+                setAsConsumed(command);
             }
         });
     });
 }
 
-function setAsConsumed (commandId) {
+function setAsConsumed (command) {
     var url = config.get('workers.commandConsumer.commands_set')
         + '?key='
         + config.get('workers.commandConsumer.security_key')
         + '&host='
         + config.get('app.system_name');
 
-    console.log(url);
-    console.log(commandId);
-
     request.post(
         url,
-        {form: {test_key: 'test'}},
+        {
+            form:
+            {
+                command_id: command.command_id,
+                command_consumed_date_time: command.consummDate
+            }
+        },
         function (error, response, body) {
             if (error) {
                 log.logError(error);
             } else {
-                console.log(response.statusCode);
-                console.log(body);
-            }
+                if (response.statusCode === 200) {
+                    var responseBody = JSON.parse(body);
 
-            process.exit(0);
+                    if (responseBody.status === 'success') {
+                        log.logInfo('Command with id: "' + command.command_id + '" marked as consumed.');
+                    } else {
+                        log.logError(responseBody.data.message);
+                    }
+                } else {
+                    log.logError(body);
+                }
+            }
         }
     );
 }
