@@ -41,7 +41,7 @@ function consumer() {
                     }
 
                     for (var i in messages) {
-                        markCommands(messages[i]);
+                        addCommands(messages[i]);
                     }
                 } else {
                     log.logError(data.data.message);
@@ -51,26 +51,31 @@ function consumer() {
     );
 }
 
-function markCommands (command) {
+function addCommands (command) {
     mongo.execute(function (db) {
         var collection = db.collection('rpiasCommand');
+
+        var date = new Date;
+        command.consummDate = date.getFullYear()
+            + '-'
+            + (date.getMonth() +1)
+            + '-'
+            + date.getDate()
+            + ' '
+            + date.getHours()
+            + ':'
+            + date.getMinutes()
+            + ':'
+            + date.getSeconds();
+        command.executed = 0;
+        command.output = '';
+        command.error = 0;
+        command.exec_time = '0000-00-00 00:00:00';
 
         collection.insertOne(command, function (err, result) {
             if (err) {
                 log.logError('Command insert error: ' + err);
             } else {
-                var date = new Date;
-                command.consummDate = date.getFullYear()
-                    + '-'
-                    + (date.getMonth() +1)
-                    + '-'
-                    + date.getDate()
-                    + ' '
-                    + date.getHours()
-                    + ':'
-                    + date.getMinutes()
-                    + ':'
-                    + date.getSeconds();
                 command.id = result.insertedId;
 
                 log.logInfo('Command consumed: ' + JSON.stringify(command) );
