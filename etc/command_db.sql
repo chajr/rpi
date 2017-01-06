@@ -12,3 +12,9 @@ CREATE TABLE `commands` (
   `to_be_exec` datetime DEFAULT NULL,
   PRIMARY KEY (`command_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin2;
+
+ALTER TABLE `zmp`.`system_log` 
+ADD COLUMN `disk_usage` VARCHAR(45) NULL DEFAULT NULL AFTER `log_server_time`;
+
+ALTER TABLE `zmp`.`commands` 
+ADD COLUMN `command_consumed_date_time` DATETIME NULL DEFAULT NULL AFTER `to_be_exec`;
