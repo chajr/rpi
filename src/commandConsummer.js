@@ -76,9 +76,7 @@ function addCommands (command) {
             if (err) {
                 log.logError('Command insert error: ' + err);
             } else {
-                command.id = result.insertedId;
-
-                log.logInfo('Command consumed: ' + JSON.stringify(command) );
+                log.logInfo('Command consumed: ' + JSON.stringify(command));
                 setAsConsumed(command);
             }
         });
@@ -98,7 +96,8 @@ function setAsConsumed (command) {
             form:
             {
                 command_id: command.command_id,
-                command_consumed_date_time: command.consummDate
+                command_consumed_date_time: command.consummDate,
+                mongo_id: command._id.toString()
             }
         },
         function (error, response, body) {
