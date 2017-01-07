@@ -42,3 +42,6 @@ ADD COLUMN `disk_usage` VARCHAR(45) NULL DEFAULT NULL AFTER `log_server_time`;
 
 ALTER TABLE `zmp`.`commands` 
 ADD COLUMN `command_consumed_date_time` DATETIME NULL DEFAULT NULL AFTER `to_be_exec`;
+
+ALTER TABLE `zmp`.`commands` 
+ADD COLUMN `mongo_id` VARCHAR(24) NULL DEFAULT NULL AFTER `command_consumed_date_time`;
