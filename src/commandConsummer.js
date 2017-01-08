@@ -72,7 +72,7 @@ function addCommands (command) {
         command.error = 0;
         command.exec_time = '0000-00-00 00:00:00';
 
-        collection.insertOne(command, function (err, result) {
+        collection.insertOne(command, function (err) {
             if (err) {
                 log.logError('Command insert error: ' + err);
             } else {
