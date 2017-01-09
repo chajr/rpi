@@ -47,8 +47,9 @@ function executeCommand (command) {
         }
     }
 
-    var outputErr = exec(command.command).stderr.replace("\n", '');
-    var output = exec(command.command).stdout.replace("\n", '');
+    var executed = exec(command.command);
+    var outputErr = executed.stderr.replace("\n", '');
+    var output = executed.stdout.replace("\n", '');
     var error = 0;
 
     if (outputErr) {
@@ -59,31 +60,39 @@ function executeCommand (command) {
         log.logInfo('Command with id: "' + command.command_id + '" executed successfully.');
     }
 
-    updateMongo(command, output, error);
-    updateDb(command, output, error);
+    command.executed = 1;
+    command.output = output;
+    command.error = error;
+    command.exec_time = currentTime.getFullYear()
+        + '-'
+        + (currentTime.getMonth() +1)
+        + '-'
+        + currentTime.getDate()
+        + ' '
+        + currentTime.getHours()
+        + ':'
+        + currentTime.getMinutes()
+        + ':'
+        + currentTime.getSeconds();
+
+    updateMongo(command);
+    updateDb(command);
 
     return null;
 }
 
-function updateMongo (command, output, error) {
+function updateMongo (command) {
     mongo.execute(function (db) {
         var collection = db.collection('rpiasCommand');
-        var update = {};
 
-        collection.updateOne(update, function(err) {
+        collection.updateOne(command, function(err) {
             if (err) {
                 log.logError(err);
-            } else {
-
             }
         });
     });
 }
 
-function updateDb (command, output, error) {
-    var response = {
-        mongo_id: command._id.toString(),
-        command_id: command.command_id,
-        error: error
-    };
+function updateDb (command) {
+    
 }
