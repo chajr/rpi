@@ -20,7 +20,7 @@ exports.launch = function (args, appConfig) {
 function executor () {
     mongo.execute(function (db) {
         var collection = db.collection('rpiasCommand');
-        collection.find({executed: {$lt: 1}}).toArray(function(err, docs) {
+        collection.find({executed: 0}).toArray(function(err, docs) {
             if (err) {
                 log.logError(err);
             } else {
@@ -60,32 +60,36 @@ function executeCommand (command) {
         log.logInfo('Command with id: "' + command.command_id + '" executed successfully.');
     }
 
-    command.executed = 1;
-    command.output = output;
-    command.error = error;
-    command.exec_time = currentTime.getFullYear()
-        + '-'
-        + (currentTime.getMonth() +1)
-        + '-'
-        + currentTime.getDate()
-        + ' '
-        + currentTime.getHours()
-        + ':'
-        + currentTime.getMinutes()
-        + ':'
-        + currentTime.getSeconds();
+    var update = {
+        $set: {
+            executed: 1,
+            output: output,
+            error: error,
+            exec_time: currentTime.getFullYear()
+                + '-'
+                + (currentTime.getMonth() +1)
+                + '-'
+                + currentTime.getDate()
+                + ' '
+                + currentTime.getHours()
+                + ':'
+                + currentTime.getMinutes()
+                + ':'
+                + currentTime.getSeconds()
+        }
+    };
 
-    updateMongo(command);
+    updateMongo(command.command_id, update);
     updateDb(command);
 
     return null;
 }
 
-function updateMongo (command) {
+function updateMongo (commandId, update) {
     mongo.execute(function (db) {
         var collection = db.collection('rpiasCommand');
 
-        collection.updateOne(command, function(err) {
+        collection.updateOne({command_id: commandId}, update, function(err) {
             if (err) {
                 log.logError(err);
             }
