@@ -63,6 +63,7 @@ function executeCommand (command) {
     var update = {
         $set: {
             executed: 1,
+            resend: 0,
             output: output,
             error: error,
             exec_time: currentTime.getFullYear()
@@ -80,7 +81,7 @@ function executeCommand (command) {
     };
 
     updateMongo(command.command_id, update);
-    updateDb(command);
+    updateDb(command.command_id, update);
 
     return null;
 }
@@ -97,6 +98,38 @@ function updateMongo (commandId, update) {
     });
 }
 
-function updateDb (command) {
-    
+function updateDb (commandId, update) {
+    var url = config.get('workers.commandConsumer.commands_set')
+        + '?key='
+        + config.get('workers.commandConsumer.security_key')
+        + '&host='
+        + config.get('app.system_name');
+
+    request.post(
+        url,
+        {
+            form:
+                {
+                    command_id: commandId,
+                    data_update: update
+                }
+        },
+        function (error, response, body) {
+            if (error) {
+                log.logError(error);
+            } else {
+                if (response.statusCode === 200) {
+                    var responseBody = JSON.parse(body);
+
+                    if (responseBody.status === 'success') {
+                        log.logInfo('Command with id: "' + commandId + '" send to server.');
+                    } else {
+                        log.logError(responseBody.data.message);
+                    }
+                } else {
+                    log.logError(body);
+                }
+            }
+        }
+    );
 }
