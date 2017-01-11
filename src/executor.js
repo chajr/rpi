@@ -24,6 +24,12 @@ function executor () {
             if (err) {
                 log.logError(err);
             } else {
+                if (docs.length === 0) {
+                    log.logInfo('No commands executed.');
+                } else {
+                    log.logInfo('"' + docs.length + '" commands to execute.');
+                }
+
                 for (var i in docs) {
                     executeCommand(docs[i])
                 }
@@ -63,7 +69,6 @@ function executeCommand (command) {
     var update = {
         $set: {
             executed: 1,
-            resend: 0,
             output: output,
             error: error,
             exec_time: currentTime.getFullYear()
@@ -111,7 +116,11 @@ function updateDb (commandId, update) {
             form:
                 {
                     command_id: commandId,
-                    data_update: update
+                    data_update: true,
+                    executed: update.$set.executed,
+                    output: update.$set.output,
+                    error: update.$set.error,
+                    exec_time: update.$set.exec_time
                 }
         },
         function (error, response, body) {
@@ -123,6 +132,12 @@ function updateDb (commandId, update) {
 
                     if (responseBody.status === 'success') {
                         log.logInfo('Command with id: "' + commandId + '" send to server.');
+                        updateMongo(
+                            commandId,
+                            {
+                                $set: {resend: 1}
+                            }
+                        );
                     } else {
                         log.logError(responseBody.data.message);
                     }
