@@ -70,6 +70,7 @@ function addCommands (command) {
         command.executed = 0;
         command.output = '';
         command.error = 0;
+        command.resend= 0;
         command.exec_time = '0000-00-00 00:00:00';
 
         collection.insertOne(command, function (err) {
