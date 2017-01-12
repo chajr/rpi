@@ -45,6 +45,10 @@ information and temperature with pressure measurement.
 - **rpia_sms_send** - false (life for 15 min)
 - **rpia_error_led** - false
 
+### Mongo DB setup:
+
+- Create `rpias` database
+
 ### Process setup:
 
 Set up correct paths in etc/config.json, correct security key, geographics position, server path
@@ -62,6 +66,8 @@ sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
 sudo forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
 sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
 sudo forever start -d /path/app.js errorLed >> /var/log/rpi-error-led.log
+sudo forever start -d /path/app.js commandConsummer >> /var/log/rpi-commandConsummer.log
+sudo forever start -d /path/app.js executor >> /var/log/rpi-executor.log
 sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
 ```
 
