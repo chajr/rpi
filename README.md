@@ -51,7 +51,7 @@ information and temperature with pressure measurement.
 
 ### Process setup:
 
-Set up correct paths in etc/config.json, correct security key, geographics position, server path
+Set up correct paths in etc/config.json, correct security key, geographic position, server path
 
 `/etc/init.d/rpi-mc.sh` content:
 
