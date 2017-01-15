@@ -135,7 +135,7 @@ function updateDb (commandId, update) {
                         updateMongo(
                             commandId,
                             {
-                                $set: {resend: 1}
+                                $set: {resend: 0}
                             }
                         );
                     } else {
