@@ -13,7 +13,6 @@
     "json_log": false,
     "shutdown_command": "sudo shutdown -h now",
     "worker_enabled": true,
-    "security_key": "",
     "position": {
       "lt": 0,
       "gt": 0
@@ -22,17 +21,20 @@
     "system_name": "",
     "mongo_connection_timeout": 5000
   },
+  "auth": {
+    "user": "",
+    "pass": "",
+    "security_key": ""
+  },
   "workers": {
     "commandConsumer": {
       "worker_time": 60000,
       "commands_get": "",
-      "commands_set": "",
-      "security_key": ""
+      "commands_set": ""
     },
     "system": {
       "worker_time": 60000,
-      "data_collector": "",
-      "security_key": ""
+      "data_collector": ""
     },
     "error_led": {
       "worker_time": 1000
