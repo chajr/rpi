@@ -80,11 +80,17 @@ function collectData() {
 
     var url = config.get('workers.system.data_collector')
         + '?key='
-        + config.get('workers.system.security_key');
+        + config.get('auth.security_key');
 
     request.post(
         url,
-        {form: data},
+        {
+            form: data,
+            auth: {
+                user: config.get('auth.user'),
+                pass: config.get('auth.pass')
+            }
+        },
         function (error, response, body) {
             if (error) {
                 log.logError(error);

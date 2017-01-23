@@ -19,12 +19,18 @@ exports.launch = function (args, appConfig) {
 function consumer() {
     var url = config.get('workers.commandConsumer.commands_get')
         + '?key='
-        + config.get('workers.commandConsumer.security_key')
+        + config.get('auth.security_key')
         + '&host='
         + config.get('app.system_name');
 
     request.post(
         url,
+        {
+            auth: {
+                user: config.get('auth.user'),
+                pass: config.get('auth.pass')
+            }
+        },
         function (error, response, body) {
             if (error) {
                 log.logError(error);
@@ -87,7 +93,7 @@ function addCommands (command) {
 function setAsConsumed (command) {
     var url = config.get('workers.commandConsumer.commands_set')
         + '?key='
-        + config.get('workers.commandConsumer.security_key')
+        + config.get('auth.security_key')
         + '&host='
         + config.get('app.system_name');
 
@@ -99,6 +105,10 @@ function setAsConsumed (command) {
                 command_id: command.command_id,
                 command_consumed_date_time: command.consummDate,
                 mongo_id: command._id.toString()
+            },
+            auth: {
+                user: config.get('auth.user'),
+                pass: config.get('auth.pass')
             }
         },
         function (error, response, body) {
