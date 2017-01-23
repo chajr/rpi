@@ -101,7 +101,7 @@ function record() {
 
     camera = new RaspiCam({
         mode: "video",
-        output: config.get('app.movie_path') + '/' + currentRecord,
+        output: config.get('app.main_path') + '/' + config.get('app.movie_path') + '/' + currentRecord,
         timeout: config.get('alert_gpio.camera.timeout'),
         width: config.get('alert_gpio.camera.width'),
         height: config.get('alert_gpio.camera.height'),
@@ -134,6 +134,8 @@ function sendToRemote() {
     if (currentRecord && config.get('app.movie_send')) {
         console.log('send file');
         var command = 'scp '
+            + config.get('app.main_path')
+            + '/'
             + config.get('app.movie_path')
             + '/'
             + currentRecord
