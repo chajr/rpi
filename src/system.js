@@ -2,9 +2,9 @@ var exec = require('sync-exec');
 var log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
-var led = require('../lib/led');
 var uptime = require('../lib/uptime');
 
+var led;
 var name = 'System worker';
 var config;
 var buttonOff;
@@ -16,6 +16,7 @@ exports.launch = function (args, appConfig, appStartTime) {
     startTime = appStartTime;
 
     if (config.get('app.gpio_enabled')) {
+        led = require('../lib/led');
         Gpio = require('onoff').Gpio;
     }
 
