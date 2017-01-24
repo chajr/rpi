@@ -20,6 +20,7 @@ sudo touch /var/log/rpi-mc-server.log
 sudo touch /var/log/rpi-error-led.log
 sudo touch /var/log/rpi-commandConsummer.log
 sudo touch /var/log/rpi-executor.log
+sudo touch /var/log/rpi-a-alert.log
 sudo chown $USER:$USER /var/log/rpi-mc-system.log
 sudo chown $USER:$USER /var/log/rpi-mc-server.log
 sudo chown $USER:$USER /var/log/rpi-a-display.log
@@ -27,6 +28,7 @@ sudo chown $USER:$USER /var/log/rpi-mc-autoIlluminate.log
 sudo chown $USER:$USER /var/log/rpi-error-led.log
 sudo chown $USER:$USER /var/log/rpi-commandConsummer.log
 sudo chown $USER:$USER /var/log/rpi-executor.log
+sudo chown $USER:$USER /var/log/rpi-a-alert.log
 
 sudo touch /etc/init.d/rpi-mc.sh
 sudo chmod +x /etc/init.d/rpi-mc.sh
