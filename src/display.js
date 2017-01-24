@@ -1,4 +1,6 @@
 var lcd = require('../lib/lcd');
+var Gpio = require('onoff').Gpio;
+
 var lcdLightStatus = 0;
 var buttonLight;
 var config;
