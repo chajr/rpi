@@ -10,7 +10,7 @@
     "url": "http://opensource.org/licenses/apache2.0.php"
   },
   "dependencies": {
-    "onoff": "1.0.*",
+    "onoff": "1.1.*",
     "gpio-stream": "1.0.17",
     "lcd" : "1.1.1",
     "winston" : "2.1.1",
