@@ -14,11 +14,21 @@ var config;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
-
     init();
 };
 
 function init() {
+    initBtn();
+    lcdInit();
+}
+
+function lcdInit() {
+    lcd.init();
+
+    lcd.displayMessage(['System init ok']);
+}
+
+function initBtn() {
     if (buttonLight) {
         buttonLight.unwatch();
     }
@@ -47,5 +57,5 @@ function lcdLight(err, state) {
         }
     }
 
-    init();
+    initBtn();
 }
