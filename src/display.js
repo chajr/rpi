@@ -1,9 +1,6 @@
 var lcd = require('../lib/lcd');
-var Gpio = require('onoff').Gpio;
-var log = require('../lib/log');
+var Button = require('../lib/button');
 
-var lcdLightStatus = 0;
-var buttonLight;
 var config;
 
 /**
@@ -18,44 +15,17 @@ exports.launch = function (args, appConfig) {
 };
 
 function init() {
-    initBtn();
-    lcdInit();
-}
-
-function lcdInit() {
-    lcd.init();
-
-    lcd.displayMessage(['System init ok']);
-}
-
-function initBtn() {
-    if (buttonLight) {
-        buttonLight.unwatch();
-    }
-
-    buttonLight = new Gpio(
+    Button.watcher(
         config.get('alert_gpio.button_display'),
-        'in',
-        'both'
+        function (status) {
+            if (status) {
+                lcd.lightOff();
+            } else {
+                lcd.lightOn();
+            }
+        }
     );
 
-    buttonLight.watch(lcdLight);
-}
-
-function lcdLight(err, state) {
-    if (err) {
-        log.logError('Button LCD light error: ' + err);
-    }
-
-    if(state == 1) {
-        if (lcdLightStatus) {
-            lcd.lightOff();
-            lcdLightStatus = 0;
-        } else {
-            lcd.lightOn();
-            lcdLightStatus = 1;
-        }
-    }
-
-    initBtn();
+    lcd.init();
+    lcd.displayMessage(['System init ok']);
 }
