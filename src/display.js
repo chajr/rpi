@@ -19,9 +19,9 @@ function init() {
         config.get('alert_gpio.button_display'),
         function (status) {
             if (status) {
-                lcd.lightOff();
-            } else {
                 lcd.lightOn();
+            } else {
+                lcd.lightOff();
             }
         }
     );
