@@ -1,30 +1,22 @@
 var Gpio = require('onoff').Gpio;
 var led = require('../lib/led');
-var log = require('../lib/log.js');
-var redis = require('../lib/redis.js');
-var RaspiCam = require("raspicam");
+var Button = require('../lib/button');
+var log = require('../lib/log');
+var redis = require('../lib/redis');
 var fs = require('fs');
 var request = require('request');
-var exec = require('child_process').exec;
 var cameraLib = require('../lib/camera');
+var isSystemArmed = false;
 
-var systemArmed;
 var config;
 var detector;
 var recordInterval;
-var currentRecord = false;
-var camera = false;
-var isSystemArmed = false;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
 
     init();
-
-    systemArmed.watch(amrSystem);
-    detector.watch(alarm);
 };
-
 
 function init() {
     detector = new Gpio(
@@ -33,12 +25,35 @@ function init() {
         'both'
     );
 
-    systemArmed = new Gpio(
+    Button.watcher(
         config.get('alert_gpio.button_armed'),
-        'in',
-        'both'
+        function (status) {
+            console.log(isSystemArmed);
+            console.log(status);
+            console.log(config.get('alert_gpio.arm_after'));
+
+            if (isSystemArmed && status == 0) {
+                redis.setData('alert_armed', 'false');
+                log.logInfo('Alert turn off.');
+                led.off(config.get('alert_gpio.arm_led'));
+                isSystemArmed = false;
+            } else if (!isSystemArmed && status == 1) {
+                console.log('arm');
+                setTimeout(
+                    function() {
+                        console.log('armed');
+                        redis.setData('alert_armed', 'true');
+                        log.logInfo('Alert turn on.');
+                        led.on(config.get('alert_gpio.arm_led'));
+                        isSystemArmed = true;
+                    },
+                    config.get('alert_gpio.arm_after')
+                );
+            }
+        }
     );
 
+    detector.watch(alarm);
     redis.connect();
 }
 
@@ -71,7 +86,7 @@ function alarm(err, state) {
         }
 
     } else {
-        cameraStop();
+        cameraLib.cameraStop();
 
         if (config.get('alert_gpio.mode') === 'movie') {
             clearInterval(recordInterval);
@@ -82,88 +97,5 @@ function alarm(err, state) {
 }
 
 function record() {
-    cameraStop();
-
-    console.log('start record');
-    var time = new Date();
-    currentRecord = time.getHours()
-        + ':'
-        + time.getMinutes()
-        + ':'
-        + time.getSeconds()
-        + '_'
-        + time.getDate()
-        + '-'
-        + (time.getMonth() +1)
-        + '-'
-        + time.getFullYear()
-        + '.avi';
-
-    camera = new RaspiCam({
-        mode: "video",
-        output: config.get('app.main_path') + '/' + config.get('app.movie_path') + '/' + currentRecord,
-        timeout: config.get('alert_gpio.camera.timeout'),
-        width: config.get('alert_gpio.camera.width'),
-        height: config.get('alert_gpio.camera.height'),
-        bitrate: config.get('alert_gpio.camera.bitrate'),
-        framerate: config.get('alert_gpio.camera.framerate')
-    });
-
-    camera.start();
-
-    console.log('record started');
-}
-
-function recordCallback(error, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    console.log(error);
-}
-
-function cameraStop() {
-    if (camera) {
-        camera.stop();
-
-        if (config.get('alert_gpio.mode') === 'movie') {
-            sendToRemote();
-        }
-    }
-}
-
-function sendToRemote() {
-    if (currentRecord && config.get('app.movie_send')) {
-        console.log('send file');
-        var command = 'scp '
-            + config.get('app.main_path')
-            + '/'
-            + config.get('app.movie_path')
-            + '/'
-            + currentRecord
-            + ' '
-            + config.get('alert_gpio.server_destination');
-
-        exec(command, recordCallback);
-
-        console.log('ended');
-        currentRecord = false;
-    }
-}
-
-function amrSystem(err, state) {
-    if (isSystemArmed && state == 0) {
-        redis.setData('alert_armed', 'false');
-        log.logInfo('Alert turn off.');
-        led.off(config.get('alert_gpio.arm_led'));
-        isSystemArmed = false;
-    } else if (!isSystemArmed && state == 1) {
-        setTimeout(
-            function() {
-                redis.setData('alert_armed', 'true');
-                log.logInfo('Alert turn on.');
-                led.on(config.get('alert_gpio.arm_led'));
-                isSystemArmed = true;
-            },
-            config.get('alert_gpio.arm_after')
-        );
-    }
+    cameraLib.record();
 }
