@@ -6,6 +6,7 @@ var redis = require('../lib/redis');
 var fs = require('fs');
 var request = require('request');
 var cameraLib = require('../lib/camera');
+var lcd = require('../lib/lcd');
 var isSystemArmed = false;
 
 var config;
@@ -28,20 +29,14 @@ function init() {
     Button.watcher(
         config.get('alert_gpio.button_armed'),
         function (status) {
-            console.log(isSystemArmed);
-            console.log(status);
-            console.log(config.get('alert_gpio.arm_after'));
-
             if (isSystemArmed && status == 0) {
                 redis.setData('alert_armed', 'false');
                 log.logInfo('Alert turn off.');
                 led.off(config.get('alert_gpio.arm_led'));
                 isSystemArmed = false;
             } else if (!isSystemArmed && status == 1) {
-                console.log('arm');
                 setTimeout(
                     function() {
-                        console.log('armed');
                         redis.setData('alert_armed', 'true');
                         log.logInfo('Alert turn on.');
                         led.on(config.get('alert_gpio.arm_led'));
