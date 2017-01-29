@@ -7,7 +7,7 @@ var fs = require('fs');
 var request = require('request');
 var cameraLib = require('../lib/camera');
 var lcd = require('../lib/lcd');
-var isSystemArmed = false;
+var isSystemArmed;
 
 var config;
 var detector;
@@ -20,6 +20,8 @@ exports.launch = function (args, appConfig) {
 };
 
 function init() {
+    redis.connect();
+
     detector = new Gpio(
         config.get('alert_gpio.detector_move'),
         'in',
@@ -49,7 +51,10 @@ function init() {
     );
 
     detector.watch(alarm);
-    redis.connect();
+    redis.getData('alert_armed', function (val) {
+        isSystemArmed = val === 'true';
+        console.log('redis status ' + isSystemArmed);
+    });
 }
 
 function alarm(err, state) {
