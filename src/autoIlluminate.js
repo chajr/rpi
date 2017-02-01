@@ -109,11 +109,15 @@ function illuminator() {
 }
 
 function isSpecialDay (currentDate) {
-    var day = currentDate.getDate();
-    var month = currentDate.getMonth() +1;
-    var special = config.get('illuminate_special.' + month);
+    let day = currentDate.getDate();
+    let month = currentDate.getMonth() +1;
+    let special = config.get('illuminate_special.' + month);
 
-    return special.indexOf(day) >= 0;
+    if (typeof(special) !== "undefined") {
+        return special.indexOf(day) >= 0;
+    }
+
+    return false;
 }
 
 function getRedisStatus (status) {
