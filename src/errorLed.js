@@ -1,11 +1,12 @@
-var log = require('../lib/log');
-var worker = require('../lib/worker');
-var redis = require('../lib/redis.js');
+let log = require('../lib/log');
+let worker = require('../lib/worker');
+let redis = require('../lib/redis.js');
 
-var name = 'LED status worker';
-var config;
-var led;
-var errorLedStatus = false;
+let name = 'LED status worker';
+let errorLedStatus = false;
+
+let config;
+let led;
 
 exports.launch = function (args, appConfig, appStartTime) {
     config = appConfig;
@@ -16,6 +17,8 @@ exports.launch = function (args, appConfig, appStartTime) {
 };
 
 function init() {
+    led.on(config.get('app.led_green'));
+
     worker.startWorker(
         handleLed,
         config.get('workers.error_led.worker_time'),
@@ -26,18 +29,22 @@ function init() {
 function handleLed() {
     redis.getData('error_led', function (data) {
         if (data) {
-            var oldLedStatus = errorLedStatus;
+            let oldLedStatus = errorLedStatus;
 
             errorLedStatus = data === 'true';
 
             if (errorLedStatus !== oldLedStatus) {
                 console.log('Error LED status changed to: ' + data);
+
+                changeStatus();
             }
         }
     });
+}
 
+function changeStatus() {
     if (config.get('app.gpio_enabled')) {
-        var led = require('../lib/led');
+        let led = require('../lib/led');
 
         if (errorLedStatus) {
             led.on(config.get('app.led_red'));
