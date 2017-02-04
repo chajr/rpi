@@ -17,7 +17,10 @@ exports.launch = function (args, appConfig, appStartTime) {
 };
 
 function init() {
-    led.on(config.get('app.led_green'));
+    if (config.get('app.gpio_enabled')) {
+        led = require('../lib/led');
+        led.on(config.get('app.led_green'));
+    }
 
     worker.startWorker(
         handleLed,
@@ -44,8 +47,6 @@ function handleLed() {
 
 function changeStatus() {
     if (config.get('app.gpio_enabled')) {
-        let led = require('../lib/led');
-
         if (errorLedStatus) {
             led.on(config.get('app.led_red'));
             led.off(config.get('app.led_green'));
