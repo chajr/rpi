@@ -33,6 +33,9 @@
       "commands_get": "",
       "commands_set": ""
     },
+    "lcd_message": {
+      "worker_time": 1000
+    },
     "system": {
       "worker_time": 60000,
       "data_collector": ""
