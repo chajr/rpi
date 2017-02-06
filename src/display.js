@@ -1,7 +1,7 @@
-var lcd = require('../lib/lcd');
-var Button = require('../lib/button');
+let lcd = require('../lib/lcd');
+let Button = require('../lib/button');
 
-var config;
+let config;
 
 /**
  * @todo show working time
@@ -25,7 +25,4 @@ function init() {
             }
         }
     );
-
-    lcd.init();
-    lcd.displayMessage(['System init ok']);
 }
