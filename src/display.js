@@ -1,5 +1,4 @@
-let lcd = require('../lib/lcd');
-let Button = require('../lib/button');
+let lcd = require('./lcd');
 
 let config;
 
@@ -7,6 +6,8 @@ let config;
  * @todo show working time
  * @todo show last record status and time
  * @todo disk usage
+ * @todo system status
+ * @todo arm status
  */
 
 exports.launch = function (args, appConfig) {
@@ -15,14 +16,5 @@ exports.launch = function (args, appConfig) {
 };
 
 function init() {
-    Button.watcher(
-        config.get('alert_gpio.button_display'),
-        function (status) {
-            if (status) {
-                lcd.lightOn();
-            } else {
-                lcd.lightOff();
-            }
-        }
-    );
+   
 }
