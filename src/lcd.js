@@ -20,7 +20,7 @@ exports.launch = function (args, appConfig) {
 };
 
 exports.setMessage = function (message, row = 0) {
-    redis.setData('lcd_message_' + row, message);
+    redis.setData('lcd_message_' + row, message, config.get('alert_gpio.message_show_time'));
 };
 
 function worker () {
