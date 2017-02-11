@@ -79,6 +79,7 @@
     "button_off":6,
     "button_armed":5,
     "button_status": 19,
+    "message_show_time": 10000,
     "button_display": 26,
     "detector_move": 18,
     "system_armed": 10,
