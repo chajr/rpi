@@ -15,6 +15,7 @@ redis-cli set rpia_lcd_light false
 redis-cli set rpia_lcd_message_0 ""
 redis-cli set rpia_lcd_message_1 ""
 redis-cli set rpia_alert_led false
+#expire 15 min
 redis-cli expire rpia_sms_send 900
 
 sudo touch /var/log/rpi-mc-system.log
