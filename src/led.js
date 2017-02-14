@@ -4,11 +4,12 @@ let redis = require('../lib/redis.js');
 
 let name = 'LED status worker';
 let errorLedStatus = false;
+let armLedStatus = false;
 
 let config;
 let led;
 
-exports.launch = function (args, appConfig, appStartTime) {
+exports.launch = function (args, appConfig) {
     config = appConfig;
 
     redis.connect();
@@ -37,22 +38,35 @@ function handleLed() {
             errorLedStatus = data === 'true';
 
             if (errorLedStatus !== oldLedStatus) {
-                console.log('Error LED status changed to: ' + data);
+                log.logInfo('Error LED status changed to: ' + data);
 
-                changeStatus();
+                changeStatus(config.get('app.led_red'), errorLedStatus);
+                changeStatus(config.get('app.led_green'), !errorLedStatus);
+            }
+        }
+    });
+
+    redis.getData('arm_led', function (data) {
+        if (data) {
+            let oldArmLedStatus = armLedStatus;
+
+            armLedStatus = data === 'true';
+
+            if (armLedStatus !== oldArmLedStatus) {
+                log.logInfo('Arm LED status changed to: ' + data);
+
+                changeStatus(config.get('alert_gpio.arm_led'), armLedStatus);
             }
         }
     });
 }
 
-function changeStatus() {
+function changeStatus(pin, status) {
     if (config.get('app.gpio_enabled')) {
-        if (errorLedStatus) {
-            led.on(config.get('app.led_red'));
-            led.off(config.get('app.led_green'));
+        if (status) {
+            led.on(pin);
         } else {
-            led.off(config.get('app.led_red'));
-            led.on(config.get('app.led_green'));
+            led.off(pin);
         }
     }
 }
