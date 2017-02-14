@@ -34,14 +34,14 @@
       "commands_set": ""
     },
     "lcd_message": {
-      "worker_time": 1000
+      "worker_time": 500
     },
     "system": {
       "worker_time": 60000,
       "data_collector": ""
     },
-    "error_led": {
-      "worker_time": 1000
+    "led": {
+      "worker_time": 500
     },
     "autoIlluminate": {
       "worker_time": 60000,

@@ -25,7 +25,7 @@ function init() {
 
     worker.startWorker(
         handleLed,
-        config.get('workers.error_led.worker_time'),
+        config.get('workers.led.worker_time'),
         name
     );
 }
@@ -46,7 +46,7 @@ function handleLed() {
         }
     });
 
-    redis.getData('arm_led', function (data) {
+    redis.getData('alert_armed', function (data) {
         if (data) {
             let oldArmLedStatus = armLedStatus;
 

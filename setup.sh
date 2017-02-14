@@ -14,7 +14,6 @@ redis-cli set rpia_error_led false
 redis-cli set rpia_lcd_light false
 redis-cli set rpia_lcd_message_0 ""
 redis-cli set rpia_lcd_message_1 ""
-redis-cli set rpia_arm_led false
 #expire 15 min
 redis-cli expire rpia_sms_send 900
 
