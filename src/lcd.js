@@ -19,8 +19,8 @@ exports.launch = function (args, appConfig) {
     Lcd.display(worker);
 };
 
-exports.setMessage = function (message, row = 0) {
-    redis.setData('lcd_message_' + row, message, config.get('alert_gpio.message_show_time'));
+exports.setMessage = function (message, row = '0', messageShowTime = '10') {
+    redis.setData('lcd_message_' + row, message, messageShowTime);
 };
 
 function worker () {
