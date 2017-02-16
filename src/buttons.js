@@ -9,6 +9,7 @@ let armInterval;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
+    redis.connect();
 
     Button.watcher(appConfig, 'alert_gpio.button_status', function (status) {
         log.logInfo('Status button: ' + status);
@@ -24,23 +25,22 @@ exports.launch = function (args, appConfig) {
 
     Button.watcher(appConfig, 'alert_gpio.button_armed', function () {
         redis.getData('alert_armed', function (isSystemArmed) {
-            if (isSystemArmed) {
+            if (isSystemArmed === 'true') {
                 redis.setData('alert_armed', 'false');
                 lcd.setMessage('System unarmed');
 
                 log.logInfo('Alert turn off.');
-            } else if (!isSystemArmed) {
+            } else if (isSystemArmed === 'false') {
                 let armDelay = config.get('alert_gpio.arm_after');
-                let timeout = armDelay/100;
+                let timeout = armDelay/1000;
 
-                lcd.setMessage('System arming');
+                lcd.setMessage('System arming', '0', '14');
 
                 armInterval = setInterval(
                     function () {
                         if (timeout < 0) {
                             redis.setData('alert_armed', 'true');
                             lcd.setMessage('System armed');
-                            lcd.setMessage('', 1);
 
                             log.logInfo('Alert turn on.');
                             isSystemArmed = true;
@@ -49,7 +49,7 @@ exports.launch = function (args, appConfig) {
                             return;
                         }
 
-                        lcd.setMessage('after: ' + timeout-- + 's', 1);
+                        lcd.setMessage('after: ' + timeout-- + 's', '1', '2');
                     },
                     1000
                 );
