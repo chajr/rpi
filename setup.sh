@@ -44,3 +44,5 @@ chmod 0777 var/log
 ln -s ~/config.json etc/config.json
 
 npm install
+
+rsync -vrtq --log-file=/var/log/rpi-a-img.log RPiAS_directory/var/img/* user@host:~/path;
