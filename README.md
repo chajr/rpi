@@ -74,3 +74,4 @@ sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
 ```
 
 rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
+rsync -vrpogthlq ~/RPiAS/var/log/*.log username@remote_host:destination_directory
