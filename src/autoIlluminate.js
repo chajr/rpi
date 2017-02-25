@@ -1,15 +1,15 @@
-var illuminate = require('./illuminate');
-var log = require('../lib/log.js');
-var redis = require('../lib/redis.js');
-var worker = require('../lib/worker');
-var SunCalc = require('suncalc');
-var config;
-var name = 'Auto illuminate worker';
-var keepAlive = false;
-var forceOn = false;
-var forceOff = false;
-var launched = false;
-var statusObject = {};
+let illuminate = require('./illuminate');
+let log = require('../lib/log.js');
+let redis = require('../lib/redis.js');
+let worker = require('../lib/worker');
+let SunCalc = require('suncalc');
+let config;
+let name = 'Auto illuminate worker';
+let keepAlive = false;
+let forceOn = false;
+let forceOff = false;
+let launched = false;
+let statusObject = {};
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -28,15 +28,15 @@ function illuminator() {
     getRedisStatus('force_off');
     getRedisStatus('keep_alive');
 
-    var lt = config.get('app.position.lt');
-    var gt = config.get('app.position.gt');
+    let lt = config.get('app.position.lt');
+    let gt = config.get('app.position.gt');
     statusObject.turnOn = config.get('workers.autoIlluminate.turnOn').split(':');
     statusObject.minTime = config.get('workers.autoIlluminate.minimalTime').split(':');
     statusObject.maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
-    var date = new Date();
-    var sunCalc = SunCalc.getTimes(date, lt, gt);
-    var sunsetTime = sunCalc.sunset.getTime();
-    var currentTime = date.getTime();
+    let date = new Date();
+    let sunCalc = SunCalc.getTimes(date, lt, gt);
+    let sunsetTime = sunCalc.sunset.getTime();
+    let currentTime = date.getTime();
     statusObject.sunsetTime = sunCalc.sunset.getHours()
         + ':'
         + sunCalc.sunset.getMinutes()
@@ -52,17 +52,17 @@ function illuminator() {
     date.setMinutes(statusObject.turnOn[1]);
     date.setHours(statusObject.turnOn[0]);
 
-    var onTime = date.getTime();
+    let onTime = date.getTime();
 
     date.setMinutes(statusObject.minTime[1]);
     date.setHours(statusObject.minTime[0]);
 
-    var minimalTime = date.getTime();
+    let minimalTime = date.getTime();
 
     date.setMinutes(statusObject.maxTime[1]);
     date.setHours(statusObject.maxTime[0]);
 
-    var offTime = date.getTime();
+    let offTime = date.getTime();
 
     statusObject.nowGraterThanMinimal = currentTime >= minimalTime;
     statusObject.nowLowerThantOff = currentTime <= offTime;
@@ -73,7 +73,7 @@ function illuminator() {
     statusObject.isWeekend = date.getDay() % 6 === 0;
     statusObject.isSpacialDay = isSpecialDay(date);
 
-    var turnLightOn = (
+    let turnLightOn = (
         (!statusObject.sunsetLowerThanOn && statusObject.nowGraterThanSunset)
         || (statusObject.sunsetLowerThanOn && statusObject.nowGraterThanOn)
         || (
@@ -85,7 +85,9 @@ function illuminator() {
     statusObject.turnLightOn = turnLightOn;
     statusObject.launched = launched;
     statusObject.turnOnStatus = !launched && (turnLightOn || forceOn);
-    statusObject.turnOffStatus = launched && ((!keepAlive && statusObject.nowGraterThanOff) || forceOff);
+
+    statusObject.alive = !keepAlive && statusObject.nowGraterThanOff && !forceOn;
+    statusObject.turnOffStatus = launched && (statusObject.alive || forceOff);
 
     log.logInfo('Auto illuminate statuses:' + JSON.stringify(statusObject));
 
