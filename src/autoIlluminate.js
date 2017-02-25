@@ -86,8 +86,9 @@ function illuminator() {
     statusObject.launched = launched;
     statusObject.turnOnStatus = !launched && (turnLightOn || forceOn);
 
-    statusObject.alive = !keepAlive && statusObject.nowGraterThanOff && !forceOn;
-    statusObject.turnOffStatus = launched && (statusObject.alive || forceOff);
+    statusObject.alive = !keepAlive && statusObject.nowGraterThanOff;
+    statusObject.force = !forceOn && !turnLightOn;
+    statusObject.turnOffStatus = launched && (statusObject.alive || statusObject.force || forceOff);
 
     log.logInfo('Auto illuminate statuses:' + JSON.stringify(statusObject));
 
