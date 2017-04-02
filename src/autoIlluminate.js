@@ -35,7 +35,7 @@ function illuminator() {
     statusObject.maxTime = config.get('workers.autoIlluminate.shutDownTime').split(':');
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
-    let sunsetTime = sunCalc.sunset.getTime();
+    let sunsetTime = sunCalc.sunset.getTime() + (2 * 60 * 60);
     let currentTime = date.getTime();
     statusObject.sunsetTime = sunCalc.sunset.getHours()
         + ':'
