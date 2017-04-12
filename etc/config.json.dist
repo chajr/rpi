@@ -142,7 +142,7 @@
     "ip_internal": "hostname -I | xargs -n1 | head -1",
     "ip_external": "wget http://ipinfo.io/ip -qO -",
     "disk_usage": "df -h | grep ^/",
-    "cpu_temp": "/opt/vc/bin/vcgencmd measure_temp",
+    "cpu_temp": "/opt/vc/bin/vcgencmd measure_temp | sensors",
     "extra": {
       "illuminate_status": "redis-cli get rpia_illuminate_status"
     }
