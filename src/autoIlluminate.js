@@ -34,10 +34,10 @@ function illuminator() {
     let gt = config.get('app.position.gt');
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
-    let iluminator = new Iluminator(date, config, launched, forceOn, sunCalc);
+    let iluminator = new Iluminator(date, config, launched, forceOn, sunCalc, keepAlive);
 
     iluminator.turnLightOn();
-    iluminator.turnLightOn(launched, forceOff);
+    iluminator.turnLightOff(forceOff);
 
     let status = iluminator.objectStatus();
 
