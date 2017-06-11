@@ -34,7 +34,9 @@ function illuminator() {
     let gt = config.get('app.position.gt');
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
-    let iluminator = new Iluminator(date, config, launched, forceOn, sunCalc, keepAlive);
+    let iluminator = new Iluminator(config, launched, forceOn, sunCalc, keepAlive);
+
+    iluminator.calculate(date);
 
     iluminator.turnLightOn();
     iluminator.turnLightOff(forceOff);
