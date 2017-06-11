@@ -30,7 +30,7 @@ sudo chown $USER:$USER /var/log/rpi-mc-system.log
 sudo chown $USER:$USER /var/log/rpi-mc-server.log
 sudo chown $USER:$USER /var/log/rpi-a-display.log
 sudo chown $USER:$USER /var/log/rpi-mc-autoIlluminate.log
-sudo chown $USER:$USER /var/log/rpi-error-led.log
+sudo chown $USER:$USER /var/log/rpi-led.log
 sudo chown $USER:$USER /var/log/rpi-commandConsummer.log
 sudo chown $USER:$USER /var/log/rpi-executor.log
 sudo chown $USER:$USER /var/log/rpi-a-alert.log
