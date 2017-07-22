@@ -144,12 +144,20 @@ describe('Test Illuminate Library', function(){
             assert.equal(Ilum.turnLightOff(), true);
         });
 
-        it('turn off because of force', function(){
+        // it('turn off because of force', function(){
+        //     let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
+        //     let Ilum = createIlluminatorObject(1, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 31, 0));
+        //
+        //     assert.equal(Ilum.turnLightOn(), false);
+        //     assert.equal(Ilum.turnLightOff(), true);
+        // });
+
+        it('turn on because of force', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
-            let Ilum = createIlluminatorObject(1, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 31, 0));
+            let Ilum = createIlluminatorObject(0, 'on', {sunset: sunset}, new Date(2017, 5, 13, 15, 30, 0));
 
             assert.equal(Ilum.turnLightOn(), true);
-            assert.equal(Ilum.turnLightOff(), true);
+            assert.equal(Ilum.turnLightOff(), false);
         });
     });
 });
