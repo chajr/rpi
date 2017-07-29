@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-let config = require('./lib/config')();
+let Config = require('./lib/config');
 let log = require('./lib/log.js');
 let redis = require('./lib/redis.js');
 let fs = require('fs');
 
+let config = new Config;
 let args = process.argv.slice(2);
 let startTime = new Date().getTime();
 let app;
