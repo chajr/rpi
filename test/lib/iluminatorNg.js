@@ -3,6 +3,21 @@ let Iluminator = require('../../lib/iluminatorNg');
 let assert = require('assert');
 
 describe('Test Illuminate Library', function(){
+    describe('Test other methods', function(){
+        it('check xor function', function(){
+            assert.equal(Iluminator.xor(true, false), true);
+            assert.equal(Iluminator.xor(false, true), true);
+
+            assert.equal(Iluminator.xor(false, false), false);
+            assert.equal(Iluminator.xor(true, true), false);
+        });
+
+        //check time calculation
+        //check prepare log
+        //calculate turn on
+        //object status
+    });
+
     describe('Test special day', function(){
         it('should return that current day is special day', function(){
             let sunset = new SunCalcMock(new Date(2017, 7, 19, 16, 0, 0));
@@ -32,15 +47,9 @@ describe('Test Illuminate Library', function(){
     describe('Test on/off calculation', function(){
         it('prevent from double turn on', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 0, 0));
-            let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 31, 0));
-
-            assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
-                false
-            );
+            let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 35, 0));
 
             assert.equal(Ilum.turnLightOn(), false);
-            assert.equal(Ilum.turnLightOff(), false);
         });
 
         it('turn on because of minimal time', function(){
@@ -48,7 +57,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 30, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -61,7 +70,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 18, 30, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -74,7 +83,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 19, 0, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -87,7 +96,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 4, 3, 16, 50, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -100,7 +109,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 16, 50, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 false
             );
 
@@ -113,7 +122,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 16, 50, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -126,7 +135,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 22, 11, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -139,7 +148,7 @@ describe('Test Illuminate Library', function(){
             let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 31, 0));
 
             assert.equal(
-                xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
                 true
             );
 
@@ -149,7 +158,12 @@ describe('Test Illuminate Library', function(){
 
         it('turn off because of force', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
-            let Ilum = createIlluminatorObject(0, 'off', {sunset: sunset}, new Date(2017, 5, 13, 15, 30, 0));
+            let Ilum = createIlluminatorObject(true, 'off', {sunset: sunset}, new Date(2017, 5, 13, 15, 30, 0));
+
+            assert.equal(
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                true
+            );
 
             assert.equal(Ilum.turnLightOn(), false);
             assert.equal(Ilum.turnLightOff(), true);
@@ -159,15 +173,29 @@ describe('Test Illuminate Library', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
             let Ilum = createIlluminatorObject(0, 'on', {sunset: sunset}, new Date(2017, 5, 13, 15, 30, 0));
 
+            assert.equal(
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                true
+            );
+
             assert.equal(Ilum.turnLightOn(), true);
+            assert.equal(Ilum.turnLightOff(), false);
+        });
+
+        it('prevent from turn off in next iteration', function(){
+            let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 0, 0));
+            let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 35, 0));
+
+            assert.equal(
+                Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
+                false
+            );
+
+            assert.equal(Ilum.turnLightOn(), false);
             assert.equal(Ilum.turnLightOff(), false);
         });
     });
 });
-
-function xor (a, b) {
-    return ( a || b ) && !( a && b );
-}
 
 /**
  * @param launched boolean
