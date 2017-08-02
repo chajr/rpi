@@ -35,7 +35,7 @@ function illuminator () {
     let turnLightOn = iluminatorNg.turnLightOn();
     let turnLightOff = iluminatorNg.turnLightOff();
 
-    if (iluminatorNg.xor(turnLightOn, turnLightOff)) {
+    if (IluminatorNg.xor(turnLightOn, turnLightOff)) {
         if (turnLightOn) {
             illuminate.launch(['on'], config);
             redis.setData('illuminate_status', 'true');
