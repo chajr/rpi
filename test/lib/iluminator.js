@@ -1,4 +1,4 @@
-let config = require('../../lib/config');
+let Config = require('../../lib/config');
 let Iluminator = require('../../lib/iluminator');
 let assert = require('assert');
 
@@ -173,7 +173,9 @@ function xor (a, b) {
  * @returns Iluminator
  */
 function createIlluminatorObject(launched, forceOn, sunCalc, keepAlive) {
-    return new Iluminator(config, launched, forceOn, sunCalc, keepAlive);
+    return new Iluminator(
+        new Config('../etc/config_test.json'), launched, forceOn, sunCalc, keepAlive
+    );
 }
 
 class SunCalcMock {
