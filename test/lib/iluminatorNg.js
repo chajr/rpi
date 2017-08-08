@@ -209,7 +209,7 @@ function createIlluminatorObject(launched, forceOn, sunCalc, date) {
         new Config('../etc/config_test.json')
     );
 
-    iluminator.setData(launched, forceOn, sunCalc, date).calculateTimes();
+    iluminator.calculateTimes(launched, forceOn, sunCalc, date);
 
     return iluminator
 }
