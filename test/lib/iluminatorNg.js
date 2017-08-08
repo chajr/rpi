@@ -205,9 +205,13 @@ describe('Test Illuminate Library', function(){
  * @returns Iluminator
  */
 function createIlluminatorObject(launched, forceOn, sunCalc, date) {
-    return new Iluminator(
-        new Config('../etc/config_test.json'), launched, forceOn, sunCalc, date
+    let iluminator = new Iluminator(
+        new Config('../etc/config_test.json')
     );
+
+    iluminator.setData(launched, forceOn, sunCalc, date).calculateTimes();
+
+    return iluminator
 }
 
 class SunCalcMock {

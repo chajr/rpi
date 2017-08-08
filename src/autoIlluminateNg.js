@@ -6,6 +6,7 @@ let SunCalc = require('suncalc');
 let IluminatorNg = require('../lib/iluminatorNg');
 
 let config;
+let iluminatorNg;
 let name = 'Auto illuminateNg worker';
 let force = false;
 let launched = false;
@@ -14,6 +15,7 @@ let statusObject = {};
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
+    iluminatorNg = new IluminatorNg(config);
 
     worker.startWorker(
         illuminator,
@@ -30,7 +32,8 @@ function illuminator () {
     let gt = config.get('app.position.gt');
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
-    let iluminatorNg = new IluminatorNg(config, launched, force, sunCalc, date);
+
+    iluminatorNg.setData(date, sunCalc, launched, force).calculateTimes();
 
     let turnLightOn = iluminatorNg.turnLightOn();
     let turnLightOff = iluminatorNg.turnLightOff();
