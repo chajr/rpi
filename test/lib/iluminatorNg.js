@@ -106,7 +106,7 @@ describe('Test Illuminate Library', function(){
 
         it('bellow minimal time & not special day & not on', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
-            let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 16, 50, 0));
+            let Ilum = createIlluminatorObject(false, 0, {sunset: sunset}, new Date(2017, 5, 13, 16, 50, 0));
 
             assert.equal(
                 Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
@@ -117,7 +117,7 @@ describe('Test Illuminate Library', function(){
             assert.equal(Ilum.turnLightOff(), false);
         });
 
-        it('turn off because of bellow minimal time & not special day', function(){
+        it('turn off because of bellow minimal time & not special day & turn on', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 30, 0));
             let Ilum = createIlluminatorObject(true, 0, {sunset: sunset}, new Date(2017, 5, 13, 16, 50, 0));
 
@@ -209,7 +209,7 @@ function createIlluminatorObject(launched, forceOn, sunCalc, date) {
         new Config('../etc/config_test.json')
     );
 
-    iluminator.calculateTimes(date, sunCalc, launched, forceOn);
+    iluminator.calculateTimes(date, sunCalc, launched, forceOn).calculateRange();
 
     return iluminator
 }

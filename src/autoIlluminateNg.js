@@ -33,7 +33,7 @@ function illuminator () {
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
 
-    iluminatorNg.calculateTimes(date, sunCalc, launched, force);
+    iluminatorNg.calculateTimes(date, sunCalc, launched, force).calculateRange();
 
     let turnLightOn = iluminatorNg.turnLightOn();
     let turnLightOff = iluminatorNg.turnLightOff();
