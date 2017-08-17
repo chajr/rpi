@@ -3,19 +3,19 @@ let log = require('../lib/log.js');
 let redis = require('../lib/redis.js');
 let worker = require('../lib/worker');
 let SunCalc = require('suncalc');
-let Iluminator = require('../lib/iluminator');
+let IluminatorNg = require('../lib/iluminatorNg');
 
 let config;
-let name = 'Auto illuminate worker';
-let keepAlive = false;
-let forceOn = false;
-let forceOff = false;
+let iluminatorNg;
+let name = 'Auto illuminateNg worker';
+let force = false;
 let launched = false;
 let statusObject = {};
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
+    iluminatorNg = new IluminatorNg(config);
 
     worker.startWorker(
         illuminator,
@@ -24,43 +24,36 @@ exports.launch = function (args, appConfig) {
     );
 };
 
-function illuminator() {
+function illuminator () {
     getRedisStatus('status');
-    getRedisStatus('force_on');
-    getRedisStatus('force_off');
-    getRedisStatus('keep_alive');
+    getRedisStatus('force');
 
     let lt = config.get('app.position.lt');
     let gt = config.get('app.position.gt');
     let date = new Date();
     let sunCalc = SunCalc.getTimes(date, lt, gt);
-    let iluminator = new Iluminator(config, launched, forceOn, sunCalc, keepAlive);
 
-    iluminator.calculate(date);
+    iluminatorNg.calculateTimes(date, sunCalc, launched, force).calculateRange();
 
-    iluminator.turnLightOn();
-    iluminator.turnLightOff(forceOff);
+    let turnLightOn = iluminatorNg.turnLightOn();
+    let turnLightOff = iluminatorNg.turnLightOff();
 
-    let status = iluminator.objectStatus();
-
-    log.logInfo('Auto illuminate statuses:' + JSON.stringify(status));
-
-    switch (true) {
-        case status.turnOnStatus:
+    if (IluminatorNg.xor(turnLightOn, turnLightOff)) {
+        if (turnLightOn) {
             illuminate.launch(['on'], config);
             redis.setData('illuminate_status', 'true');
             launched = true;
 
-            log.logInfo('Auto illuminate turned on.');
-            break;
+            log.logInfo('Auto illuminate Ng turned on.');
+        }
 
-        case status.turnOffStatus:
+        if (turnLightOff) {
             illuminate.launch(['off'], config);
             redis.setData('illuminate_status', 'false');
             launched = false;
 
-            log.logInfo('Auto illuminate turned off.');
-            break;
+            log.logInfo('Auto illuminate Ng turned off.');
+        }
     }
 }
 
@@ -72,17 +65,10 @@ function getRedisStatus (status) {
                     launched = data === 'true';
                     statusObject.illuminateStatus = data;
                     break;
-                case 'force_on':
-                    forceOn = data === 'true';
-                    statusObject.illuminateForceOn = data;
-                    break;
-                case 'force_off':
-                    forceOff = data === 'true';
-                    statusObject.illuminateForceOff = data;
-                    break;
-                case 'keep_alive':
-                    keepAlive = data === 'true';
-                    statusObject.illuminateKeepAlive = data;
+
+                case 'force':
+                    force = data;
+                    statusObject.illuminateForce = data;
                     break;
 
                 default:

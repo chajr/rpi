@@ -1,40 +1,36 @@
-var http = require('http');
-var qs = require('querystring');
-var log = require('./lib/log');
-var config = require('./lib/config');
-var url = require('url');
-var illuminate = require('./src/illuminate');
-var redis = require('./lib/redis.js');
-var led = require('./lib/led');
+let http = require('http');
+// let qs = require('querystring');
+let log = require('./lib/log');
+let config = require('./lib/config');
+let url = require('url');
+let illuminate = require('./src/illuminate');
+let redis = require('./lib/redis.js');
+let led = require('./lib/led');
 
 http.createServer(function (request, response) {
-    var postData = '';
-    var responseData = {
+    redis.connect();
+
+    // let postData = '';
+    let responseData = {
         "status": 'success'
     };
 
-    if (request.method === 'POST') {
-        request.on('data', function (data) {
-            postData += data;
-        });
-
-        request.on('end', function () {
-            var postDataFull = qs.parse(postData);
-        });
-    }
+    // if (request.method === 'POST') {
+    //     request.on('data', function (data) {
+    //         postData += data;
+    //     });
+    //
+    //     request.on('end', function () {
+    //         let postDataFull = qs.parse(postData);
+    //     });
+    // }
 
     if (request.method === 'GET') {
-        var getData = url.parse(request.url, true);
+        let getData = url.parse(request.url, true);
 
         switch (getData.query.app) {
             case 'illuminate':
-                if (getData.query.status === 'on') {
-                    illuminate.launch(['on'], config);
-                    log.logInfo('Light turn on manually.');
-                } else {
-                    illuminate.launch(['off'], config);
-                    log.logInfo('Light turn off manually.');
-                }
+                illuminateHandler(getData.query.status);
                 break;
 
             case 'alert':
@@ -61,5 +57,31 @@ http.createServer(function (request, response) {
 
     response.end(JSON.stringify(responseData));
 }).listen(3000);
+
+function illuminateHandler (paramValue) {
+    switch (paramValue) {
+        case 'force_on_enable':
+            illuminate.launch(['on'], config);
+            redis.setData('illuminate_force_on', true);
+            log.logInfo('Light force on enable.');
+            break;
+
+        case 'force_on_disable':
+            redis.setData('illuminate_force_on', false);
+            log.logInfo('Light force on disable.');
+            break;
+
+        case 'force_off_enable':
+            illuminate.launch(['off'], config);
+            redis.setData('illuminate_force_off', true);
+            log.logInfo('Light force off enabled.');
+            break;
+
+        case 'force_off_disable':
+            redis.setData('illuminate_force_off', false);
+            log.logInfo('Light force off disabled.');
+            break;
+    }
+}
 
 console.log('Server is running.');

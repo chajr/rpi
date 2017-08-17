@@ -1,38 +1,20 @@
-var lcd = require('../lib/lcd');
-var lcdLightStatus = 0;
-var buttonLight;
-var config;
+let lcd = require('./lcd');
+
+let config;
 
 /**
  * @todo show working time
  * @todo show last record status and time
  * @todo disk usage
+ * @todo system status
+ * @todo arm status
  */
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
-
     init();
-
-    buttonLight.watch(lcdLight);
 };
 
 function init() {
-    buttonLight = new Gpio(
-        config.get('alert_gpio.button_display'),
-        'in',
-        'both'
-    );
-}
-
-function lcdLight(err, state) {
-    if(state == 1) {
-        if (lcdLightStatus) {
-            lcd.lightOff();
-            lcdLightStatus = 0;
-        } else {
-            lcd.lightOn();
-            lcdLightStatus = 1;
-        }
-    }
+   
 }

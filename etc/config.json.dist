@@ -5,15 +5,15 @@
     "movie_length": 10,
     "system_shutdown": true,
     "light_on": true,
-    "log_path": "~/projects/RPiAS/var/log",
-    "movie_path": "~/projects/RPiAS/var/movie",
-    "img_path": "~/projects/RPiAS/var/img",
+    "main_path": "~/projects/RPiAS",
+    "log_path": "var/log",
+    "movie_path": "var/movie",
+    "img_path": "var/img",
     "led_red": 22,
     "led_green": 13,
     "json_log": false,
     "shutdown_command": "sudo shutdown -h now",
     "worker_enabled": true,
-    "security_key": "",
     "position": {
       "lt": 0,
       "gt": 0
@@ -22,20 +22,26 @@
     "system_name": "",
     "mongo_connection_timeout": 5000
   },
+  "auth": {
+    "user": "",
+    "pass": "",
+    "security_key": ""
+  },
   "workers": {
     "commandConsumer": {
       "worker_time": 60000,
       "commands_get": "",
-      "commands_set": "",
-      "security_key": ""
+      "commands_set": ""
+    },
+    "lcd_message": {
+      "worker_time": 500
     },
     "system": {
       "worker_time": 60000,
-      "data_collector": "",
-      "security_key": ""
+      "data_collector": ""
     },
-    "error_led": {
-      "worker_time": 1000
+    "led": {
+      "worker_time": 500
     },
     "autoIlluminate": {
       "worker_time": 60000,
@@ -73,6 +79,7 @@
     "button_off":6,
     "button_armed":5,
     "button_status": 19,
+    "message_show_time": 10000,
     "button_display": 26,
     "detector_move": 18,
     "system_armed": 10,
@@ -135,6 +142,7 @@
     "ip_internal": "hostname -I | xargs -n1 | head -1",
     "ip_external": "wget http://ipinfo.io/ip -qO -",
     "disk_usage": "df -h | grep ^/",
+    "cpu_temp": "/opt/vc/bin/vcgencmd measure_temp | sensors",
     "extra": {
       "illuminate_status": "redis-cli get rpia_illuminate_status"
     }

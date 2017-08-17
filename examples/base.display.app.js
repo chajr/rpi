@@ -1,15 +1,15 @@
 var gpio = require('onoff').Gpio;
 var Lcd = require('lcd'),
   lcd = new Lcd({
-    rs: 12,
-    e: 21,
-    data: [5, 6, 17, 18],
+    rs: 20,
+    e: 16,
+    data: [17, 25, 24, 23],
     cols: 8,
     rows: 2
   });
 
 lcd.on('ready', function() {
-  var led = new gpio(4, 'out');
+  var led = new gpio(13, 'out');
   led.writeSync(1);
 
   setInterval(function() {

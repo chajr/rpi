@@ -36,9 +36,7 @@ information and temperature with pressure measurement.
 ### Set Redis with keys:
 
 - **rpia_illuminate_status** - false
-- **rpia_illuminate_force_on** - false
-- **rpia_illuminate_force_off** - false
-- **rpia_illuminate_keep_alive** - false
+- **rpia_illuminate_force** - on/off/null
 - **rpia_illuminate_light_1** - false
 - **rpia_illuminate_light_2** - false
 - **rpia_alert_armed** - false
@@ -63,12 +61,15 @@ ntpd -gq
 service ntp start
 
 sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
-sudo forever start -d /path/app.js autoIlluminate >> /var/log/rpi-mc-autoIlluminate.log
+sudo forever start -d /path/app.js autoIlluminateNg >> /var/log/rpi-mc-autoIlluminateNg.log
 sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
-sudo forever start -d /path/app.js errorLed >> /var/log/rpi-error-led.log
+sudo forever start -d /path/app.js led >> /var/log/rpi-led.log
 sudo forever start -d /path/app.js commandConsummer >> /var/log/rpi-commandConsummer.log
 sudo forever start -d /path/app.js executor >> /var/log/rpi-executor.log
+sudo forever start -d /path/app.js alert >> /var/log/rpi-a-alert.log
+sudo forever start -d /path/app.js lcd >> /var/log/rpi-a-lcd.log
 sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
 ```
 
 rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
+rsync -vrpogthlq ~/RPiAS/var/log/*.log username@remote_host:destination_directory

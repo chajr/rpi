@@ -1,21 +1,22 @@
-var exec = require('sync-exec');
-var log = require('../lib/log');
-var worker = require('../lib/worker');
-var request = require('request');
-var led = require('../lib/led');
-var uptime = require('../lib/uptime');
+let exec = require('sync-exec');
+let log = require('../lib/log');
+let worker = require('../lib/worker');
+let request = require('request');
+let uptime = require('../lib/uptime');
 
-var name = 'System worker';
-var config;
-var buttonOff;
-var Gpio;
-var startTime;
+let led;
+let name = 'System worker';
+let config;
+let buttonOff;
+let Gpio;
+let startTime;
 
 exports.launch = function (args, appConfig, appStartTime) {
     config = appConfig;
     startTime = appStartTime;
 
     if (config.get('app.gpio_enabled')) {
+        led = require('../lib/led');
         Gpio = require('onoff').Gpio;
     }
 
@@ -43,10 +44,10 @@ function init() {
 }
 
 function systemOff(err, state) {
-    if (state == 1) {
-        var lcd = require('../lib/lcd');
-        var uptime = uptime(startTime);
-        var exec = require('child_process').exec;
+    if (state === 1) {
+        let lcd = require('../lib/lcd');
+        let uptime = uptime(startTime);
+        let exec = require('child_process').exec;
 
         lcd.clear();
         lcd.displayMessage([
@@ -62,13 +63,13 @@ function systemOff(err, state) {
 }
 
 function collectData() {
-    var data = [];
+    let data = [];
     data['extra'] = [];
-    var commands = config.get('commands');
+    let commands = config.get('commands');
 
-    for (var key in commands) {
+    for (let key in commands) {
         if (key === 'extra') {
-            for (var keyExtra in commands[key]) {
+            for (let keyExtra in commands[key]) {
                 data['extra'][keyExtra] = exec(commands[key][keyExtra]).stdout;
             }
 
@@ -78,13 +79,19 @@ function collectData() {
         data[key] = exec(commands[key]).stdout;
     }
 
-    var url = config.get('workers.system.data_collector')
+    let url = config.get('workers.system.data_collector')
         + '?key='
-        + config.get('workers.system.security_key');
+        + config.get('auth.security_key');
 
     request.post(
         url,
-        {form: data},
+        {
+            form: data,
+            auth: {
+                user: config.get('auth.user'),
+                pass: config.get('auth.pass')
+            }
+        },
         function (error, response, body) {
             if (error) {
                 log.logError(error);

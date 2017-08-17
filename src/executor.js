@@ -31,7 +31,7 @@ function executor () {
                 }
 
                 for (var i in docs) {
-                    executeCommand(docs[i])
+                    executeCommand(docs[i]);
                 }
             }
         });
@@ -106,22 +106,25 @@ function updateMongo (commandId, update) {
 function updateDb (commandId, update) {
     var url = config.get('workers.commandConsumer.commands_set')
         + '?key='
-        + config.get('workers.commandConsumer.security_key')
+        + config.get('auth.security_key')
         + '&host='
         + config.get('app.system_name');
 
     request.post(
         url,
         {
-            form:
-                {
-                    command_id: commandId,
-                    data_update: true,
-                    executed: update.$set.executed,
-                    output: update.$set.output,
-                    error: update.$set.error,
-                    exec_time: update.$set.exec_time
-                }
+            form: {
+                command_id: commandId,
+                data_update: true,
+                executed: update.$set.executed,
+                output: update.$set.output,
+                error: update.$set.error,
+                exec_time: update.$set.exec_time
+            },
+            auth: {
+                user: config.get('auth.user'),
+                pass: config.get('auth.pass')
+            }
         },
         function (error, response, body) {
             if (error) {
@@ -135,7 +138,7 @@ function updateDb (commandId, update) {
                         updateMongo(
                             commandId,
                             {
-                                $set: {resend: 1}
+                                $set: {resend: 0}
                             }
                         );
                     } else {

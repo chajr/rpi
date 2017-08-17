@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
-var config = require('./lib/config');
-var log = require('./lib/log.js');
-var redis = require('./lib/redis.js');
-var fs = require('fs');
+let Config = require('./lib/config');
+let log = require('./lib/log.js');
+let redis = require('./lib/redis.js');
+let fs = require('fs');
 
-var args = process.argv.slice(2);
-var startTime = new Date().getTime();
-var app;
+let config = new Config;
+let args = process.argv.slice(2);
+let startTime = new Date().getTime();
+let app;
 
-if (fs.existsSync('./src/' + args[0] + '.js')) {
-    app = require('./src/' + args[0]);
+if (fs.existsSync(config.get('app.main_path') + '/src/' + args[0] + '.js')) {
+    app = require(config.get('app.main_path') + '/src/' + args[0]);
 } else {
     console.log('nothing to run');
     process.exit(1);
