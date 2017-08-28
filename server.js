@@ -30,26 +30,16 @@ http.createServer(function (request, response) {
 
         switch (getData.query.app) {
             case 'illuminate':
-                illuminateHandler(getData.query.status);
+                illuminateHandler(getData.query.status, responseData);
                 break;
 
             case 'alert':
-                if (getData.query.status === 'on') {
-                    redis.setData('alert_armed', 'true');
-                    log.logInfo('Alert turn on.');
-                    led.on(config.get('alert_gpio.arm_led'));
-                } else {
-                    redis.setData('alert_armed', 'false');
-                    log.logInfo('Alert turn off.');
-                    led.off(config.get('alert_gpio.arm_led'));
-                }
+                alertHandler(getData.query.status, responseData);
                 break;
 
             default:
                 responseData.status = 'fail';
-                responseData.data = {
-                    'message': 'Application is not specified.'
-                };
+                responseData.message ='Application is not specified.';
 
                 log.logInfo('Application is not specified: ' + getData.query.app);
         }
@@ -58,28 +48,39 @@ http.createServer(function (request, response) {
     response.end(JSON.stringify(responseData));
 }).listen(3000);
 
-function illuminateHandler (paramValue) {
+function alertHandler (paramValue, responseData) {
+    if (paramValue === 'on') {
+        redis.setData('alert_armed', 'true');
+        log.logInfo('Alert turn on.');
+        led.on(config.get('alert_gpio.arm_led'));
+        responseData.message = 'Alert enabled';
+    } else {
+        redis.setData('alert_armed', 'false');
+        log.logInfo('Alert turn off.');
+        led.off(config.get('alert_gpio.arm_led'));
+        responseData.message = 'Alert disabled';
+    }
+}
+
+function illuminateHandler (paramValue, responseData) {
     switch (paramValue) {
-        case 'force_on_enable':
+        case 'force_on':
             illuminate.launch(['on'], config);
-            redis.setData('illuminate_force_on', true);
+            redis.setData('illuminate_force', true);
             log.logInfo('Light force on enable.');
+            responseData.message = 'enabled';
             break;
 
-        case 'force_on_disable':
-            redis.setData('illuminate_force_on', false);
+        case 'force_off':
+            redis.setData('illuminate_force', false);
             log.logInfo('Light force on disable.');
+            responseData.message = 'disabled';
             break;
 
-        case 'force_off_enable':
-            illuminate.launch(['off'], config);
-            redis.setData('illuminate_force_off', true);
-            log.logInfo('Light force off enabled.');
-            break;
-
-        case 'force_off_disable':
-            redis.setData('illuminate_force_off', false);
-            log.logInfo('Light force off disabled.');
+        case 'force_status':
+            redis.getData('illuminate_force', function (data) {
+                responseData.message = data === 'true' ? 'enabled' : 'disabled';
+            });
             break;
     }
 }
