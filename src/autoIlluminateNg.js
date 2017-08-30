@@ -1,12 +1,13 @@
-let illuminate = require('./illuminate');
+const IlluminateNg = require('./illuminateNg');
+const IluminatorNg = require('../lib/iluminatorNg');
 let log = require('../lib/log.js');
 let redis = require('../lib/redis.js');
 let worker = require('../lib/worker');
 let SunCalc = require('suncalc');
-let IluminatorNg = require('../lib/iluminatorNg');
 
 let config;
 let iluminatorNg;
+let illuminateNg;
 let name = 'Auto illuminateNg worker';
 let force = false;
 let launched = false;
@@ -16,6 +17,7 @@ exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
     iluminatorNg = new IluminatorNg(config);
+    illuminateNg = new IlluminateNg(config);
 
     worker.startWorker(
         illuminator,
@@ -38,22 +40,24 @@ function illuminator () {
     let turnLightOn = iluminatorNg.turnLightOn();
     let turnLightOff = iluminatorNg.turnLightOff();
 
-    if (IluminatorNg.xor(turnLightOn, turnLightOff)) {
-        if (turnLightOn) {
-            illuminate.launch(['on'], config);
-            redis.setData('illuminate_status', 'true');
-            launched = true;
+    if (!IluminatorNg.xor(turnLightOn, turnLightOff)) {
+        return;
+    }
 
-            log.logInfo('Auto illuminate Ng turned on.');
-        }
+    if (turnLightOn) {
+        illuminateNg.on();
+        redis.setData('illuminate_status', 'true');
+        launched = true;
 
-        if (turnLightOff) {
-            illuminate.launch(['off'], config);
-            redis.setData('illuminate_status', 'false');
-            launched = false;
+        log.logInfo('Auto illuminate Ng turned on.');
+    }
 
-            log.logInfo('Auto illuminate Ng turned off.');
-        }
+    if (turnLightOff) {
+        illuminateNg.off();
+        redis.setData('illuminate_status', 'false');
+        launched = false;
+
+        log.logInfo('Auto illuminate Ng turned off.');
     }
 }
 
