@@ -1,4 +1,3 @@
-const IlluminateNg = require('./illuminateNg');
 const IluminatorNg = require('../lib/iluminatorNg');
 let log = require('../lib/log.js');
 let redis = require('../lib/redis.js');
@@ -7,7 +6,6 @@ let SunCalc = require('suncalc');
 
 let config;
 let iluminatorNg;
-let illuminateNg;
 let name = 'Auto illuminateNg worker';
 let force = false;
 let launched = false;
@@ -16,8 +14,6 @@ let statusObject = {};
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
-    iluminatorNg = new IluminatorNg(config);
-    illuminateNg = new IlluminateNg(config);
 
     worker.startWorker(
         illuminator,
@@ -49,7 +45,6 @@ function illuminator () {
     }
 
     if (turnLightOn) {
-        illuminateNg.on();
         redis.setData('illuminate_status', 'true');
         launched = true;
 
@@ -57,7 +52,6 @@ function illuminator () {
     }
 
     if (turnLightOff) {
-        illuminateNg.off();
         redis.setData('illuminate_status', 'false');
         launched = false;
 
