@@ -62,6 +62,7 @@ service ntp start
 
 sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
 sudo forever start -d /path/app.js autoIlluminateNg >> /var/log/rpi-mc-autoIlluminateNg.log
+sudo forever start -d /path/app.js light >> /var/log/rpi-mc-light.log
 sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
 sudo forever start -d /path/app.js led >> /var/log/rpi-led.log
 sudo forever start -d /path/app.js commandConsummer >> /var/log/rpi-commandConsummer.log

@@ -17,8 +17,9 @@ redis-cli expire rpia_sms_send 900
 
 sudo touch /var/log/rpi-mc-system.log
 sudo touch /var/log/rpi-mc-autoIlluminateNg.log
-sudo touch /var/log/rpi-a-display.log
 sudo touch /var/log/rpi-mc-server.log
+sudo touch /var/log/rpi-a-display.log
+sudo touch /var/log/rpi-mc-light.log
 sudo touch /var/log/rpi-error-led.log
 sudo touch /var/log/rpi-commandConsummer.log
 sudo touch /var/log/rpi-executor.log
@@ -28,6 +29,7 @@ sudo chown $USER:$USER /var/log/rpi-mc-system.log
 sudo chown $USER:$USER /var/log/rpi-mc-server.log
 sudo chown $USER:$USER /var/log/rpi-a-display.log
 sudo chown $USER:$USER /var/log/rpi-mc-autoIlluminateNg.log
+sudo chown $USER:$USER /var/log/rpi-mc-light.log
 sudo chown $USER:$USER /var/log/rpi-led.log
 sudo chown $USER:$USER /var/log/rpi-commandConsummer.log
 sudo chown $USER:$USER /var/log/rpi-executor.log
