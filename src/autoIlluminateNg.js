@@ -14,6 +14,7 @@ let statusObject = {};
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
+    iluminatorNg = new IluminatorNg(config);
 
     worker.startWorker(
         illuminator,
