@@ -15,7 +15,7 @@ exports.launch = function (args, appConfig) {
 
     worker.startWorker(
         light,
-        config.get('workers..worker_time'),
+        config.get('workers.light.worker_time'),
         name
     );
 };

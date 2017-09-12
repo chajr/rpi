@@ -48,6 +48,9 @@
       "minimalTime": "19:00",
       "turnOn": "17:30",
       "shutDownTime": "22:10"
+    },
+    "light": {
+      "worker_time": 1000
     }
   },
   "connections": {
