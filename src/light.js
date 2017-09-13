@@ -11,6 +11,11 @@ let launched = false;
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
+
+    redis.getData('illuminate_status', function (data) {
+        launched = data === 'true';
+    });
+
     illuminateNg = new IlluminateNg(config);
 
     worker.startWorker(
