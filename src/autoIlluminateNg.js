@@ -63,8 +63,7 @@ function illuminator () {
 }
 
 function fixDateForSuncalc (date) {
-    let stamp = date.getTime();
-    let micro = stamp.getTime() + (fixTime * 1000);
+    let micro = date.getTime() + (fixTime * 1000);
 
     return new Date(micro);
 }
