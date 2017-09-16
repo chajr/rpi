@@ -11,6 +11,8 @@ let force = false;
 let launched = false;
 let statusObject = {};
 
+const fixTime = 2615;
+
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
@@ -30,7 +32,7 @@ function illuminator () {
     let lt = config.get('app.position.lt');
     let gt = config.get('app.position.gt');
     let date = new Date();
-    let sunCalc = SunCalc.getTimes(date, lt, gt);
+    let sunCalc = SunCalc.getTimes(fixDateForSuncalc(date), lt, gt);
 
     iluminatorNg.calculateTimes(date, sunCalc, launched, force).calculateRange();
 
@@ -58,6 +60,13 @@ function illuminator () {
 
         log.logInfo('Auto illuminate Ng turned off.');
     }
+}
+
+function fixDateForSuncalc (date) {
+    let stamp = date.getTime();
+    let micro = stamp.getTime() + (fixTime * 1000);
+
+    return new Date(micro);
 }
 
 function getRedisStatus (status) {
