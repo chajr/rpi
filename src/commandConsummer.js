@@ -35,7 +35,14 @@ function consumer() {
             if (error) {
                 log.logError(error);
             } else {
-                var data = JSON.parse(body);
+                let data = {};
+
+                try {
+                    data = JSON.parse(body);
+                } catch (exception) {
+                    console.log(body);
+                    data.status = 'fail';
+                }
 
                 if (data.status === 'success') {
                     var messages = JSON.parse(data.data.message);
