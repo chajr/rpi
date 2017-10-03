@@ -1,10 +1,10 @@
-var log = require('../lib/log.js');
-var worker = require('../lib/worker');
-var request = require('request');
-var mongo = require('../lib/mongoDb');
+let log = require('../lib/log.js');
+let worker = require('../lib/worker');
+let request = require('request');
+let mongo = require('../lib/mongoDb');
 
-var name = 'Command consumer worker';
-var config;
+let name = 'Command consumer worker';
+let config;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -17,7 +17,7 @@ exports.launch = function (args, appConfig) {
 };
 
 function consumer() {
-    var url = config.get('workers.commandConsumer.commands_get')
+    let url = config.get('workers.commandConsumer.commands_get')
         + '?key='
         + config.get('auth.security_key')
         + '&host='
@@ -35,29 +35,26 @@ function consumer() {
             if (error) {
                 log.logError(error);
             } else {
-                let data = {};
-
                 try {
-                    data = JSON.parse(body);
-                } catch (exception) {
-                    console.log(body);
-                    data.status = 'fail';
-                }
+                    let data = JSON.parse(body);
 
-                if (data.status === 'success') {
-                    var messages = JSON.parse(data.data.message);
+                    if (data.status === 'success') {
+                        let messages = JSON.parse(data.data.message);
 
-                    if (messages.length === 0) {
-                        log.logInfo('No commands consumed.');
+                        if (messages.length === 0) {
+                            log.logInfo('No commands consumed.');
+                        } else {
+                            log.logInfo('Consumed: "' + messages.length + '" commands.');
+                        }
+
+                        for (let i in messages) {
+                            addCommands(messages[i]);
+                        }
                     } else {
-                        log.logInfo('Consumed: "' + messages.length + '" commands.');
+                        log.logError(data.data.message);
                     }
-
-                    for (var i in messages) {
-                        addCommands(messages[i]);
-                    }
-                } else {
-                    log.logError(data.data.message);
+                } catch (exception) {
+                    log.logError(body);
                 }
             }
         }
@@ -66,9 +63,9 @@ function consumer() {
 
 function addCommands (command) {
     mongo.execute(function (db) {
-        var collection = db.collection('rpiasCommand');
+        let collection = db.collection('rpiasCommand');
 
-        var date = new Date;
+        let date = new Date;
         command.consummDate = date.getFullYear()
             + '-'
             + (date.getMonth() +1)
@@ -98,7 +95,7 @@ function addCommands (command) {
 }
 
 function setAsConsumed (command) {
-    var url = config.get('workers.commandConsumer.commands_set')
+    let url = config.get('workers.commandConsumer.commands_set')
         + '?key='
         + config.get('auth.security_key')
         + '&host='
@@ -123,7 +120,7 @@ function setAsConsumed (command) {
                 log.logError(error);
             } else {
                 if (response.statusCode === 200) {
-                    var responseBody = JSON.parse(body);
+                    let responseBody = JSON.parse(body);
 
                     if (responseBody.status === 'success') {
                         log.logInfo('Command with id: "' + command.command_id + '" marked as consumed.');
