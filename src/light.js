@@ -28,14 +28,22 @@ exports.launch = function (args, appConfig) {
 function light() {
     redis.getData('illuminate_status', function (data) {
         if (data) {
-            if (data === 'true' && !launched) {
-                illuminateNg.on();
-                launched = true;
-                log.logInfo('Light turned on.');
-            } else if (data === 'false' && launched) {
-                illuminateNg.off();
-                launched = false;
-                log.logInfo('Light turned off.');
+            switch (true) {
+                case data === 'true' && !launched:
+                    illuminateNg.on();
+                    launched = true;
+                    log.logInfo('Light turned on.');
+                    break;
+
+                case data === 'false' && launched:
+                    illuminateNg.off();
+                    launched = false;
+                    log.logInfo('Light turned off.');
+                    break;
+
+                default:
+                    log.logInfo('Unsupported illuminate status case. Data: ' + data + '; Launched: ' + launched);
+                    break;
             }
         }
     });
