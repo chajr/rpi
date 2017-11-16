@@ -16,7 +16,12 @@ const fixTime = 2615;
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
-    iluminatorNg = new IluminatorNg(config);
+
+    redis.setData('illuminate_minimal_time', config.get('workers.autoIlluminate.turnOn'));
+    redis.setData('illuminate_turn_on', config.get('workers.autoIlluminate.minimalTime'));
+    redis.setData('illuminate_shut_down_time', config.get('workers.autoIlluminate.shutDownTime'));
+
+    iluminatorNg = new IluminatorNg(config, redis);
 
     worker.startWorker(
         illuminator,
