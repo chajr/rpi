@@ -74,7 +74,7 @@ function fixDateForSuncalc (date) {
 }
 
 function getRedisStatus (status) {
-    redis.getData('illuminate_' + status, function (data) {
+    redis.getData('illuminate_' + status, (data) => {
         if (data) {
             switch (status) {
                 case 'status':
