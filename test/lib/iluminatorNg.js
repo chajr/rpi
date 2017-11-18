@@ -205,13 +205,38 @@ describe('Test Illuminate Library', function(){
  * @returns Iluminator
  */
 function createIlluminatorObject(launched, forceOn, sunCalc, date) {
-    let iluminator = new Iluminator(
-        new Config('../etc/config_test.json')
-    );
+    let config = new Config('../etc/config_test.json');
+    let redisMock = new RedisMock(config);
+
+    let iluminator = new Iluminator(config, redisMock);
 
     iluminator.calculateTimes(date, sunCalc, launched, forceOn).calculateRange();
 
     return iluminator
+}
+
+class RedisMock {
+    constructor (config) {
+        this.minimal_time = config.get('workers.autoIlluminate.turnOn');
+        this.turn_on = config.get('workers.autoIlluminate.minimalTime');
+        this.shut_down_time = config.get('workers.autoIlluminate.shutDownTime');
+    }
+
+   getData (key, callback) {
+       switch (key) {
+           case 'illuminate_minimal_time':
+               callback(this.minimal_time);
+               break;
+
+           case 'illuminate_turn_on':
+               callback(this.turn_on);
+               break;
+
+           case 'illuminate_shut_down_time':
+               callback(this.shut_down_time);
+               break;
+       }
+   }
 }
 
 class SunCalcMock {
