@@ -30,7 +30,7 @@ http.createServer(function (request, response) {
 
         switch (getData.query.app) {
             case 'illuminate':
-                illuminateHandler(getData.query.status, responseData);
+                illuminateHandler(getData.query, responseData);
                 break;
 
             case 'alert':
@@ -62,25 +62,43 @@ function alertHandler (paramValue, responseData) {
     }
 }
 
-function illuminateHandler (paramValue, responseData) {
-    switch (paramValue) {
+function illuminateHandler (params, responseData) {
+    switch (params.status) {
         case 'force_on':
             illuminate.launch(['on'], config);
             redis.setData('illuminate_force', true);
             log.logInfo('Light force on enable.');
-            responseData.message = 'enabled';
+            responseData.message = 'force enabled';
             break;
 
         case 'force_off':
             redis.setData('illuminate_force', false);
             log.logInfo('Light force on disable.');
-            responseData.message = 'disabled';
+            responseData.message = 'force disabled';
             break;
 
         case 'force_status':
             redis.getData('illuminate_force', function (data) {
                 responseData.message = data === 'true' ? 'enabled' : 'disabled';
             });
+            break;
+
+        case 'force_default':
+            redis.setData('illuminate_force', false);
+            log.logInfo('Light force on disable.');
+            responseData.message = 'force set to default';
+            break;
+
+        case 'set_time':
+            redis.setData('illuminate_minimal_time', params.min_time);
+            redis.setData('illuminate_turn_on', params.turn_on);
+            redis.setData('illuminate_shut_down_time', params.turn_off);
+
+            let logTime = JSON.stringify({});
+
+            log.logInfo('Times set to: ' + logTime);
+            responseData.message = 'new times set up';
+
             break;
     }
 }
