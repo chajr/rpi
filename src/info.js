@@ -1,8 +1,8 @@
 require('console.table');
-var colors = require('colors');
-var exec = require('sync-exec');
-var redis = require('../lib/redis.js');
-var config;
+require('colors');
+let exec = require('sync-exec');
+let redis = require('../lib/redis.js');
+let config;
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -43,19 +43,24 @@ function getRedisVars() {
             console.log('Illuminate status: ', data.yellow);
         }
     });
-    redis.getData('illuminate_force_on', function (data) {
+    redis.getData('illuminate_force', function (data) {
         if (data) {
-            console.log('Illuminate force on: ', data.yellow);
+            console.log('Illuminate force: ', data.yellow);
         }
     });
-    redis.getData('illuminate_force_off', function (data) {
+    redis.getData('illuminate_minimal_time', function (data) {
         if (data) {
-            console.log('Illuminate force off: ', data.yellow);
+            console.log('Illuminate minimal time: ', data.yellow);
         }
     });
-    redis.getData('illuminate_keep_alive', function (data) {
+    redis.getData('illuminate_turn_on', function (data) {
         if (data) {
-            console.log('Illuminate keep alive: ', data.yellow);
+            console.log('Illuminate turn on: ', data.yellow);
+        }
+    });
+    redis.getData('illuminate_shut_down_time', function (data) {
+        if (data) {
+            console.log('Illuminate shutdown time: ', data.yellow);
         }
     });
     redis.getData('illuminate_light_1', function (data) {
@@ -70,17 +75,32 @@ function getRedisVars() {
     });
     redis.getData('alert_armed', function (data) {
         if (data) {
-            console.log('Illuminate system armed: ', data.yellow);
+            console.log('System armed: ', data.yellow);
         }
     });
     redis.getData('sms_send', function (data) {
         if (data) {
-            console.log('Illuminate sms send: ', data.yellow);
+            console.log('SMS send: ', data.yellow);
+        }
+    });
+    redis.getData('lcd_light', function (data) {
+        if (data) {
+            console.log('LCD light: ', data.yellow);
+        }
+    });
+    redis.getData('lcd_message_0', function (data) {
+        if (data) {
+            console.log('LCD message 0: ', data.yellow);
+        }
+    });
+    redis.getData('lcd_message_1', function (data) {
+        if (data) {
+            console.log('LCD message 1: ', data.yellow);
         }
     });
     redis.getData('error_led', function (data) {
         if (data) {
-            var string;
+            let string;
 
             if (data === 'false') {
                 string = data.green;
@@ -96,12 +116,12 @@ function getRedisVars() {
 }
 
 function getSusnetTime() {
-    var lt = config.get('app.position.lt');
-    var gt = config.get('app.position.gt');
-    var date = new Date();
-    var SunCalc = require('suncalc');
-    var sunCalc = SunCalc.getTimes(date, lt, gt);
-    var sunsetTime = sunCalc.sunset.getHours()
+    let lt = config.get('app.position.lt');
+    let gt = config.get('app.position.gt');
+    let date = new Date();
+    let SunCalc = require('suncalc');
+    let sunCalc = SunCalc.getTimes(date, lt, gt);
+    let sunsetTime = sunCalc.sunset.getHours()
         + ':'
         + sunCalc.sunset.getMinutes()
         + ':'
