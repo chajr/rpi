@@ -13,6 +13,8 @@ exports.launch = function (args, appConfig) {
     getProcesses();
     getSusnetTime();
     getRedisVars();
+
+    process.exit(0);
 };
 
 function execCommand(command) {
@@ -38,81 +40,53 @@ function getProcesses() {
 }
 
 function getRedisVars() {
-    redis.getData('illuminate_status', function (data) {
-        if (data) {
-            console.log('Illuminate status: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_force', function (data) {
-        if (data) {
-            console.log('Illuminate force: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_minimal_time', function (data) {
-        if (data) {
-            console.log('Illuminate minimal time: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_turn_on', function (data) {
-        if (data) {
-            console.log('Illuminate turn on: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_shut_down_time', function (data) {
-        if (data) {
-            console.log('Illuminate shutdown time: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_light_1', function (data) {
-        if (data) {
-            console.log('Illuminate light 1: ', data.yellow);
-        }
-    });
-    redis.getData('illuminate_light_2', function (data) {
-        if (data) {
-            console.log('Illuminate light 2: ', data.yellow);
-        }
-    });
-    redis.getData('alert_armed', function (data) {
-        if (data) {
-            console.log('System armed: ', data.yellow);
-        }
-    });
-    redis.getData('sms_send', function (data) {
-        if (data) {
-            console.log('SMS send: ', data.yellow);
-        }
-    });
-    redis.getData('lcd_light', function (data) {
-        if (data) {
-            console.log('LCD light: ', data.yellow);
-        }
-    });
-    redis.getData('lcd_message_0', function (data) {
-        if (data) {
-            console.log('LCD message 0: ', data.yellow);
-        }
-    });
-    redis.getData('lcd_message_1', function (data) {
-        if (data) {
-            console.log('LCD message 1: ', data.yellow);
-        }
-    });
-    redis.getData('error_led', function (data) {
-        if (data) {
-            let string;
+    getRedisData('illuminate_status', 'Illuminate status: ');
+    getRedisData('illuminate_force', 'Illuminate force: ');
+    getRedisData('illuminate_minimal_time', 'Illuminate minimal time: ');
+    getRedisData('illuminate_turn_on', 'Illuminate turn on: ');
+    getRedisData('illuminate_shut_down_time', 'Illuminate shutdown time: ');
+    getRedisData('illuminate_light_1', 'Illuminate light 1: ');
+    getRedisData('illuminate_light_2', 'Illuminate light 2: ');
+    getRedisData('alert_armed', 'System armed: ');
+    getRedisData('sms_send', 'SMS send: ');
+    getRedisData('lcd_light', 'LCD light: ');
+    getRedisData('lcd_message_0', 'LCD message 0: ');
+    getRedisData('lcd_message_1', 'LCD message 1: ');
 
-            if (data === 'false') {
-                string = data.green;
+    getRedisData('error_led', 'Error LED status: ', function (data) {
+        if (data === 'false') {
+            return data.green;
+        }
+
+        return data.red;
+    });
+}
+
+function getRedisData(key, message, callback = false) {
+    redis.getData(key, function (data) {
+        if (data) {
+            let messageData;
+
+            if (callback) {
+                messageData = callback(data);
             } else {
-                string = data.red;
+                messageData = setColor(data);
             }
 
-            console.log('Error LED status: ', string);
-
-            process.exit(0);
+            console.log(message, messageData);
         }
     });
+}
+
+function setColor(message) {
+    switch (message) {
+        case 'true':
+            return message.green;
+        case 'false':
+            return message.red;
+        default:
+            return message.yellow;
+    }
 }
 
 function getSusnetTime() {
