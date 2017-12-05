@@ -13,8 +13,6 @@ exports.launch = function (args, appConfig) {
     getProcesses();
     getSusnetTime();
     getRedisVars();
-
-    process.exit(0);
 };
 
 function execCommand(command) {
@@ -53,16 +51,21 @@ function getRedisVars() {
     getRedisData('lcd_message_0', 'LCD message 0: ');
     getRedisData('lcd_message_1', 'LCD message 1: ');
 
-    getRedisData('error_led', 'Error LED status: ', function (data) {
-        if (data === 'false') {
-            return data.green;
-        }
-
-        return data.red;
-    });
+    getRedisData(
+        'error_led',
+        'Error LED status: ',
+        function (data) {
+            if (data === 'false') {
+                return data.green;
+            }
+    
+            return data.red;
+        },
+        true
+    );
 }
 
-function getRedisData(key, message, callback = false) {
+function getRedisData(key, message, callback = false, exit = false) {
     redis.getData(key, function (data) {
         if (data) {
             let messageData;
@@ -74,6 +77,10 @@ function getRedisData(key, message, callback = false) {
             }
 
             console.log(message, messageData);
+        }
+
+        if (exit) {
+            process.exit(0);
         }
     });
 }
