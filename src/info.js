@@ -45,6 +45,7 @@ function getRedisVars() {
     getRedisData('illuminate_shut_down_time', 'Illuminate shutdown time: ');
     getRedisData('illuminate_light_1', 'Illuminate light 1: ');
     getRedisData('illuminate_light_2', 'Illuminate light 2: ');
+    getRedisData('illuminate_light_3', 'Illuminate light 3: ');
     getRedisData('alert_armed', 'System armed: ');
     getRedisData('sms_send', 'SMS send: ');
     getRedisData('lcd_light', 'LCD light: ');
@@ -58,7 +59,7 @@ function getRedisVars() {
             if (data === 'false') {
                 return data.green;
             }
-    
+
             return data.red;
         },
         true

@@ -6,6 +6,7 @@ redis-cli set rpia_illuminate_status false
 redis-cli set rpia_illuminate_force null
 redis-cli set rpia_illuminate_light_1 false
 redis-cli set rpia_illuminate_light_2 false
+redis-cli set rpia_illuminate_light_3 false
 redis-cli set rpia_illuminate_minimal_time 19:00
 redis-cli set rpia_illuminate_turn_on 17:30
 redis-cli set rpia_illuminate_shut_down_time 22:10
