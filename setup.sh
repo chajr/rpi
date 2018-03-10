@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER = $1;
+USER=$1; 
 
 redis-cli set rpia_illuminate_status false
 redis-cli set rpia_illuminate_force null
