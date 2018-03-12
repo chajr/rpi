@@ -64,13 +64,15 @@ sudo forever start -d /path/app.js system >> /var/log/rpi-mc-system.log
 sudo forever start -d /path/app.js autoIlluminateNg >> /var/log/rpi-mc-autoIlluminateNg.log
 sudo forever start -d /path/app.js light >> /var/log/rpi-mc-light.log
 sudo forever start -d /path/app.js display >> /var/log/rpi-a-display.log
-sudo forever start -d /path/app.js led >> /var/log/rpi-led.log
+sudo forever start -d /path/app.js led >> /var/log/rpi-error-led.log
 sudo forever start -d /path/app.js commandConsummer >> /var/log/rpi-commandConsummer.log
 sudo forever start -d /path/app.js executor >> /var/log/rpi-executor.log
 sudo forever start -d /path/app.js alert >> /var/log/rpi-a-alert.log
 sudo forever start -d /path/app.js lcd >> /var/log/rpi-a-lcd.log
 sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
 ```
+
+sudo update-rc.d rpi-mc.sh start
 
 rsync -vrpogthlq ~/RPiAS/var/img/*.jpg username@remote_host:destination_directory
 rsync -vrpogthlq ~/RPiAS/var/log/*.log username@remote_host:destination_directory
