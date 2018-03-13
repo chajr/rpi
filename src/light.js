@@ -42,7 +42,7 @@ function light() {
                     break;
 
                 default:
-                    log.logInfo('Unsupported illuminate status case. Data: ' + data + '; Launched: ' + launched);
+                    log.logInfo('Heartbeat; Data: ' + data + '; Launched: ' + launched);
                     break;
             }
         }
