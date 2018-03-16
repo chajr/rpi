@@ -2,14 +2,22 @@
 
 USER=$1; 
 
-redis-cli set rpia_illuminate_status false
+redis-cli set rpia_illuminate_status_1 false
+redis-cli set rpia_illuminate_status_2 false
+redis-cli set rpia_illuminate_status_3 false
 redis-cli set rpia_illuminate_force null
 redis-cli set rpia_illuminate_light_1 false
 redis-cli set rpia_illuminate_light_2 false
 redis-cli set rpia_illuminate_light_3 false
-redis-cli set rpia_illuminate_minimal_time 19:00
-redis-cli set rpia_illuminate_turn_on 17:30
-redis-cli set rpia_illuminate_shut_down_time 22:10
+redis-cli set rpia_illuminate_minimal_time_1 19:00
+redis-cli set rpia_illuminate_turn_on_1 17:30
+redis-cli set rpia_illuminate_shut_down_time_1 22:10
+redis-cli set rpia_illuminate_minimal_time_2 19:00
+redis-cli set rpia_illuminate_turn_on_2 17:30
+redis-cli set rpia_illuminate_shut_down_time_2 22:10
+redis-cli set rpia_illuminate_minimal_time_3 19:00
+redis-cli set rpia_illuminate_turn_on_3 17:30
+redis-cli set rpia_illuminate_shut_down_time_3 22:10
 redis-cli set rpia_alert_armed false
 redis-cli set rpia_sms_send false
 redis-cli set rpia_error_led false
