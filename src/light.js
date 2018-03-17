@@ -6,15 +6,19 @@ let worker = require('../lib/worker');
 let config;
 let illuminateNg;
 let name = 'Light worker';
-let launched = false;
+let launched = [
+    false,
+    false,
+    false,
+];
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
 
-    redis.getData('illuminate_status', function (data) {
-        launched = data === 'true';
-    });
+    setLaunched(1);
+    setLaunched(2);
+    setLaunched(3);
 
     illuminateNg = new IlluminateNg(config);
 
@@ -25,26 +29,39 @@ exports.launch = function (args, appConfig) {
     );
 };
 
-function light() {
-    redis.getData('illuminate_status', function (data) {
-        if (data) {
-            switch (true) {
-                case data === 'true' && !launched:
-                    illuminateNg.on();
-                    launched = true;
-                    log.logInfo('Light turned on.');
-                    break;
-
-                case data === 'false' && launched:
-                    illuminateNg.off();
-                    launched = false;
-                    log.logInfo('Light turned off.');
-                    break;
-
-                default:
-                    log.logInfo('Heartbeat; Data: ' + data + '; Launched: ' + launched);
-                    break;
-            }
-        }
+function setLaunched (pinNumber) {
+    redis.getData('illuminate_status_' + pinNumber, function (data) {
+        launched[pinNumber -1] = data === 'true';
     });
 }
+
+function light() {
+    let pinNumber;
+
+    for (pinNumber = 1; pinNumber < 4; pinNumber++) {
+        redis.getData('illuminate_status_' + pinNumber, function (data) {
+            if (data) {
+                switch (true) {
+                    case data === 'true' && !launched:
+                        illuminateNg.on(pinNumber);
+                        launched[pinNumber -1] = true;
+                        log.logInfo('Light turned on: ' + pinNumber);
+                        break;
+
+                    case data === 'false' && launched:
+                        illuminateNg.off(pinNumber);
+                        launched[pinNumber -1] = false;
+                        log.logInfo('Light turned off: ' + pinNumber);
+                        break;
+
+                    default:
+                        log.logInfo(
+                            'Heartbeat; Data: ' + data + '; Launched: ' + launched + '; Pin number: ' + pinNumber
+                        );
+                        break;
+                }
+            }
+        });
+    }
+}
+
