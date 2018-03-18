@@ -45,9 +45,20 @@
     },
     "autoIlluminate": {
       "worker_time": 60000,
-      "minimalTime": "19:00",
-      "turnOn": "17:30",
-      "shutDownTime": "22:10"
+      "light": {
+        "default": {
+          "minimalTime": "19:00",
+          "turnOn": "17:30",
+          "shutDownTime": "22:10"
+        },
+        "1": {
+          "shutDownTime": "19:05"
+        },
+        "2": {
+          "shutDownTime": "21:30"
+        },
+        "3": {}
+      }
     },
     "light": {
       "worker_time": 1000
