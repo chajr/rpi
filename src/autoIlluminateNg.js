@@ -46,7 +46,7 @@ function mergeConfig (defaultConfig, pinNumber) {
     redis.setData('illuminate_minimal_time_' + pinNumber, result.turnOn);
     redis.setData('illuminate_turn_on_' + pinNumber, result.minimalTime);
     redis.setData('illuminate_shut_down_time_' + pinNumber, result.shutDownTime);
-} 
+}
 
 function illuminator () {
     getRedisStatus('status', 1);
@@ -80,14 +80,14 @@ function handleLight (pinNumber, sunCalc, date) {
 
     if (turnLightOn) {
         redis.setData('illuminate_status_' + pinNumber, 'true');
-        launched[pinNumber] = true;
+        launched[pinNumber -1] = true;
 
         log.logInfo('Auto illuminate Ng turned on: ' + pinNumber);
     }
 
     if (turnLightOff) {
         redis.setData('illuminate_status_' + pinNumber, 'false');
-        launched[pinNumber] = false;
+        launched[pinNumber -1] = false;
 
         log.logInfo('Auto illuminate Ng turned off: ' + pinNumber);
     }
