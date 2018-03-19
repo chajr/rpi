@@ -36,32 +36,39 @@ function setLaunched (pinNumber) {
 }
 
 function light() {
-    let pinNumber;
+    onOff(1);
+    onOff(2);
+    onOff(3);
+}
 
-    for (pinNumber = 1; pinNumber < 4; pinNumber++) {
-        redis.getData('illuminate_status_' + pinNumber, function (data) {
-            if (data) {
-                switch (true) {
-                    case data === 'true' && !launched:
-                        illuminateNg.on(pinNumber);
-                        launched[pinNumber -1] = true;
-                        log.logInfo('Light turned on: ' + pinNumber);
-                        break;
+function onOff (pinNumber) {
+    redis.getData('illuminate_status_' + pinNumber, (data) => {
+        if (data) {
+            switch (true) {
+                case data === 'true' && !launched:
+                    illuminateNg.on(pinNumber);
+                    launched[pinNumber -1] = true;
+                    log.logInfo('Light turned on: ' + pinNumber);
+                    break;
 
-                    case data === 'false' && launched:
-                        illuminateNg.off(pinNumber);
-                        launched[pinNumber -1] = false;
-                        log.logInfo('Light turned off: ' + pinNumber);
-                        break;
+                case data === 'false' && launched:
+                    illuminateNg.off(pinNumber);
+                    launched[pinNumber -1] = false;
+                    log.logInfo('Light turned off: ' + pinNumber);
+                    break;
 
-                    default:
-                        log.logInfo(
-                            'Heartbeat; Data: ' + data + '; Launched: ' + launched + '; Pin number: ' + pinNumber
-                        );
-                        break;
-                }
+                default:
+                    log.logInfo(
+                        'Heartbeat; Data: '
+                        + data
+                        + '; Launched: '
+                        + launched[pinNumber -1]
+                        + '; Pin number: '
+                        + pinNumber
+                    );
+                    break;
             }
-        });
-    }
+        }
+    });
 }
 
