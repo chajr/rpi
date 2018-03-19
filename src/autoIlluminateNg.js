@@ -8,7 +8,11 @@ let config;
 let iluminatorNg = [];
 let name = 'Auto illuminateNg worker';
 let force = false;
-let launched = [];
+let launched = [
+    false,
+    false,
+    false,
+];
 let statusObject = {};
 
 const fixTime = 2615;
@@ -35,13 +39,13 @@ exports.launch = function (args, appConfig) {
 };
 
 function mergeConfig (defaultConfig, pinNumber) {
-    let base = config.get('workers.autoIlluminate.light: ' + pinNumber);
+    let base = config.get('workers.autoIlluminate.light.' + pinNumber);
 
     let result = Object.assign({}, defaultConfig, base);
 
     redis.setData('illuminate_minimal_time_' + pinNumber, result.turnOn);
     redis.setData('illuminate_turn_on_' + pinNumber, result.minimalTime);
-    redis.setData('illuminate_shut_down_time_', + pinNumber, result.shutDownTime);
+    redis.setData('illuminate_shut_down_time_' + pinNumber, result.shutDownTime);
 } 
 
 function illuminator () {
@@ -61,7 +65,7 @@ function illuminator () {
 }
 
 function handleLight (pinNumber, sunCalc, date) {
-    iluminatorNg[pinNumber -1].calculateTimes(date, sunCalc, launched[pinNumber], force).calculateRange();
+    iluminatorNg[pinNumber -1].calculateTimes(date, sunCalc, launched[pinNumber -1], force).calculateRange();
 
     log.logInfo(
         JSON.stringify(iluminatorNg[pinNumber -1].prepareLog())
@@ -106,7 +110,7 @@ function getRedisStatus (status, pinNumber = false) {
         if (data) {
             switch (status) {
                 case 'status':
-                    launched[pinNumber] = data === 'true';
+                    launched[pinNumber -1] = data === 'true';
                     statusObject.illuminateStatus = data;
                     break;
 
