@@ -45,13 +45,13 @@ function onOff (pinNumber) {
     redis.getData('illuminate_status_' + pinNumber, (data) => {
         if (data) {
             switch (true) {
-                case data === 'true' && !launched:
+                case data === 'true' && !launched[pinNumber -1]:
                     illuminateNg.on(pinNumber);
                     launched[pinNumber -1] = true;
                     log.logInfo('Light turned on: ' + pinNumber);
                     break;
 
-                case data === 'false' && launched:
+                case data === 'false' && launched[pinNumber -1]:
                     illuminateNg.off(pinNumber);
                     launched[pinNumber -1] = false;
                     log.logInfo('Light turned off: ' + pinNumber);
