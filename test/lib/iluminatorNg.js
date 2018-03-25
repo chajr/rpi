@@ -55,6 +55,7 @@ describe('Test Illuminate Library', function(){
         it('turn on because of minimal time', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 0, 0));
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 30, 0));
+            console.log(Ilum.turnLightOn());
 
             assert.equal(
                 Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
@@ -208,7 +209,7 @@ function createIlluminatorObject(launched, forceOn, sunCalc, date) {
     let config = new Config('../etc/config_test.json');
     let redisMock = new RedisMock(config);
 
-    let iluminator = new Iluminator(config, redisMock);
+    let iluminator = new Iluminator(config, redisMock, 1);
 
     iluminator.calculateTimes(date, sunCalc, launched, forceOn).calculateRange();
 
@@ -224,15 +225,15 @@ class RedisMock {
 
    getData (key, callback) {
        switch (key) {
-           case 'illuminate_minimal_time':
+           case 'illuminate_minimal_time_1':
                callback(this.minimal_time);
                break;
 
-           case 'illuminate_turn_on':
+           case 'illuminate_turn_on_1':
                callback(this.turn_on);
                break;
 
-           case 'illuminate_shut_down_time':
+           case 'illuminate_shut_down_time_1':
                callback(this.shut_down_time);
                break;
        }
