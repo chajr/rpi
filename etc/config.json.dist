@@ -62,6 +62,9 @@
     },
     "light": {
       "worker_time": 1000
+    },
+    "log": {
+      "worker_time": 86400
     }
   },
   "connections": {

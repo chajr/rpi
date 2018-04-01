@@ -69,6 +69,7 @@ sudo forever start -d /path/app.js commandConsummer >> /var/log/rpi-commandConsu
 sudo forever start -d /path/app.js executor >> /var/log/rpi-executor.log
 sudo forever start -d /path/app.js alert >> /var/log/rpi-a-alert.log
 sudo forever start -d /path/app.js lcd >> /var/log/rpi-a-lcd.log
+sudo forever start -d /path/app.js logCompressor >> /var/log/rpi-logCompressor.log
 sudo forever start -d /path/server.js >> /var/log/rpi-mc-server.log
 ```
 
