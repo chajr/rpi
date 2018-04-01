@@ -9,6 +9,7 @@ const toSkip = [
     'info_' + date + '.log',
     'error_' + date + '.log',
     'warning_' + date + '.log',
+    'debug_' + date + '.log',
 ];
 
 let config;
