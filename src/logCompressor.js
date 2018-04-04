@@ -3,15 +3,6 @@ const log = require('../lib/log');
 const zlib = require('zlib');
 const worker = require('../lib/worker');
 
-let date = log.getDate();
-const toSkip = [
-    '.gitignore',
-    'info_' + date + '.log',
-    'error_' + date + '.log',
-    'warning_' + date + '.log',
-    'debug_' + date + '.log',
-];
-
 let config;
 const name = 'Log compressor';
 
@@ -26,6 +17,15 @@ exports.launch = function (args, appConfig) {
 };
 
 function compress () {
+    let date = log.getDate();
+    const toSkip = [
+        '.gitignore',
+        'info_' + date + '.log',
+        'error_' + date + '.log',
+        'warning_' + date + '.log',
+        'debug_' + date + '.log',
+    ];
+
     let logPath = config.get('app.main_path') + '/' + config.get('app.log_path') + '/';
     let files = fs.readdirSync(logPath);
 
