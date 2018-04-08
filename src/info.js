@@ -30,6 +30,8 @@ function getSystemInfo() {
         '%'
     );
     console.log('CPU used: ', execCommand('cat /var/log/proc.log').green, '%');
+    console.log('Opened files: ', execCommand('lsof | wc -l').green);
+    console.log('Node opened files: ', execCommand('lsof | grep node | wc -l').green);
     // console.log('Disk usage: ', exec('disk_usage: \'df -h | grep ^/\'').stdout.green);
 }
 
