@@ -1,8 +1,9 @@
-let log = require('../lib/log.js');
+let Log = require('../lib/log');
 let worker = require('../lib/worker');
 let request = require('request');
 let mongo = require('../lib/mongoDb');
 
+let log = new Log();
 let name = 'Command consumer worker';
 let config;
 
@@ -33,7 +34,7 @@ function consumer() {
         },
         function (error, response, body) {
             if (error) {
-                log.logError(error);
+                log.logError(error, '', true);
             } else {
                 try {
                     let data = JSON.parse(body);
@@ -42,9 +43,9 @@ function consumer() {
                         let messages = JSON.parse(data.data.message);
 
                         if (messages.length === 0) {
-                            log.logInfo('No commands consumed.');
+                            log.logInfo('No commands consumed.', '', true);
                         } else {
-                            log.logInfo('Consumed: "' + messages.length + '" commands.');
+                            log.logInfo('Consumed: "' + messages.length + '" commands.', '', true);
                         }
 
                         for (let i in messages) {
@@ -85,9 +86,9 @@ function addCommands (command) {
 
         collection.insertOne(command, function (err) {
             if (err) {
-                log.logError('Command insert error: ' + err);
+                log.logError('Command insert error: ' + err, '', true);
             } else {
-                log.logInfo('Command consumed: ' + JSON.stringify(command));
+                log.logInfo('Command consumed: ' + JSON.stringify(command), '', true);
                 setAsConsumed(command);
             }
         });
@@ -117,13 +118,13 @@ function setAsConsumed (command) {
         },
         function (error, response, body) {
             if (error) {
-                log.logError(error);
+                log.logError(error, '', true);
             } else {
                 if (response.statusCode === 200) {
                     let responseBody = JSON.parse(body);
 
                     if (responseBody.status === 'success') {
-                        log.logInfo('Command with id: "' + command.command_id + '" marked as consumed.');
+                        log.logInfo('Command with id: "' + command.command_id + '" marked as consumed.', '', true);
                     } else {
                         log.logError(responseBody.data.message);
                     }

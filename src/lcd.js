@@ -7,6 +7,7 @@ let name = 'LCD worker';
 
 let config;
 let messageRow = [null, null];
+let log = new Log();
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -44,7 +45,7 @@ function checkAndPrint (key) {
             messageRow[key] = data;
 
             if (messageRow[key] !== oldMessage) {
-                Log.logInfo('Row ' + key + ' message: ' + data);
+                log.logInfo('Row ' + key + ' message: ' + data, 'src', true);
                 Lcd.print(key, clearData(data));
             }
         }

@@ -1,5 +1,5 @@
 const IluminatorNg = require('../lib/iluminatorNg');
-let log = require('../lib/log.js');
+let Log = require('../lib/log');
 let redis = require('../lib/redis.js');
 let worker = require('../lib/worker');
 let SunCalc = require('suncalc');
@@ -14,6 +14,7 @@ let launched = [
     false,
 ];
 let statusObject = {};
+let log = new Log();
 
 const fixTime = 2615;
 
@@ -68,7 +69,8 @@ function handleLight (pinNumber, sunCalc, date) {
     iluminatorNg[pinNumber -1].calculateTimes(date, sunCalc, launched[pinNumber -1], force).calculateRange();
 
     log.logInfo(
-        JSON.stringify(iluminatorNg[pinNumber -1].prepareLog())
+        JSON.stringify(iluminatorNg[pinNumber -1].prepareLog()),
+        'autoIlluminateNg-src'
     );
 
     let turnLightOn = iluminatorNg[pinNumber -1].turnLightOn();
@@ -82,14 +84,14 @@ function handleLight (pinNumber, sunCalc, date) {
         redis.setData('illuminate_status_' + pinNumber, 'true');
         launched[pinNumber -1] = true;
 
-        log.logInfo('Auto illuminate Ng turned on: ' + pinNumber);
+        log.logInfo('Auto illuminate Ng turned on: ' + pinNumber, 'autoIlluminateNg-src', true);
     }
 
     if (turnLightOff) {
         redis.setData('illuminate_status_' + pinNumber, 'false');
         launched[pinNumber -1] = false;
 
-        log.logInfo('Auto illuminate Ng turned off: ' + pinNumber);
+        log.logInfo('Auto illuminate Ng turned off: ' + pinNumber, 'autoIlluminateNg-src', true);
     }
 }
 

@@ -1,5 +1,5 @@
 let Gpio = require('onoff').Gpio;
-let log = require('../lib/log');
+let Log = require('../lib/log');
 let redis = require('../lib/redis');
 let fs = require('fs');
 let cameraLib = require('../lib/camera');
@@ -8,6 +8,7 @@ let lcd = require('../lib/lcd');
 let config;
 let detector;
 let recordInterval;
+let log = new Log();
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -29,13 +30,13 @@ function init() {
 
 function alarm(err, state) {
     if (err) {
-        log.logError(err);
+        log.logError(err, '', true);
     }
 
     if (state === 1) {
         redis.getData('alert_armed', function (data) {
             if (data === 'true') {
-                log.logInfo('Move detected.');
+                log.logInfo('Move detected.', '', true);
 
                 if (config.get('alert_gpio.mode') === 'movie') {
                     record();
@@ -51,7 +52,7 @@ function alarm(err, state) {
             }
         });
     } else {
-        log.logInfo('No move detected.');
+        log.logInfo('No move detected.', '', true);
         cameraLib.cameraStop();
 
         if (config.get('alert_gpio.mode') === 'movie') {

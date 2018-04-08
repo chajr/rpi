@@ -1,5 +1,5 @@
 let exec = require('sync-exec');
-let log = require('../lib/log');
+let Log = require('../lib/log');
 let worker = require('../lib/worker');
 let request = require('request');
 let uptime = require('../lib/uptime');
@@ -10,6 +10,7 @@ let config;
 let buttonOff;
 let Gpio;
 let startTime;
+let log = new Log();
 
 exports.launch = function (args, appConfig, appStartTime) {
     config = appConfig;
@@ -55,7 +56,7 @@ function systemOff(err, state) {
             'after: ' + uptime
         ]);
 
-        log.logInfo('System shutdown after: ' + uptime);
+        log.logInfo('System shutdown after: ' + uptime, '', true);
         console.log('System is shutting down.');
 
         exec(config.get('app.shutdown_command'));

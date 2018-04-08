@@ -1,10 +1,11 @@
-let log = require('../lib/log');
+let Log = require('../lib/log');
 let worker = require('../lib/worker');
 let redis = require('../lib/redis.js');
 
 let name = 'LED status worker';
 let errorLedStatus = false;
 let armLedStatus = false;
+let log = new Log();
 
 let config;
 let led;
@@ -38,7 +39,7 @@ function handleLed() {
             errorLedStatus = data === 'true';
 
             if (errorLedStatus !== oldLedStatus) {
-                log.logInfo('Error LED status changed to: ' + data);
+                log.logInfo('Error LED status changed to: ' + data, '', true);
 
                 changeStatus(config.get('app.led_red'), errorLedStatus);
                 changeStatus(config.get('app.led_green'), !errorLedStatus);
@@ -53,7 +54,7 @@ function handleLed() {
             armLedStatus = data === 'true';
 
             if (armLedStatus !== oldArmLedStatus) {
-                log.logInfo('Arm LED status changed to: ' + data);
+                log.logInfo('Arm LED status changed to: ' + data, '', true);
 
                 changeStatus(config.get('alert_gpio.arm_led'), armLedStatus);
             }

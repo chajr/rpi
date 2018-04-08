@@ -1,5 +1,5 @@
 const IlluminateNg = require('../lib/IluminateNg');
-let log = require('../lib/log.js');
+let Log = require('../lib/log');
 let redis = require('../lib/redis.js');
 let worker = require('../lib/worker');
 
@@ -11,6 +11,7 @@ let launched = [
     false,
     false,
 ];
+let log = new Log();
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
@@ -48,13 +49,13 @@ function onOff (pinNumber) {
                 case data === 'true' && !launched[pinNumber -1]:
                     illuminateNg.on(pinNumber);
                     launched[pinNumber -1] = true;
-                    log.logInfo('Light turned on: ' + pinNumber);
+                    log.logInfo('Light turned on: ' + pinNumber, 'light-src', true);
                     break;
 
                 case data === 'false' && launched[pinNumber -1]:
                     illuminateNg.off(pinNumber);
                     launched[pinNumber -1] = false;
-                    log.logInfo('Light turned off: ' + pinNumber);
+                    log.logInfo('Light turned off: ' + pinNumber, 'light-src', true);
                     break;
 
                 default:
@@ -64,7 +65,8 @@ function onOff (pinNumber) {
                         + '; Launched: '
                         + launched[pinNumber -1]
                         + '; Pin number: '
-                        + pinNumber
+                        + pinNumber,
+                        'light-src'
                     );
                     break;
             }

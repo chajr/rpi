@@ -1,4 +1,4 @@
-let log = require('../lib/log');
+let Log = require('../lib/log');
 let redis = require('../lib/redis');
 let lcdLib = require('../lib/lcd');
 let lcd = require('./lcd');
@@ -6,13 +6,14 @@ let Button = require('../lib/button');
 
 let config;
 let armInterval;
+let log = new Log();
 
 exports.launch = function (args, appConfig) {
     config = appConfig;
     redis.connect();
 
     Button.watcher(appConfig, 'alert_gpio.button_status', function (status) {
-        log.logInfo('Status button: ' + status);
+        log.logInfo('Status button: ' + status, 'src', true);
     });
 
     Button.watcher(appConfig, 'alert_gpio.button_display', function (status) {
@@ -29,7 +30,7 @@ exports.launch = function (args, appConfig) {
                 redis.setData('alert_armed', 'false');
                 lcd.setMessage('System unarmed');
 
-                log.logInfo('Alert turn off.');
+                log.logInfo('Alert turn off.', 'src', true);
             } else if (isSystemArmed === 'false') {
                 let armDelay = config.get('alert_gpio.arm_after');
                 let timeout = armDelay/1000;
@@ -42,7 +43,7 @@ exports.launch = function (args, appConfig) {
                             redis.setData('alert_armed', 'true');
                             lcd.setMessage('System armed');
 
-                            log.logInfo('Alert turn on.');
+                            log.logInfo('Alert turn on.', 'src', true);
                             isSystemArmed = true;
 
                             clearInterval(armInterval);

@@ -1,11 +1,13 @@
 let http = require('http');
 // let qs = require('querystring');
-let log = require('./lib/log');
+let Log = require('./lib/log');
 let config = require('./lib/config');
 let url = require('url');
 let illuminate = require('./src/illuminate');
 let redis = require('./lib/redis.js');
 let led = require('./lib/led');
+
+let log = new Log();
 
 http.createServer(function (request, response) {
     redis.connect();
@@ -41,7 +43,7 @@ http.createServer(function (request, response) {
                 responseData.status = 'fail';
                 responseData.message ='Application is not specified.';
 
-                log.logInfo('Application is not specified: ' + getData.query.app);
+                log.logInfo('Application is not specified: ' + getData.query.app, 'server', true);
         }
     }
 
@@ -51,12 +53,12 @@ http.createServer(function (request, response) {
 function alertHandler (paramValue, responseData) {
     if (paramValue === 'on') {
         redis.setData('alert_armed', 'true');
-        log.logInfo('Alert turn on.');
+        log.logInfo('Alert turn on.', 'server', true);
         led.on(config.get('alert_gpio.arm_led'));
         responseData.message = 'Alert enabled';
     } else {
         redis.setData('alert_armed', 'false');
-        log.logInfo('Alert turn off.');
+        log.logInfo('Alert turn off.', 'server', true);
         led.off(config.get('alert_gpio.arm_led'));
         responseData.message = 'Alert disabled';
     }
@@ -67,13 +69,13 @@ function illuminateHandler (params, responseData) {
         case 'force_on':
             illuminate.launch(['on'], config);
             redis.setData('illuminate_force', true);
-            log.logInfo('Light force on enable.');
+            log.logInfo('Light force on enable.', 'server', true);
             responseData.message = 'force enabled';
             break;
 
         case 'force_off':
             redis.setData('illuminate_force', false);
-            log.logInfo('Light force on disable.');
+            log.logInfo('Light force on disable.', 'server', true);
             responseData.message = 'force disabled';
             break;
 
@@ -85,7 +87,7 @@ function illuminateHandler (params, responseData) {
 
         case 'force_default':
             redis.setData('illuminate_force', false);
-            log.logInfo('Light force on disable.');
+            log.logInfo('Light force on disable.', 'server', true);
             responseData.message = 'force set to default';
             break;
 
@@ -96,7 +98,7 @@ function illuminateHandler (params, responseData) {
 
             let logTime = JSON.stringify({});
 
-            log.logInfo('Times set to: ' + logTime);
+            log.logInfo('Times set to: ' + logTime, 'server', true);
             responseData.message = 'new times set up';
 
             break;

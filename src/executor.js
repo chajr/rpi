@@ -1,9 +1,10 @@
-var log = require('../lib/log.js');
+let Log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
 var mongo = require('../lib/mongoDb');
 var exec = require('sync-exec');
 
+let log = new Log();
 var name = 'Command executor worker';
 var config;
 
@@ -22,12 +23,12 @@ function executor () {
         var collection = db.collection('rpiasCommand');
         collection.find({executed: 0}).toArray(function(err, docs) {
             if (err) {
-                log.logError(err);
+                log.logError(err, '', true);
             } else {
                 if (docs.length === 0) {
-                    log.logInfo('No commands executed.');
+                    log.logInfo('No commands executed.', '', true);
                 } else {
-                    log.logInfo('"' + docs.length + '" commands to execute.');
+                    log.logInfo('"' + docs.length + '" commands to execute.', '', true);
                 }
 
                 for (var i in docs) {
@@ -46,7 +47,9 @@ function executeCommand (command) {
 
         if (execTime > currentTime) {
             log.logInfo(
-                'Command with id: "' + command.command_id + '" should be executed later: ' + command.to_be_exec
+                'Command with id: "' + command.command_id + '" should be executed later: ' + command.to_be_exec,
+                '',
+                true
             );
 
             return null;
@@ -61,9 +64,9 @@ function executeCommand (command) {
     if (outputErr) {
         output = outputErr;
         error = 1;
-        log.logError('Error on command with id: "' + command.command_id + '": ' + outputErr);
+        log.logError('Error on command with id: "' + command.command_id + '": ' + outputErr, '', true);
     } else {
-        log.logInfo('Command with id: "' + command.command_id + '" executed successfully.');
+        log.logInfo('Command with id: "' + command.command_id + '" executed successfully.', '', true);
     }
 
     var update = {
@@ -97,7 +100,7 @@ function updateMongo (commandId, update) {
 
         collection.updateOne({command_id: commandId}, update, function(err) {
             if (err) {
-                log.logError(err);
+                log.logError(err, '', true);
             }
         });
     });
@@ -128,13 +131,13 @@ function updateDb (commandId, update) {
         },
         function (error, response, body) {
             if (error) {
-                log.logError(error);
+                log.logError(error, '', true);
             } else {
                 if (response.statusCode === 200) {
                     var responseBody = JSON.parse(body);
 
                     if (responseBody.status === 'success') {
-                        log.logInfo('Command with id: "' + commandId + '" send to server.');
+                        log.logInfo('Command with id: "' + commandId + '" send to server.', '', true);
                         updateMongo(
                             commandId,
                             {
