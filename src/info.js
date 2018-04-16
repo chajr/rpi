@@ -42,24 +42,22 @@ function getProcesses() {
 function getRedisVars() {
     console.log();
 
-    getRedisData('illuminate_status_1', 'Illuminate status: ');
-    getRedisData('illuminate_status_2', 'Illuminate status: ');
-    getRedisData('illuminate_status_3', 'Illuminate status: ');
+    getRedisData('illuminate_status_1', 'Illuminate status 1: ');
+    getRedisData('illuminate_status_2', 'Illuminate status 2: ');
+    getRedisData('illuminate_status_3', 'Illuminate status 3: ');
     getRedisData('illuminate_force', 'Illuminate force: ');
-    getRedisData('illuminate_minimal_time_1', 'Illuminate minimal time: ');
-    getRedisData('illuminate_turn_on_1', 'Illuminate turn on: ');
-    getRedisData('illuminate_shut_down_time_1', 'Illuminate shutdown time: ');
-    getRedisData('illuminate_minimal_time_2', 'Illuminate minimal time: ');
-    getRedisData('illuminate_turn_on_2', 'Illuminate turn on: ');
-    getRedisData('illuminate_shut_down_time_2', 'Illuminate shutdown time: ');
-    getRedisData('illuminate_minimal_time_3', 'Illuminate minimal time: ');
-    getRedisData('illuminate_turn_on_3', 'Illuminate turn on: ');
-    getRedisData('illuminate_shut_down_time_3', 'Illuminate shutdown time: ');
+    getRedisData('illuminate_minimal_time_1', 'Illuminate minimal time 1: ');
+    getRedisData('illuminate_turn_on_1', 'Illuminate turn on 1: ');
+    getRedisData('illuminate_shut_down_time_1', 'Illuminate shutdown time 1: ');
+    getRedisData('illuminate_minimal_time_2', 'Illuminate minimal time 2: ');
+    getRedisData('illuminate_turn_on_2', 'Illuminate turn on 2: ');
+    getRedisData('illuminate_shut_down_time_2', 'Illuminate shutdown time 2: ');
+    getRedisData('illuminate_minimal_time_3', 'Illuminate minimal time 3: ');
+    getRedisData('illuminate_turn_on_3', 'Illuminate turn on 3: ');
+    getRedisData('illuminate_shut_down_time_3', 'Illuminate shutdown time 3: ');
     getRedisData('illuminate_light_1', 'Illuminate light 1: ');
     getRedisData('illuminate_light_2', 'Illuminate light 2: ');
     getRedisData('illuminate_light_3', 'Illuminate light 3: ');
-
-    console.log();
 
     getRedisData('alert_armed', 'System armed: ');
     getRedisData('sms_send', 'SMS send: ');
