@@ -1,0 +1,23 @@
+{
+  "app": {
+    "movie_send": true,
+    "position": {
+      "lt": 50.496067,
+      "gt": 19.4291496
+    }
+  },
+  "workers": {
+    "autoIlluminate": {
+      "minimalTime": "19:00",
+      "turnOn": "17:30",
+      "shutDownTime": "20:00"
+    }
+  },
+  "illuminate_special": {
+    "1": [1, 6],
+    "5": [1, 3],
+    "8": [15],
+    "11": [1, 11],
+    "12": [25, 26]
+  }
+}

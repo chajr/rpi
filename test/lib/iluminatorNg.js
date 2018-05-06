@@ -55,7 +55,6 @@ describe('Test Illuminate Library', function(){
         it('turn on because of minimal time', function(){
             let sunset = new SunCalcMock(new Date(2017, 5, 13, 16, 0, 0));
             let Ilum = createIlluminatorObject(0, 0, {sunset: sunset}, new Date(2017, 5, 13, 17, 30, 0));
-            console.log(Ilum.turnLightOn());
 
             assert.equal(
                 Iluminator.xor(Ilum.turnLightOn(), Ilum.turnLightOff()),
