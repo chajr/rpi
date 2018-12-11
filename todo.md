@@ -1,0 +1,4 @@
+- [ ] in redis keep calculated hour for on/off light instead of bool value
+- [ ] calculate on/off hour much less (like 1 pre min)
+- [ ] add triggers for calculating
+- [ ] set min/max time for on/off by cli (with trigger for recalculating)
