@@ -1,11 +1,11 @@
 {
   "name": "RPiAS",
   "author": {
-    "name" : "Michał Adamiak",
-    "email" : "chajr@bluetree.pl"
+    "name": "Michał Adamiak",
+    "email": "chajr@bluetree.pl"
   },
   "version": "0.4.10",
-  "licenses" : {
+  "licenses": {
     "type": "Apache-2.0",
     "url": "http://opensource.org/licenses/apache2.0.php"
   },
@@ -13,10 +13,10 @@
   "dependencies": {
     "onoff": "1.1.*",
     "gpio-stream": "1.0.17",
-    "lcd" : "1.1.1",
-    "exec-plan" : "0.0.3",
-    "sync-exec" : "0.6.2",
-    "request" : "2.69.*",
+    "lcd": "1.1.1",
+    "exec-plan": "0.0.3",
+    "sync-exec": "0.6.2",
+    "request": "2.69.*",
     "raspicam": "0.2.13",
     "suncalc": "1.8.0",
     "console.table": "0.7.0",
@@ -32,6 +32,7 @@
     "mocha": "^3.4.2"
   },
   "scripts": {
-    "test": "mocha --recursive --repoter spec test"
+    "test": "node node_modules/mocha/bin/mocha --recursive --repoter spec test",
+    "compile": "node node_modules/.bin/tsc src/*.ts; node node_modules/.bin/tsc lib/*.ts"
   }
 }
