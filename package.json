@@ -4,32 +4,28 @@
     "name": "Michał Adamiak",
     "email": "chajr@bluetree.pl"
   },
-  "version": "0.4.10",
-  "licenses": {
-    "type": "Apache-2.0",
-    "url": "http://opensource.org/licenses/apache2.0.php"
-  },
+  "version": "0.5.0",
+  "licenses": "Apache-2.0",
   "main": "app.js",
   "dependencies": {
-    "onoff": "1.1.*",
-    "gpio-stream": "1.0.17",
-    "lcd": "1.1.1",
-    "exec-plan": "0.0.3",
-    "sync-exec": "0.6.2",
-    "request": "2.69.*",
-    "raspicam": "0.2.13",
-    "suncalc": "1.8.0",
-    "console.table": "0.7.0",
     "cli-table": "0.3.*",
     "colors": "1.1.*",
-    "redis": "2.6.0-1",
-    "mongodb": "2.2.16",
+    "console.table": "0.7.0",
     "date-easter": "0.2.2",
+    "exec-plan": "0.0.3",
+    "gpio-stream": "1.0.17",
+    "lcd": "1.1.1",
     "lodash": ">=4.17.11",
+    "mongodb": "2.2.16",
+    "onoff": "1.1.*",
+    "raspicam": "0.2.13",
+    "redis": "2.6.0-1",
+    "request": "^2.88.0",
+    "suncalc": "1.8.0",
     "typescript": "3.4.5"
   },
   "devDependencies": {
-    "mocha": "^3.4.2"
+    "mocha": "^6.1.4"
   },
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive --repoter spec test",
