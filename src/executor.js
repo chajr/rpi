@@ -2,7 +2,7 @@ let Log = require('../lib/log');
 var worker = require('../lib/worker');
 var request = require('request');
 var mongo = require('../lib/mongoDb');
-var exec = require('sync-exec');
+const {execSync} = require('child_process');
 
 let log = new Log();
 var name = 'Command executor worker';
@@ -56,15 +56,22 @@ function executeCommand (command) {
         }
     }
 
-    var executed = exec(command.command);
-    var outputErr = executed.stderr.replace("\n", '');
-    var output = executed.stdout.replace("\n", '');
-    var error = 0;
+    let ls;
+    let output;
+    let error = 0;
 
-    if (outputErr) {
-        output = outputErr;
+    try {
+        ls = execSync(command.command);
+    } catch (exception) {
         error = 1;
-        log.logError('Error on command with id: "' + command.command_id + '": ' + outputErr, '', true);
+        ls = exception.stderr
+    } finally {
+        const out = Buffer.from(ls);
+        output = out.toString().replace("\n", '');
+    }
+
+    if (error) {
+        log.logError('Error on command with id: "' + command.command_id + '": ' + output, '', true);
     } else {
         log.logInfo('Command with id: "' + command.command_id + '" executed successfully.', '', true);
     }

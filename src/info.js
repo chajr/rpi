@@ -1,6 +1,6 @@
 require('console.table');
 require('colors');
-let exec = require('sync-exec');
+const {execSync} = require('child_process');
 let redis = require('../lib/redis.js');
 let config;
 
@@ -16,7 +16,19 @@ exports.launch = function (args, appConfig) {
 };
 
 function execCommand(command) {
-    return exec(command).stdout.replace("\n", '');
+    let ls;
+    let output;
+
+    try {
+        ls = execSync(command);
+    } catch (exception) {
+        ls = exception.stderr
+    } finally {
+        const out = Buffer.from(ls);
+        output = out.toString().replace("\n", '');
+    }
+
+    return output;
 }
 
 function getSystemInfo() {

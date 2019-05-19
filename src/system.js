@@ -1,4 +1,5 @@
-let exec = require('sync-exec');
+const {execSync} = require('child_process');
+const {exec} = require('child_process');
 let Log = require('../lib/log');
 let worker = require('../lib/worker');
 let request = require('request');
@@ -48,7 +49,6 @@ function systemOff(err, state) {
     if (state === 1) {
         let lcd = require('../lib/lcd');
         let uptime = uptime(startTime);
-        let exec = require('child_process').exec;
 
         lcd.clear();
         lcd.displayMessage([
@@ -59,7 +59,9 @@ function systemOff(err, state) {
         log.logInfo('System shutdown after: ' + uptime, '', true);
         console.log('System is shutting down.');
 
-        exec(config.get('app.shutdown_command'));
+        exec(config.get('app.shutdown_command'), {}, function () {
+            console.log('System off.');
+        });
     }
 }
 
@@ -71,13 +73,19 @@ function collectData() {
     for (let key in commands) {
         if (key === 'extra') {
             for (let keyExtra in commands[key]) {
-                data['extra'][keyExtra] = exec(commands[key][keyExtra]).stdout;
+                let buffer = execSync(commands[key][keyExtra]);
+                let output = Buffer.from(buffer);
+
+                data['extra'][keyExtra] = output.toString();
             }
 
             continue;
         }
 
-        data[key] = exec(commands[key]).stdout;
+        let buffer = execSync(commands[key]);
+        let output = Buffer.from(buffer);
+
+        data[key] = output.toString();
     }
 
     let url = config.get('workers.system.data_collector')
