@@ -5,7 +5,6 @@
     "movie_length": 10,
     "system_shutdown": true,
     "light_on": true,
-    "main_path": "~/projects/RPiAS",
     "log_path": "var/log",
     "movie_path": "var/movie",
     "img_path": "var/img",

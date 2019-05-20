@@ -2,6 +2,7 @@ const fs = require('fs');
 const log = require('../lib/log');
 const zlib = require('zlib');
 const worker = require('../lib/worker');
+const path = require('path');
 
 let config;
 const name = 'Log compressor';
@@ -26,7 +27,7 @@ function compress () {
         'debug_' + date + '.log',
     ];
 
-    let logPath = config.get('app.main_path') + '/' + config.get('app.log_path') + '/';
+    let logPath = path.dirname(__dirname) + '/' + config.get('app.log_path') + '/';
     let files = fs.readdirSync(logPath);
 
     for (let index in files) {
