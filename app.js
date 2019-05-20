@@ -10,8 +10,8 @@ let args = process.argv.slice(2);
 let startTime = new Date().getTime();
 let app;
 
-if (fs.existsSync(config.get('app.main_path') + '/src/' + args[0] + '.js')) {
-    app = require(config.get('app.main_path') + '/src/' + args[0]);
+if (fs.existsSync(__dirname + '/src/' + args[0] + '.js')) {
+    app = require(__dirname + '/src/' + args[0]);
 } else {
     console.log('nothing to run');
     process.exit(1);
