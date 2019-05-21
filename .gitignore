@@ -2,4 +2,7 @@ etc/config.json
 node_modules/
 *.swp
 .idea
-t
+t.js
+
+lib/uptime.js
+app.js

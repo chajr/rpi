@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-let Config = require('./lib/config');
-let log = require('./lib/log.js');
-let redis = require('./lib/redis.js');
-let fs = require('fs');
+import Config = require('./lib/config');
+import log = require('./lib/log.js');
+import redis = require('./lib/redis.js');
+import fs = require('fs');
 
 let config = new Config;
 let args = process.argv.slice(2);
