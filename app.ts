@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 
+import colors = require('colors');
 import Config = require('./lib/config');
 import log = require('./lib/log.js');
 import redis = require('./lib/redis.js');
 import fs = require('fs');
 
+let app;
 let config = new Config;
 let args = process.argv.slice(2);
 let startTime = new Date().getTime();
-let app;
+let path = __dirname + '/src/' + args[0];
 
-if (fs.existsSync(__dirname + '/src/' + args[0] + '.js')) {
-    app = require(__dirname + '/src/' + args[0]);
+if (fs.existsSync(path + '.js')) {
+    app = require(path + args[0]);
 } else {
-    console.log('nothing to run');
+    console.log(colors.yellow('Nothing to run: ') + colors.cyan(path));
     process.exit(1);
 }
 
@@ -23,7 +25,6 @@ try {
     redis.connect();
     redis.setData('error_led', 'false');
     app.launch(args, config, startTime);
-    // process.exit(0);
 } catch (error) {
     console.log('Application error, more info in log file.');
     console.log(error);
@@ -33,3 +34,5 @@ try {
 
     process.exit(1);
 }
+
+//finally launch app error mode
