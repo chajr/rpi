@@ -8,6 +8,7 @@
   "licenses": "Apache-2.0",
   "main": "app.js",
   "dependencies": {
+    "@types/colors": "^1.2.1",
     "cli-table": "0.3.*",
     "colors": "1.1.*",
     "console.table": "0.7.0",
@@ -25,10 +26,11 @@
     "typescript": "3.4.5"
   },
   "devDependencies": {
+    "@types/node": "^12.0.2",
     "mocha": "^6.1.4"
   },
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive --repoter spec test",
-    "compile": "node node_modules/.bin/tsc src/*.ts; node node_modules/.bin/tsc lib/*.ts"
+    "compile": "node node_modules/.bin/tsc app.ts;node node_modules/.bin/tsc src/*.ts; node node_modules/.bin/tsc lib/*.ts"
   }
 }
