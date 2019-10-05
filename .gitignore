@@ -6,3 +6,6 @@ t.js
 
 lib/uptime.js
 app.js
+
+src/test.js
+src/info.js
