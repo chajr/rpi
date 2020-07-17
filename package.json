@@ -16,7 +16,7 @@
     "exec-plan": "0.0.3",
     "gpio-stream": "1.0.17",
     "lcd": "1.1.1",
-    "lodash": ">=4.17.13",
+    "lodash": ">=4.17.19",
     "mongodb": "2.2.16",
     "onoff": "1.1.*",
     "raspicam": "0.2.13",
