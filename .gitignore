@@ -6,7 +6,7 @@ t.js
 
 #app.js
 
-src/test.js
-src/info.js
+#src/test.js
+#src/info.js
 
-lib/uptime.js
+#lib/uptime.js
