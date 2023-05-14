@@ -13,7 +13,7 @@ let startTime = new Date().getTime();
 let path = __dirname + '/src/' + args[0];
 
 if (fs.existsSync(path + '.js')) {
-    app = require(path + args[0]);
+    app = require(path);
 } else {
     console.log(colors.yellow('Nothing to run: ') + colors.cyan(path));
     process.exit(1);
