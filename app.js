@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let Config = require('./lib/config');
+let Config = require('./lib/config.js');
 let log = require('./lib/log.js');
 let redis = require('./lib/redis.js');
 let fs = require('fs');
