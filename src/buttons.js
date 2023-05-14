@@ -17,6 +17,7 @@ exports.launch = function (args, appConfig) {
     });
 
     Button.watcher(appConfig, 'alert_gpio.button_display', function (status) {
+        log.logInfo('LCD light button: ' + status, 'src', true);
         if (status) {
             lcdLib.lightOn();
         } else {
@@ -24,7 +25,9 @@ exports.launch = function (args, appConfig) {
         }
     });
 
-    Button.watcher(appConfig, 'alert_gpio.button_armed', function () {
+    Button.watcher(appConfig, 'alert_gpio.button_armed', function (status) {
+        log.logInfo('Arm button: ' + status, 'src', true);
+
         redis.getData('alert_armed', function (isSystemArmed) {
             if (isSystemArmed === 'true') {
                 redis.setData('alert_armed', 'false');

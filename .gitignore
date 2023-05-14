@@ -4,7 +4,7 @@ node_modules/
 .idea
 t.js
 
-app.js
+#app.js
 
 src/test.js
 src/info.js

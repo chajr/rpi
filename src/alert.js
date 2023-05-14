@@ -52,7 +52,7 @@ function alarm(err, state) {
             }
         });
     } else {
-        log.logInfo('No move detected.', '', true);
+        // log.logInfo('No move detected.', '', true);
         cameraLib.cameraStop();
 
         if (config.get('alert_gpio.mode') === 'movie') {
