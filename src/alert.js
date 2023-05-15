@@ -30,13 +30,13 @@ function init() {
 
 function alarm(err, state) {
     if (err) {
-        log.logError(err, '', true);
+        log.logError(err, 'src', true);
     }
 
     if (state === 1) {
         redis.getData('alert_armed', function (data) {
             if (data === 'true') {
-                log.logInfo('Move detected.', '', true);
+                log.logInfo('Move detected.', 'src', true);
 
                 if (config.get('alert_gpio.mode') === 'movie') {
                     record();

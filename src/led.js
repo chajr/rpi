@@ -39,7 +39,7 @@ function handleLed() {
             errorLedStatus = data === 'true';
 
             if (errorLedStatus !== oldLedStatus) {
-                log.logInfo('Error LED status changed to: ' + data, '', true);
+                log.logInfo('Error LED status changed to: ' + data, 'src', true);
 
                 changeStatus(config.get('app.led_red'), errorLedStatus);
                 changeStatus(config.get('app.led_green'), !errorLedStatus);
@@ -54,7 +54,7 @@ function handleLed() {
             armLedStatus = data === 'true';
 
             if (armLedStatus !== oldArmLedStatus) {
-                log.logInfo('Arm LED status changed to: ' + data, '', true);
+                log.logInfo('Arm LED status changed to: ' + data, 'src', true);
 
                 changeStatus(config.get('alert_gpio.arm_led'), armLedStatus);
             }
