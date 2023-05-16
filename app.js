@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 let Config = require('./lib/config.js');
-let log = require('./lib/log.js');
+let Log = require('./lib/log.js');
 let redis = require('./lib/redis.js');
 let fs = require('fs');
 let colors = require('colors');
@@ -11,6 +11,7 @@ let config = new Config;
 let args = process.argv.slice(2);
 let startTime = new Date().getTime();
 let path = __dirname + '/src/' + args[0];
+let log = new Log();
 
 if (fs.existsSync(path + '.js')) {
     app = require(path);
