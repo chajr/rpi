@@ -25,10 +25,8 @@ function executor () {
             if (err) {
                 log.logError(err, '', true);
             } else {
-                if (docs.length === 0) {
-                    log.logInfo('No commands executed.', '', true);
-                } else {
-                    log.logInfo('"' + docs.length + '" commands to execute.', '', true);
+                if (docs.length !== 0) {
+                    log.logInfo('"' + docs.length + '" commands to execute.', 'src', true);
                 }
 
                 for (var i in docs) {

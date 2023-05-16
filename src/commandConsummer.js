@@ -42,10 +42,8 @@ function consumer() {
                     if (data.status === 'success') {
                         let messages = JSON.parse(data.data.message);
 
-                        if (messages.length === 0) {
-                            log.logInfo('No commands consumed.', '', true);
-                        } else {
-                            log.logInfo('Consumed: "' + messages.length + '" commands.', '', true);
+                        if (messages.length !== 0) {
+                            log.logInfo('Consumed: "' + messages.length + '" commands.', 'src', true);
                         }
 
                         for (let i in messages) {
